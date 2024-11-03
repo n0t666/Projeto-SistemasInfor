@@ -13,7 +13,7 @@
                 <img src="<?=$assetDir?>/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block"><?=Yii::$app->user->identity->username;?></a>
             </div>
         </div>
 
@@ -49,25 +49,40 @@
                     ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
                     ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
                     ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
-                    ['label' => 'MULTI LEVEL EXAMPLE', 'header' => true],
-                    ['label' => 'Level1'],
+                    ['label' => 'Funcionalidades de gestão', 'header' => true],
                     [
-                        'label' => 'Level1',
+                        'label' => 'Gestão de Utilizadores',
+                        'icon' => 'users',
                         'items' => [
-                            ['label' => 'Level2', 'iconStyle' => 'far'],
-                            [
-                                'label' => 'Level2',
-                                'iconStyle' => 'far',
-                                'items' => [
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle'],
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle'],
-                                    ['label' => 'Level3', 'iconStyle' => 'far', 'icon' => 'dot-circle']
-                                ]
-                            ],
-                            ['label' => 'Level2', 'iconStyle' => 'far']
-                        ]
+                            ['label' => 'Utilizadores', 'icon' => 'user', 'url' => ['/user/index']],
+                            ['label' => 'Listas', 'icon' => 'list', 'url' => ['/user/lists']],
+                            ['label' => 'Sugestões de Funcionalidades', 'icon' => 'lightbulb', 'url' => ['/suggestions/index']],
+                        ],
                     ],
-                    ['label' => 'Level1'],
+                    [
+                        'label' => 'Gestão de Jogos',
+                        'icon' => 'gamepad',
+                        'items' => [
+                            ['label' => 'Jogos', 'icon' => 'gamepad', 'url' => ['/game/index']],
+                            ['label' => 'Franquias', 'icon' => 'tag', 'url' => ['/franchise/index']],
+                            ['label' => 'Screenshots', 'icon' => 'images', 'url' => ['/screenshot/index']],
+                            ['label' => 'Distribuidoras', 'icon' => 'store', 'url' => ['/distributor/index']],
+                            ['label' => 'Tags', 'icon' => 'tags', 'url' => ['/tag/index']],
+                            ['label' => 'Editoras', 'icon' => 'book', 'url' => ['/publisher/index']],
+                            ['label' => 'Géneros', 'icon' => 'folder', 'url' => ['/genre/index']],
+                        ],
+                    ],
+                    [
+                        'label' => 'Gestão de Vendas',
+                        'icon' => 'shopping-cart',
+                        'items' => [
+                            ['label' => 'Vendas', 'icon' => 'dollar-sign', 'url' => ['/sales/index']],
+                            ['label' => 'Códigos Promocionais', 'icon' => 'tags', 'url' => ['/promo-code/index']],
+                            ['label' => 'Encomendas', 'icon' => 'shopping-basket', 'url' => ['/order/index']],
+                            ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/key/index']],
+                            ['label' => 'Produtos', 'icon' => 'cubes', 'url' => ['/product/index']],
+                        ],
+                    ],
                     ['label' => 'LABELS', 'header' => true],
                     ['label' => 'Important', 'iconStyle' => 'far', 'iconClassAdded' => 'text-danger'],
                     ['label' => 'Warning', 'iconClass' => 'nav-icon far fa-circle text-warning'],

@@ -10,18 +10,14 @@ use yii\helpers\Html;
 $this->title = $name;
 ?>
 <div class="site-error">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
+    <div class="d-flex align-items-center justify-content-center py-100 mt-5">
+        <div class="text-center">
+            <h1 class="display-1 fw-bold"><?= Html::encode($exception->statusCode) ?></h1>
+            <p class="fs-3"> <span class="text-danger">Opps!</span> Erro na página</p>
+            <p class="lead">
+                <?= Html::encode($exception->getMessage()) ?>
+            </p>
+            <?= Html::a('Voltar', ['site/index'], ['class' => 'btn btn-primary w-100 text-uppercase']) ?>
+        </div>
     </div>
-
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
-
 </div>
