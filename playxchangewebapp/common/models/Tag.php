@@ -43,7 +43,6 @@ class Tag extends \yii\db\ActiveRecord
     }
 
     public function getJogos(){
-        return $this->hasMany(Jogo::class, ['id' => 'jogo_id'])->viaTable('tagsJogos', ['tag_id' => 'id']);
-
+        return $this->hasMany(Jogo::class, ['id' => 'jogo_id'])->viaTable('jogosTags', ['tag_id' => 'id']);
     }
 }

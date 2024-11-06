@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -31,6 +32,10 @@ var_dump($tags);
     <?= $form->field($model, 'publicadora_id')->textInput() ?>
 
     <?= $form->field($model, 'editora_id')->textInput() ?>
+
+    <?= $form->field($model, 'tags')->checkboxList(
+        ArrayHelper::map($tags, 'id', 'nome')
+    ) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

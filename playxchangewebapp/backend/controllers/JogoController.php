@@ -4,7 +4,9 @@ namespace backend\controllers;
 
 use common\models\Jogo;
 use common\models\Tag;
+use Yii;
 use yii\data\ActiveDataProvider;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -82,8 +84,16 @@ class JogoController extends Controller
         $model = new Jogo();
         $tags = Tag::find()->all();
 
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
+                foreach ($tagsSelected as $tag) {
+                    $tag = Tag::findOne($tag);
+                    if($tag) {
+                        $model->link('tags', $tag);
+                    }
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -106,8 +116,23 @@ class JogoController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $tags = Tag::find()->all();
+
+        if (!$model) {
+            throw new NotFoundHttpException("Não foi possível encontrar o jogo  solicitado.");
+        }
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
+            $model->unlinkAll('tags', true);
+            foreach ($tagsSelected as $tagId) {
+                $tag = Tag::findOne($tagId);
+                if ($tag) {
+                    $model->link('tags', $tag);
+                }
+            }
+
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
