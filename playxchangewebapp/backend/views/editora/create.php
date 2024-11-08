@@ -2,19 +2,26 @@
 
 use yii\helpers\Html;
 
-/** @var yii\web\View $this */
-/** @var common\models\Editora $model */
+/* @var $this yii\web\View */
+/* @var $model common\models\Editora */
 
 $this->title = 'Create Editora';
 $this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="editora-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <?=$this->render('_form', [
+                        'model' => $model
+                    ]) ?>
+                </div>
+            </div>
+        </div>
+        <!--.card-body-->
+    </div>
+    <!--.card-->
 </div>

@@ -13,7 +13,7 @@ $this->title = 'Entrar';
 $img = Yii::getAlias('@web') . "/images/authForms/login.jpg";
 
 ?>
-<div class="site-login my-5">
+<div class="site-login my-xl-2">
     <div class="row">
         <div class="col-lg-10 col-xl-9 mx-auto">
             <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
@@ -61,7 +61,7 @@ $img = Yii::getAlias('@web') . "/images/authForms/login.jpg";
                         Need a new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
                     </div>
 
-                    <div class="d-grid mb-2">
+                    <div class="d-grid">
                         <?= Html::submitButton('Login', ['class' => 'btn btn-lg btn-primary btn-login fw-bold text-uppercase', 'name' => 'login-button']) ?>
                     </div>
 

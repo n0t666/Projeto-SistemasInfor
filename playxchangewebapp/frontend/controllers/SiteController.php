@@ -60,6 +60,7 @@ class SiteController extends Controller
         return [
             'error' => [
                 'class' => \yii\web\ErrorAction::class,
+                'layout' => 'main_without_footer'
             ],
             'captcha' => [
                 'class' => \yii\captcha\CaptchaAction::class,
@@ -85,6 +86,8 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        $this->layout = 'main_without_footer';
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -153,6 +156,8 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
+        $this->layout = 'main_without_footer';
+
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');

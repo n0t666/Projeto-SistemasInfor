@@ -3,16 +3,16 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Editora;
+use common\models\Franquia;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EditoraController implements the CRUD actions for Editora model.
+ * FranquiaController implements the CRUD actions for Franquia model.
  */
-class EditoraController extends Controller
+class FranquiaController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,13 +30,13 @@ class EditoraController extends Controller
     }
 
     /**
-     * Lists all Editora models.
+     * Lists all Franquia models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Editora::find(),
+            'query' => Franquia::find(),
         ]);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class EditoraController extends Controller
     }
 
     /**
-     * Displays a single Editora model.
+     * Displays a single Franquia model.
      * @param int $id ID
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,13 +58,13 @@ class EditoraController extends Controller
     }
 
     /**
-     * Creates a new Editora model.
+     * Creates a new Franquia model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Editora();
+        $model = new Franquia();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -76,7 +76,7 @@ class EditoraController extends Controller
     }
 
     /**
-     * Updates an existing Editora model.
+     * Updates an existing Franquia model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return mixed
@@ -96,7 +96,7 @@ class EditoraController extends Controller
     }
 
     /**
-     * Deletes an existing Editora model.
+     * Deletes an existing Franquia model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return mixed
@@ -110,15 +110,15 @@ class EditoraController extends Controller
     }
 
     /**
-     * Finds the Editora model based on its primary key value.
+     * Finds the Franquia model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Editora the loaded model
+     * @return Franquia the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Editora::findOne($id)) !== null) {
+        if (($model = Franquia::findOne($id)) !== null) {
             return $model;
         }
 

@@ -62,7 +62,7 @@ class Avaliacao extends \yii\db\ActiveRecord
      */
     public function getComentarios()
     {
-        return $this->hasMany(Comentarios::class, ['utilizador_id' => 'utilizador_id', 'jogo_id' => 'jogo_id']);
+        return $this->hasMany(Comentario::class, ['utilizador_id' => 'utilizador_id', 'jogo_id' => 'jogo_id']);
     }
 
     /**
@@ -72,7 +72,7 @@ class Avaliacao extends \yii\db\ActiveRecord
      */
     public function getJogo()
     {
-        return $this->hasOne(Jogos::class, ['id' => 'jogo_id']);
+        return $this->hasOne(Jogo::class, ['id' => 'jogo_id']);
     }
 
     /**

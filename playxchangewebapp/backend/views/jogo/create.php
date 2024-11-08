@@ -2,21 +2,26 @@
 
 use yii\helpers\Html;
 
-/** @var yii\web\View $this */
-/** @var common\models\Jogo $model */
-/** @var \common\models\Tag[] $tags  */
+/* @var $this yii\web\View */
+/* @var $model common\models\Jogo */
 
 $this->title = 'Create Jogo';
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
-<div class="jogo-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model, 'tags' => $tags
-    ]) ?>
-
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <?=$this->render('_form', [
+                        'model' => $model
+                    ]) ?>
+                </div>
+            </div>
+        </div>
+        <!--.card-body-->
+    </div>
+    <!--.card-->
 </div>

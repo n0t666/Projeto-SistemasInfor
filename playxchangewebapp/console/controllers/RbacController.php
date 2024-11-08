@@ -142,6 +142,9 @@ class RbacController extends Controller
         $visualizarTudo = $auth->createPermission('verTudo');
         $cancelarEncomenda = $auth->createPermission('cancelarEncomenda');
 
+        $associarRoles = $auth->createPermission('associarRoles');
+        $associarRoles->description = 'Associar um certo utilizador a uma role';
+
         $cliente = $auth->createRole('cliente');
         $cliente->addChild($cliente, $usarCodigosProm);
         $cliente->addChild($cliente, $visualizarPerfil);
@@ -301,8 +304,7 @@ class RbacController extends Controller
         $admin->addChild($admin, $criarChaves);
         $admin->addChild($admin,$editarChaves);
         $admin->addChild($admin,$apagarChaves);
-
-
+        $admin->addChild($admin,$associarRoles);
         $auth->add($admin);
 
 

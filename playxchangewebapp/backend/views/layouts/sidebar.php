@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="site/index" class="brand-link">
         <img src="<?=$assetDir?>/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
@@ -63,13 +63,13 @@
                         'label' => 'Gestão de Jogos',
                         'icon' => 'gamepad',
                         'items' => [
-                            ['label' => 'Jogos', 'icon' => 'gamepad', 'url' => ['/game/index']],
-                            ['label' => 'Franquias', 'icon' => 'tag', 'url' => ['/franchise/index']],
-                            ['label' => 'Screenshots', 'icon' => 'images', 'url' => ['/screenshot/index']],
-                            ['label' => 'Distribuidoras', 'icon' => 'store', 'url' => ['/distributor/index']],
-                            ['label' => 'Tags', 'icon' => 'tags', 'url' => ['/tag/index']],
-                            ['label' => 'Editoras', 'icon' => 'book', 'url' => ['/publisher/index']],
-                            ['label' => 'Géneros', 'icon' => 'folder', 'url' => ['/genre/index']],
+                            ['label' => 'Jogos', 'icon' => 'gamepad', 'url' => ['/jogo']],
+                            ['label' => 'Franquias', 'icon' => 'tag', 'url' => ['/franquia']],
+                            ['label' => 'Screenshots', 'icon' => 'images', 'url' => ['/screenshot']],
+                            ['label' => 'Distribuidoras', 'icon' => 'store', 'url' => ['/distributora']],
+                            ['label' => 'Tags', 'icon' => 'tags', 'url' => ['/tag']],
+                            ['label' => 'Editoras', 'icon' => 'book', 'url' => ['/publicadora']],
+                            ['label' => 'Géneros', 'icon' => 'folder', 'url' => ['/genero']],
                         ],
                     ],
                     [
@@ -78,9 +78,9 @@
                         'items' => [
                             ['label' => 'Vendas', 'icon' => 'dollar-sign', 'url' => ['/sales/index']],
                             ['label' => 'Códigos Promocionais', 'icon' => 'tags', 'url' => ['/promo-code/index']],
-                            ['label' => 'Encomendas', 'icon' => 'shopping-basket', 'url' => ['/order/index']],
-                            ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/key/index']],
-                            ['label' => 'Produtos', 'icon' => 'cubes', 'url' => ['/product/index']],
+                            ['label' => 'Encomendas', 'icon' => 'shopping-basket', 'url' => ['/fatura']],
+                            ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/chaves']],
+                            ['label' => 'Produtos', 'icon' => 'cubes', 'url' => ['/produtos']],
                         ],
                     ],
                     ['label' => 'LABELS', 'header' => true],

@@ -1,16 +1,11 @@
 <?php
 
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
-/** @var yii\web\View $this */
-/** @var common\models\Jogo $model */
-/** @var yii\widgets\ActiveForm $form */
-/** @var \common\models\Tag[] $tags  */
-
-var_dump($tags);
-
+/* @var $this yii\web\View */
+/* @var $model common\models\Jogo */
+/* @var $form yii\bootstrap4\ActiveForm */
 ?>
 
 <div class="jogo-form">
@@ -29,13 +24,9 @@ var_dump($tags);
 
     <?= $form->field($model, 'imagemCapa')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'publicadora_id')->textInput() ?>
+    <?= $form->field($model, 'distribuidora_id')->textInput() ?>
 
     <?= $form->field($model, 'editora_id')->textInput() ?>
-
-    <?= $form->field($model, 'tags')->checkboxList(
-        ArrayHelper::map($tags, 'id', 'nome')
-    ) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

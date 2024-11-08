@@ -1,14 +1,14 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
-/** @var yii\web\View $this */
-/** @var common\models\Publicadora $model */
-/** @var yii\widgets\ActiveForm $form */
+/* @var $this yii\web\View */
+/* @var $model common\models\Franquia */
+/* @var $form yii\bootstrap4\ActiveForm */
 ?>
 
-<div class="publicadora-form">
+<div class="franquia-form">
 
     <?php $form = ActiveForm::begin(); ?>
 

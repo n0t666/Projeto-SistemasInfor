@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Editoras';
+$this->title = 'Franquias';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Editora', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Create Franquia', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
 

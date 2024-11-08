@@ -1,52 +1,57 @@
 <?php
 
-use common\models\Jogo;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
-/** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
-
+/* @var $this yii\web\View */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Jogos';
 $this->params['breadcrumbs'][] = $this->title;
-
-
 ?>
-<div class="jogo-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Jogo', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'nome',
-            'dataLancamento',
-            'descricao:ntext',
-            'trailerLink',
-            //'franquia_id',
-            //'imagemCapa',
-            //'publicadora_id',
-            //'editora_id',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Jogo $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
-        ],
-
-    ]); ?>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <?= Html::a('Create Jogo', ['create'], ['class' => 'btn btn-success']) ?>
+                        </div>
+                    </div>
 
 
+
+                    <?= GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
+
+                            'id',
+                            'nome',
+                            'dataLancamento',
+                            'descricao:ntext',
+                            'trailerLink',
+                            //'franquia_id',
+                            //'imagemCapa',
+                            //'distribuidora_id',
+                            //'editora_id',
+
+                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                        ],
+                        'summaryOptions' => ['class' => 'summary mb-2'],
+                        'pager' => [
+                            'class' => 'yii\bootstrap4\LinkPager',
+                        ]
+                    ]); ?>
+
+
+                </div>
+                <!--.card-body-->
+            </div>
+            <!--.card-->
+        </div>
+        <!--.col-md-12-->
+    </div>
+    <!--.row-->
 </div>

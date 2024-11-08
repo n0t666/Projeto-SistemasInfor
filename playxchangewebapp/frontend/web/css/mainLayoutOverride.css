@@ -246,6 +246,7 @@ body {
 
 
 .navbar-nav .nav-link {
+    font-size: 20px;
     position: relative;
     color: #7A7A7A;
     transition: color 0.3s ease;
@@ -424,4 +425,9 @@ input[type="text"].disabled, input[type="password"].disabled, input[type="email"
     background-color: #BB86FC;
     clip-path: polygon(0% 100%, 100% 50%, 0% 0%);
     margin: 0 10px;
+}
+
+
+.site-login{
+    overflow: hidden !important;
 }

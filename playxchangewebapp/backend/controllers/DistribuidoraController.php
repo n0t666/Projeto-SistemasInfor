@@ -2,54 +2,41 @@
 
 namespace backend\controllers;
 
-use common\models\Publicadora;
+use Yii;
+use common\models\Distribuidora;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PublicadoraController implements the CRUD actions for Publicadora model.
+ * DistribuidoraController implements the CRUD actions for Distribuidora model.
  */
-class PublicadoraController extends Controller
+class DistribuidoraController extends Controller
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
-            ]
-        );
+            ],
+        ];
     }
 
     /**
-     * Lists all Publicadora models.
-     *
-     * @return string
+     * Lists all Distribuidora models.
+     * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Publicadora::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
+            'query' => Distribuidora::find(),
         ]);
 
         return $this->render('index', [
@@ -58,9 +45,9 @@ class PublicadoraController extends Controller
     }
 
     /**
-     * Displays a single Publicadora model.
+     * Displays a single Distribuidora model.
      * @param int $id ID
-     * @return string
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
@@ -71,20 +58,16 @@ class PublicadoraController extends Controller
     }
 
     /**
-     * Creates a new Publicadora model.
+     * Creates a new Distribuidora model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Publicadora();
+        $model = new Distribuidora();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -93,17 +76,17 @@ class PublicadoraController extends Controller
     }
 
     /**
-     * Updates an existing Publicadora model.
+     * Updates an existing Distribuidora model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -113,10 +96,10 @@ class PublicadoraController extends Controller
     }
 
     /**
-     * Deletes an existing Publicadora model.
+     * Deletes an existing Distribuidora model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
@@ -127,15 +110,15 @@ class PublicadoraController extends Controller
     }
 
     /**
-     * Finds the Publicadora model based on its primary key value.
+     * Finds the Distribuidora model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Publicadora the loaded model
+     * @return Distribuidora the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Publicadora::findOne(['id' => $id])) !== null) {
+        if (($model = Distribuidora::findOne($id)) !== null) {
             return $model;
         }
 

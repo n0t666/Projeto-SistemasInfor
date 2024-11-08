@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Editora */
+/* @var $model common\models\Faq */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Faqs', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -31,7 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'attributes' => [
                             'id',
-                            'nome',
+                            'pergunta',
+                            'descricao:ntext',
                         ],
                     ]) ?>
                 </div>
