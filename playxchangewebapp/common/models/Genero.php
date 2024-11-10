@@ -11,7 +11,6 @@ use Yii;
  * @property string $nome
  *
  * @property Jogo[] $jogos
- * @property Jogosgenero[] $jogosgeneros
  */
 class Genero extends \yii\db\ActiveRecord
 {
@@ -31,6 +30,7 @@ class Genero extends \yii\db\ActiveRecord
         return [
             [['nome'], 'required'],
             [['nome'], 'string', 'max' => 100],
+            [['nome'], 'unique'],
         ];
     }
 
@@ -53,15 +53,5 @@ class Genero extends \yii\db\ActiveRecord
     public function getJogos()
     {
         return $this->hasMany(Jogo::class, ['id' => 'jogo_id'])->viaTable('jogosgeneros', ['genero_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Jogosgeneros]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getJogosgeneros()
-    {
-        return $this->hasMany(Jogosgenero::class, ['genero_id' => 'id']);
     }
 }

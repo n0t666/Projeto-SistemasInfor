@@ -28,6 +28,7 @@ class Franquia extends \yii\db\ActiveRecord
         return [
             [['nome'], 'required'],
             [['nome'], 'string', 'max' => 100],
+            [['nome'], 'unique'],
         ];
     }
 
@@ -41,4 +42,5 @@ class Franquia extends \yii\db\ActiveRecord
             'nome' => 'Nome',
         ];
     }
+
 }

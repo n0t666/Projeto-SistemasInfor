@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\base\Behavior;
+use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "jogos".
@@ -17,21 +20,18 @@ use Yii;
  * @property int $distribuidora_id
  * @property int $editora_id
  *
- * @property Avaliaco[] $avaliacos
+ * @property Avaliacao[] $avaliacos
  * @property Distribuidora $distribuidora
  * @property Editora $editora
  * @property Franquia $franquia
  * @property Genero[] $generos
- * @property Jogosgenero[] $jogosgeneros
- * @property Jogostag[] $jogostags
  * @property Lista[] $listas
- * @property Listasjogo[] $listasjogos
  * @property Produto[] $produtos
  * @property Screenshot[] $screenshots
  * @property Tag[] $tags
- * @property Utilizadoresjogo[] $utilizadoresjogos
- * @property Userdatum[] $utilizadors
- * @property Userdatum[] $utilizadors0
+ * @property UtilizadorJogo[] $utilizadoresjogos
+ * @property Userdata[] $utilizadors
+ * @property Userdata[] $utilizadors0
  */
 class Jogo extends \yii\db\ActiveRecord
 {
@@ -50,7 +50,7 @@ class Jogo extends \yii\db\ActiveRecord
     {
         return [
             [['nome', 'dataLancamento', 'trailerLink', 'imagemCapa', 'distribuidora_id', 'editora_id'], 'required'],
-            [['dataLancamento'], 'safe'],
+            [['dataLancamento'], 'date', 'format' => 'php:d/m/Y'],
             [['descricao'], 'string'],
             [['franquia_id', 'distribuidora_id', 'editora_id'], 'integer'],
             [['nome'], 'string', 'max' => 200],
@@ -69,13 +69,13 @@ class Jogo extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'dataLancamento' => 'Data Lancamento',
-            'descricao' => 'Descricao',
-            'trailerLink' => 'Trailer Link',
-            'franquia_id' => 'Franquia ID',
-            'imagemCapa' => 'Imagem Capa',
-            'distribuidora_id' => 'Distribuidora ID',
-            'editora_id' => 'Editora ID',
+            'dataLancamento' => 'Data De Lançamento',
+            'descricao' => 'Descrição',
+            'trailerLink' => 'Trailer',
+            'franquia_id' => 'Franquia',
+            'imagemCapa' => 'Capa',
+            'distribuidora_id' => 'Distribuidora',
+            'editora_id' => 'Editora',
         ];
     }
 
@@ -84,9 +84,9 @@ class Jogo extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAvaliacos()
+    public function getAvaliacoes()
     {
-        return $this->hasMany(Avaliaco::class, ['jogo_id' => 'id']);
+        return $this->hasMany(Avaliacao::class, ['jogo_id' => 'id']);
     }
 
     /**
@@ -129,25 +129,8 @@ class Jogo extends \yii\db\ActiveRecord
         return $this->hasMany(Genero::class, ['id' => 'genero_id'])->viaTable('jogosgeneros', ['jogo_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Jogosgeneros]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getJogosgeneros()
-    {
-        return $this->hasMany(Jogosgenero::class, ['jogo_id' => 'id']);
-    }
 
-    /**
-     * Gets query for [[Jogostags]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getJogostags()
-    {
-        return $this->hasMany(Jogostag::class, ['jogo_id' => 'id']);
-    }
+
 
     /**
      * Gets query for [[Listas]].
@@ -188,6 +171,39 @@ class Jogo extends \yii\db\ActiveRecord
     public function getTags()
     {
         return $this->hasMany(Tag::class, ['id' => 'tag_id'])->viaTable('jogostags', ['jogo_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Utilizadoresjogos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUtilizadoresjogos()
+    {
+        return $this->hasMany(UtilizadorJogo::class, ['jogo_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Utilizadors0]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUtilizadorjogos()
+    {
+        return $this->hasMany(Userdata::class, ['id' => 'utilizador_id'])->viaTable('utilizadoresjogos', ['jogo_id' => 'id']);
+    }
+
+    public function behaviors(){
+        return [
+            [
+                'class'      => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['dataLancamento'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['dataLancamento'],
+                ],
+                'value'       => date('Y-m-d'),
+            ],
+        ];
     }
 
 

@@ -31,7 +31,7 @@ class Screenshot extends \yii\db\ActiveRecord
         return [
             [['jogo_id', 'caminho'], 'required'],
             [['jogo_id'], 'integer'],
-            [['caminho'], 'string', 'max' => 255],
+            [['filename'], 'string', 'max' => 255],
             [['jogo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Jogo::class, 'targetAttribute' => ['jogo_id' => 'id']],
         ];
     }
@@ -44,7 +44,7 @@ class Screenshot extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'jogo_id' => 'Jogo ID',
-            'caminho' => 'Caminho',
+            'filename' => 'Filename',
         ];
     }
 

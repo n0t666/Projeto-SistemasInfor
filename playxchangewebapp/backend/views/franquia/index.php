@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Franquia', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar franquia', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
 

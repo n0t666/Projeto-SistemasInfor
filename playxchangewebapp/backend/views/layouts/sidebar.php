@@ -35,30 +35,7 @@
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-                    [
-                        'label' => 'Starter Pages',
-                        'icon' => 'tachometer-alt',
-                        'badge' => '<span class="right badge badge-info">2</span>',
-                        'items' => [
-                            ['label' => 'Active Page', 'url' => ['site/index'], 'iconStyle' => 'far'],
-                            ['label' => 'Inactive Page', 'iconStyle' => 'far'],
-                        ]
-                    ],
-                    ['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
-                    ['label' => 'Yii2 PROVIDED', 'header' => true],
-                    ['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],
-                    ['label' => 'Gii',  'icon' => 'file-code', 'url' => ['/gii'], 'target' => '_blank'],
-                    ['label' => 'Debug', 'icon' => 'bug', 'url' => ['/debug'], 'target' => '_blank'],
                     ['label' => 'Funcionalidades de gestão', 'header' => true],
-                    [
-                        'label' => 'Gestão de Utilizadores',
-                        'icon' => 'users',
-                        'items' => [
-                            ['label' => 'Utilizadores', 'icon' => 'user', 'url' => ['/user/index']],
-                            ['label' => 'Listas', 'icon' => 'list', 'url' => ['/user/lists']],
-                            ['label' => 'Sugestões de Funcionalidades', 'icon' => 'lightbulb', 'url' => ['/suggestions/index']],
-                        ],
-                    ],
                     [
                         'label' => 'Gestão de Jogos',
                         'icon' => 'gamepad',
@@ -68,25 +45,30 @@
                             ['label' => 'Screenshots', 'icon' => 'images', 'url' => ['/screenshot']],
                             ['label' => 'Distribuidoras', 'icon' => 'store', 'url' => ['/distributora']],
                             ['label' => 'Tags', 'icon' => 'tags', 'url' => ['/tag']],
-                            ['label' => 'Editoras', 'icon' => 'book', 'url' => ['/publicadora']],
+                            ['label' => 'Editoras', 'icon' => 'book', 'url' => ['/editora']],
                             ['label' => 'Géneros', 'icon' => 'folder', 'url' => ['/genero']],
+                        ],
+                    ],
+                    [
+                        'label' => 'Gestão de Utilizadores',
+                        'icon' => 'users',
+                        'items' => [
+                            ['label' => 'Utilizadores', 'icon' => 'user', 'url' => ['/utilizador/']],
+                            ['label' => 'Listas', 'icon' => 'list', 'url' => ['/listas']],
+                            ['label' => 'Sugestões de Funcionalidades', 'icon' => 'lightbulb', 'url' => ['/suggestions/index']],
                         ],
                     ],
                     [
                         'label' => 'Gestão de Vendas',
                         'icon' => 'shopping-cart',
                         'items' => [
-                            ['label' => 'Vendas', 'icon' => 'dollar-sign', 'url' => ['/sales/index']],
+                            ['label' => 'Vendas', 'icon' => 'dollar-sign', 'url' => ['/faturas']],
                             ['label' => 'Códigos Promocionais', 'icon' => 'tags', 'url' => ['/promo-code/index']],
                             ['label' => 'Encomendas', 'icon' => 'shopping-basket', 'url' => ['/fatura']],
                             ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/chaves']],
                             ['label' => 'Produtos', 'icon' => 'cubes', 'url' => ['/produtos']],
                         ],
                     ],
-                    ['label' => 'LABELS', 'header' => true],
-                    ['label' => 'Important', 'iconStyle' => 'far', 'iconClassAdded' => 'text-danger'],
-                    ['label' => 'Warning', 'iconClass' => 'nav-icon far fa-circle text-warning'],
-                    ['label' => 'Informational', 'iconStyle' => 'far', 'iconClassAdded' => 'text-info'],
                 ],
             ]);
             ?>

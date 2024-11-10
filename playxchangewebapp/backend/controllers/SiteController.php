@@ -2,8 +2,13 @@
 
 namespace backend\controllers;
 
+use common\models\Fatura;
+use common\models\Jogo;
 use common\models\LoginForm;
+use common\models\Produto;
+use common\models\User;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -28,9 +33,14 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin','funcionario','moderador'],
                     ],
                 ],
             ],
@@ -62,7 +72,33 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $ultimosMeses = strtotime('-6 month'); // 6 meses
+        $ultimosUtilizadores = User::find()->where(['>=','created_at',$ultimosMeses])->count();
+        $totalVendas = Fatura::find()->count();
+        $totalJogos = Jogo::find()->count();
+        $progressoUtilizadores =  ($ultimosUtilizadores / Yii::$app->params['metas']['crescimentoUtilizadores']) * 100;
+        $progressoVendas = ($totalVendas / Yii::$app->params['metas']['crescimentoVendas']) * 100;
+        $progressoJogos = ($totalJogos / Yii::$app->params['metas']['crescimentoJogos']) * 100;
+
+        $dataProviderProdutos = new ActiveDataProvider([
+            'query' => Produto::find()->orderBy(['id' => SORT_DESC])->limit(5),
+            'pagination' => false,
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
+        ]);
+
+        return $this->render('index',[
+            'ultimosUtilizadores' => $ultimosUtilizadores,
+            'totalVendas' => $totalVendas,
+            'totalJogos' => $totalJogos,
+            'progressoUtilizadores' => $progressoUtilizadores,
+            'progressoVendas' => $progressoVendas,
+            'progressoJogos' => $progressoJogos,
+            'dataProviderProdutos' => $dataProviderProdutos,
+        ]);
     }
 
     /**
@@ -76,7 +112,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $this->layout = 'blank';
+        $this->layout = 'main-login';
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {

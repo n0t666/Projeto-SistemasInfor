@@ -30,6 +30,7 @@ class Distribuidora extends \yii\db\ActiveRecord
         return [
             [['nome'], 'required'],
             [['nome'], 'string', 'max' => 255],
+            [['nome'], 'unique'],
         ];
     }
 

@@ -3,10 +3,10 @@
 /* @var $this yii\web\View */
 /* @var $model common\models\Tag */
 
-$this->title = 'Update Tag: ' . $model->id;
+$this->title = 'Atualizar Tag: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Tags', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Atualizar';
 ?>
 
 <div class="container-fluid">

@@ -28,6 +28,7 @@ class Tag extends \yii\db\ActiveRecord
         return [
             [['nome'], 'required'],
             [['nome'], 'string', 'max' => 200],
+            [['nome'], 'unique'],
         ];
     }
 

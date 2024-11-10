@@ -1,11 +1,22 @@
 <?php
 
+use common\models\Distribuidora;
+use common\models\Editora;
+use common\models\Franquia;
+use common\models\Genero;
+use common\models\Tag;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Jogo */
 
-$this->title = 'Create Jogo';
+/* @var Franquia[] $franquias */
+/* @var Distribuidora[] $distribuidoras */
+/* @var Editora[] $editoras */
+/* @var Tag[] $tags */
+/* @var Genero[] $generos */
+
+$this->title = 'Criar Jogo';
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,7 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="row">
                 <div class="col-md-12">
                     <?=$this->render('_form', [
-                        'model' => $model
+                        'model' => $model,
+                        'franquias' => $franquias,
+                        'distribuidoras'=>$distribuidoras,
+                        'editoras'=>$editoras,
+                        'tags'=>$tags,
+                        'generos' => $generos,
                     ]) ?>
                 </div>
             </div>

@@ -5,19 +5,21 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "Publicadoras".
+ * This is the model class for table "metodosenvio".
  *
  * @property int $id
  * @property string $nome
+ *
+ * @property Fatura[] $faturas
  */
-class Publicadora extends \yii\db\ActiveRecord
+class MetodoEnvio extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'Publicadoras';
+        return 'metodosenvio';
     }
 
     /**
@@ -27,7 +29,8 @@ class Publicadora extends \yii\db\ActiveRecord
     {
         return [
             [['nome'], 'required'],
-            [['nome'], 'string', 'max' => 255],
+            [['nome'], 'string', 'max' => 150],
+            [['nome'], 'unique'],
         ];
     }
 
@@ -40,5 +43,15 @@ class Publicadora extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nome' => 'Nome',
         ];
+    }
+
+    /**
+     * Gets query for [[Faturas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFaturas()
+    {
+        return $this->hasMany(Fatura::class, ['envio_id' => 'id']);
     }
 }

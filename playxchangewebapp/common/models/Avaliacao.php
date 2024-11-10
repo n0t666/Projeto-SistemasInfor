@@ -12,8 +12,8 @@ use Yii;
  * @property float $numEstrelas
  * @property string $dataAvaliacao
  *
- * @property Comentarios[] $comentarios
- * @property Jogos $jogo
+ * @property Comentario[] $comentarios
+ * @property Jogo $jogo
  * @property Userdata $utilizador
  */
 class Avaliacao extends \yii\db\ActiveRecord
@@ -37,7 +37,7 @@ class Avaliacao extends \yii\db\ActiveRecord
             [['numEstrelas'], 'number'],
             [['dataAvaliacao'], 'safe'],
             [['utilizador_id', 'jogo_id'], 'unique', 'targetAttribute' => ['utilizador_id', 'jogo_id']],
-            [['jogo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Jogos::class, 'targetAttribute' => ['jogo_id' => 'id']],
+            [['jogo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Jogo::class, 'targetAttribute' => ['jogo_id' => 'id']],
             [['utilizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userdata::class, 'targetAttribute' => ['utilizador_id' => 'id']],
         ];
     }
@@ -53,16 +53,6 @@ class Avaliacao extends \yii\db\ActiveRecord
             'numEstrelas' => 'Num Estrelas',
             'dataAvaliacao' => 'Data Avaliacao',
         ];
-    }
-
-    /**
-     * Gets query for [[Comentarios]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getComentarios()
-    {
-        return $this->hasMany(Comentario::class, ['utilizador_id' => 'utilizador_id', 'jogo_id' => 'jogo_id']);
     }
 
     /**

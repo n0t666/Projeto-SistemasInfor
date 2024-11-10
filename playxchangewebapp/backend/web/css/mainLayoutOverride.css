@@ -1,0 +1,23 @@
+.jogo-capa img {
+    max-height: 400px; /* Ensure the image doesn't take too much space */
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.model-details-badge{
+    font-size: 0.875rem;
+    padding: 8px 12px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.model-details-badge:hover{
+    transform: scale(1.1);
+}
+
