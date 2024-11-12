@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Editora */
 
-$this->title = 'Create Editora';
+$this->title = 'Criar Editora';
 $this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Editora */
+/* @var $model common\models\Chave */
 
-$this->title = $model->nome;
-$this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
+$this->title = 'Chave: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Chaves', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -21,9 +21,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'attributes' => [
                             'id',
-                            'nome',
+                            'produto_id',
+                            'plataforma_id',
+                            'chave',
+                            'dataGeracao',
+                            'dataExpiracao',
+                            'isUsada',
                         ],
                     ]) ?>
+
                     <div class="row mt-4">
                         <div class="col-md-6">
                             <?= Html::a('Atualizar', ['update', 'id' => $model->id], [
@@ -40,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]) ?>
                         </div>
                     </div>
+
                 </div>
                 <!--.col-md-12-->
             </div>

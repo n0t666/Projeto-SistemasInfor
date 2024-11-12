@@ -32,7 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'format' => ['date', 'php:d/m/Y'],
                             ],
                             'descricao:ntext',
-                            'trailerLink',
+                            [
+                                'attribute' => 'trailerLink',
+                                'value' => function ($model) {
+                                    return \Yii::$app->formatter->asUrl($model->trailerLink, ['target' => '_blank']);
+                                },
+                                'format' => 'raw',
+                            ],
                             [
                                 'attribute' => 'franquia_id',
                                 'value' => $model->franquia ? $model->franquia->nome : 'N/A',

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "avaliacoes".
@@ -52,6 +53,18 @@ class Avaliacao extends \yii\db\ActiveRecord
             'jogo_id' => 'Jogo ID',
             'numEstrelas' => 'Num Estrelas',
             'dataAvaliacao' => 'Data Avaliacao',
+        ];
+    }
+
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                TimestampBehavior::className(),
+                'createdAtAttribute' => 'dataAvaliacao',
+                'updatedAtAttribute' => false,
+             ],
         ];
     }
 

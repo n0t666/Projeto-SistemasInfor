@@ -240,6 +240,12 @@ class RbacController extends Controller
         $associarRoles->description = 'Associar um certo utilizador a uma role';
         $auth->add($associarRoles);
 
+        $acederBackend = $auth->createPermission('acederBackend');
+        $auth->add($acederBackend);
+
+        $acederFrontend = $auth->createPermission('acederFrontend');
+        $auth->add($acederFrontend);
+
         $cliente = $auth->createRole('cliente');
         $auth->add($cliente);
         $auth->addChild($cliente, $usarCodigosProm);
@@ -284,6 +290,7 @@ class RbacController extends Controller
         $auth->addChild($cliente, $adicionarJogados);
         $auth->addChild($cliente, $removerJogados);
         $auth->addChild($cliente, $editarComentario);
+        $auth->addChild($cliente, $acederFrontend);
 
         $funcionario = $auth->createRole('funcionario');
         $auth->add($funcionario);
@@ -292,6 +299,7 @@ class RbacController extends Controller
         $auth->addChild($funcionario,$editarProdutos);
         $auth->addChild($funcionario,$cancelarEncomenda);
         $auth->addChild($funcionario,$visualizarTudo);
+        $auth->addChild($funcionario,$acederBackend);
 
 
         $moderador = $auth->createRole('moderador');
@@ -305,7 +313,7 @@ class RbacController extends Controller
         $auth->addChild($moderador,$alterarEstadoEncomenda);
         $auth->addChild($moderador,$alterarEstadoSugestao);
         $auth->addChild($moderador,$visualizarTudo);
-
+        $auth->addChild($moderador,$acederBackend);
 
         $admin = $auth->createRole('admin');
         $auth->add($admin);
@@ -372,6 +380,9 @@ class RbacController extends Controller
         $auth->addChild($admin,$apagarChaves);
         $auth->addChild($admin,$associarRoles);
         $auth->assign($admin, 1);
+        $auth->assign($moderador, 2);
+        $auth->assign($funcionario, 3);
+        $auth->assign($cliente, 4);
     }
 
 }

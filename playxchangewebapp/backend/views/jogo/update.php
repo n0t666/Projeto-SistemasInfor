@@ -9,10 +9,16 @@
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
 
+use common\models\Distribuidora;
+use common\models\Editora;
+use common\models\Franquia;
+use common\models\Genero;
+use common\models\Tag;
+
 $this->title = 'Atualizar Jogo: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Atualizar';
 ?>
 
 <div class="container-fluid">

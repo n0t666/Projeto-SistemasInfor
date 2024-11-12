@@ -34,11 +34,18 @@ use yii\bootstrap4\ActiveForm;
             'inputFormat' => 'dd/mm/yyyy',
             'clearIncomplete' => true,
         ],
+
     ]) ?>
+
+    <?= $form->field($model, 'dataLancamento')->widget(\y) ?>
+
+
+
+
 
     <?= $form->field($model, 'descricao')->textarea(['rows' => 6, 'class' => 'form-control']) ?>
 
-    <?= $form->field($model, 'trailerLink')->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
+    <?= $form->field($model, 'trailerLink')->textInput(['maxlength' => true, 'class' => 'form-control','type'=> 'url']) ?>
 
     <?= $form->field($model, 'franquia_id')->dropDownList(
         ArrayHelper::map($franquias, 'id', 'nome'),

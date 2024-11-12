@@ -1,11 +1,11 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Editora */
+/* @var $model common\models\SugestaoFuncionalidade */
 
-$this->title = 'Editar Editora: ' . $model->nome;
-$this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->nome, 'url' => ['view', 'id' => $model->id]];
+$this->title = 'Update Sugestao Funcionalidade: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Sugestao Funcionalidades', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 

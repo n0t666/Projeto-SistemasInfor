@@ -3,7 +3,6 @@
 use yii\grid\GridView;
 
 $this->title = 'Página inicial';
-$this->params['breadcrumbs'] = [['label' => $this->title]];
 
 /* @var $ultimosUtilizadores */
 /* @var $totalVendas */
@@ -21,7 +20,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
     <div class="row">
         <div class="col-md-4 col-sm-6 col-12">
             <?= \hail812\adminlte\widgets\InfoBox::widget([
-                'text' => 'Número de novos utilizadores nos últimos 6 meses',
+                'text' => 'Novos utilizadores nos últimos 6 meses',
                 'number' => $ultimosUtilizadores,
                 'icon' => 'fas fa-users',
                 'iconTheme' => 'bg-info',
@@ -178,9 +177,10 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                 'columns' => [
                     ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
                     //'id',
-                    'nome',
+                    'jogo_id',
+                    //'plataforma_id',
                     'preço',
-                    'created_at:datetime',
+                    'quantidade',
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'template' => '{view}',
@@ -209,6 +209,13 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                                 'attribute' => 'quantidade',
                                 'headerOptions' => ['class' => 'text-center'],
                                 'contentOptions' => ['class' => 'text-center'],
+                            ],
+                            [
+                                'label' => 'Preço',
+                                'attribute' => 'preco',
+                                'format' => ['currency'],
+                                'headerOptions' => ['class' => 'text-center'],
+                                'contentOptions' => ['class' => 'text-right'],
                             ],
                         ],
                         'tableOptions' => ['class' => 'table table-sm table-striped table-bordered m-0'],

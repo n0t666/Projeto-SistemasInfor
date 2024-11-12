@@ -1,12 +1,12 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Editora */
+/* @var $model common\models\Chave */
 
-$this->title = 'Editar Editora: ' . $model->nome;
-$this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->nome, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Atualizar Chave: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Chaves', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Atualizar';
 ?>
 
 <div class="container-fluid">

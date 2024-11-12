@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="site/index" class="brand-link">
+    <a href="<?=\yii\helpers\Url::home()?>" class="brand-link">
         <img src="<?=$assetDir?>/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
@@ -43,7 +43,7 @@
                             ['label' => 'Jogos', 'icon' => 'gamepad', 'url' => ['/jogo']],
                             ['label' => 'Franquias', 'icon' => 'tag', 'url' => ['/franquia']],
                             ['label' => 'Screenshots', 'icon' => 'images', 'url' => ['/screenshot']],
-                            ['label' => 'Distribuidoras', 'icon' => 'store', 'url' => ['/distributora']],
+                            ['label' => 'Distribuidoras', 'icon' => 'store', 'url' => ['/distribuidora']],
                             ['label' => 'Tags', 'icon' => 'tags', 'url' => ['/tag']],
                             ['label' => 'Editoras', 'icon' => 'book', 'url' => ['/editora']],
                             ['label' => 'Géneros', 'icon' => 'folder', 'url' => ['/genero']],
@@ -53,8 +53,8 @@
                         'label' => 'Gestão de Utilizadores',
                         'icon' => 'users',
                         'items' => [
-                            ['label' => 'Utilizadores', 'icon' => 'user', 'url' => ['/utilizador/']],
-                            ['label' => 'Listas', 'icon' => 'list', 'url' => ['/listas']],
+                            ['label' => 'Utilizadores', 'icon' => 'user', 'url' => ['/user/']],
+                            ['label' => 'Listas', 'icon' => 'list', 'url' => ['/lista']],
                             ['label' => 'Sugestões de Funcionalidades', 'icon' => 'lightbulb', 'url' => ['/suggestions/index']],
                         ],
                     ],
@@ -62,11 +62,10 @@
                         'label' => 'Gestão de Vendas',
                         'icon' => 'shopping-cart',
                         'items' => [
-                            ['label' => 'Vendas', 'icon' => 'dollar-sign', 'url' => ['/faturas']],
-                            ['label' => 'Códigos Promocionais', 'icon' => 'tags', 'url' => ['/promo-code/index']],
+                            ['label' => 'Códigos Promocionais', 'icon' => 'tags', 'url' => ['/codigo-promocional']],
                             ['label' => 'Encomendas', 'icon' => 'shopping-basket', 'url' => ['/fatura']],
-                            ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/chaves']],
-                            ['label' => 'Produtos', 'icon' => 'cubes', 'url' => ['/produtos']],
+                            ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/chave']],
+                            ['label' => 'Produtos', 'icon' => 'cubes', 'url' => ['/produto']],
                         ],
                     ],
                 ],

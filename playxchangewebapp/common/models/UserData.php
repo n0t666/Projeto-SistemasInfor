@@ -25,12 +25,9 @@ use Yii;
  * @property Comentario[] $comentarios
  * @property Userdata[] $denunciados
  * @property Userdata[] $denunciantes
- * @property Denuncia[] $denuncias
- * @property Denuncia[] $denuncias0
  * @property Fatura[] $faturas
  * @property SugestaoFuncionalidade[] $funcionalidades
- * @property Gostoscomentario[] $gostoscomentarios
- * @property Gostoslista[] $gostoslistas
+ * @property GostoComentario[] $gostoscomentarios
  * @property Jogo[] $jogos
  * @property Jogo[] $jogos0
  * @property Listabloqueio[] $listabloqueios
@@ -39,16 +36,23 @@ use Yii;
  * @property Lista[] $listas0
  * @property Userdata[] $seguidors
  * @property Userdata[] $seguidos
- * @property Sugestoesfuncionalidade[] $sugestoesfuncionalidades
+ * @property SugestaoFuncionalidade[] $sugestoesfuncionalidades
  * @property User $user
- * @property Utilizacaocodigo[] $utilizacaocodigos
  * @property Userdata[] $utilizadorBloqueados
- * @property Utilizadoresjogo[] $utilizadoresjogos
+ * @property UtilizadorJogo[] $utilizadoresjogos
  * @property Userdata[] $utilizadors
- * @property Votosfuncionalidade[] $votosfuncionalidades
+ * @property VotoFuncionalidade[] $votosfuncionalidades
  */
 class Userdata extends \yii\db\ActiveRecord
 {
+
+    CONST STATUS_PUBLIC = 0; // Todos tem permissões para visualizar
+
+    CONST STATUS_PRIVATE = 1; // Apenas o utilizador pode visualizar
+
+    CONST STATUS_MUTUAL = 2; // Para pessoas que se seguem mutuamente
+
+
     /**
      * {@inheritdoc}
      */
@@ -72,7 +76,13 @@ class Userdata extends \yii\db\ActiveRecord
             [['fotoCapa', 'fotoPerfil'], 'string', 'max' => 255],
             [['nif'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-        ];
+            ['privacidadeSeguidores', 'default', 'value' => self::STATUS_PUBLIC],
+            ['privacidadeSeguidores', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
+            ['privacidadeFavoritos', 'default', 'value' => self::STATUS_PUBLIC],
+            ['privacidadeFavoritos', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
+            ['privacidadeJogos', 'default', 'value' => self::STATUS_PUBLIC],
+            ['privacidadeJogos', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
+            ];
     }
 
     /**

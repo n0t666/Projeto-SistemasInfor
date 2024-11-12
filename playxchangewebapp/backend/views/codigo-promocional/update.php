@@ -1,11 +1,11 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Editora */
+/* @var $model common\models\CodigoPromocional */
 
-$this->title = 'Editar Editora: ' . $model->nome;
-$this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->nome, 'url' => ['view', 'id' => $model->id]];
+$this->title = 'Update Codigo Promocional: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Codigo Promocionals', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 

@@ -1,12 +1,13 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $model common\models\Editora */
+use yii\helpers\Html;
 
-$this->title = 'Editar Editora: ' . $model->nome;
-$this->params['breadcrumbs'][] = ['label' => 'Editoras', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->nome, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+/* @var $this yii\web\View */
+/* @var $model common\models\Produto */
+
+$this->title = 'Create Produto';
+$this->params['breadcrumbs'][] = ['label' => 'Produtos', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="container-fluid">

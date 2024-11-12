@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Editoras';
+$this->title = 'Sugestao Funcionalidades';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Criar Editora', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Create Sugestao Funcionalidade', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
 
@@ -28,7 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'yii\grid\SerialColumn'],
 
                             'id',
-                            'nome',
+                            'utilizador_id',
+                            'descricao:ntext',
+                            'titulo',
+                            'dataSugestao',
+                            //'estado',
 
                             ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
                         ],
