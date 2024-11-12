@@ -49,10 +49,10 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'utilizador_id' => 'Utilizador ID',
-            'jogo_id' => 'Jogo ID',
-            'numEstrelas' => 'Num Estrelas',
-            'dataAvaliacao' => 'Data Avaliacao',
+            'utilizador_id' => 'Utilizador',
+            'jogo_id' => 'Jogo',
+            'numEstrelas' => 'Número de estrelas',
+            'dataAvaliacao' => 'Data da avaliação ',
         ];
     }
 

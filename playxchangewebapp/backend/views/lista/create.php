@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Lista */
 
-$this->title = 'Create Lista';
+$this->title = 'Criar Lista';
 $this->params['breadcrumbs'][] = ['label' => 'Listas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

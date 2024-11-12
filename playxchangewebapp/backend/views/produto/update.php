@@ -3,10 +3,10 @@
 /* @var $this yii\web\View */
 /* @var $model common\models\Produto */
 
-$this->title = 'Update Produto: ' . $model->id;
+$this->title = 'Atualizar Produto: ' . $model->jogo->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Produtos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = ['label' => $model->jogo->nome, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Atualizar';
 ?>
 
 <div class="container-fluid">

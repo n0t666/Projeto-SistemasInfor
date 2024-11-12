@@ -5,6 +5,7 @@ use common\models\Editora;
 use common\models\Franquia;
 use common\models\Genero;
 use common\models\Tag;
+use kartik\date\DatePicker;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
@@ -19,6 +20,10 @@ use yii\bootstrap4\ActiveForm;
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
 
+
+var_dump($model->dataLancamento);
+
+
 ?>
 
 <div class="jogo-form">
@@ -27,20 +32,17 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
 
-    <?= $form->field($model, 'dataLancamento')->widget(\yii\widgets\MaskedInput::class, [
-        'mask' => '99/99/9999',
-        'clientOptions' => [
-            'alias' => 'datetime',
-            'inputFormat' => 'dd/mm/yyyy',
-            'clearIncomplete' => true,
-        ],
-
-    ]) ?>
-
-    <?= $form->field($model, 'dataLancamento')->widget(\y) ?>
-
-
-
+    <?= $form->field($model, 'dataLancamento')->widget(DatePicker::class, [
+            'options' => ['placeholder' => 'Introduza a data de lançamento ...'],
+            'pluginOptions' => [
+                'todayHighlight' => true,
+                'todayBtn' => true,
+                'autoclose' => true,
+                'format' => 'dd/mm/yyyy'
+                ]
+             ]
+    )
+    ?>
 
 
     <?= $form->field($model, 'descricao')->textarea(['rows' => 6, 'class' => 'form-control']) ?>
@@ -48,28 +50,28 @@ use yii\bootstrap4\ActiveForm;
     <?= $form->field($model, 'trailerLink')->textInput(['maxlength' => true, 'class' => 'form-control','type'=> 'url']) ?>
 
     <?= $form->field($model, 'franquia_id')->dropDownList(
-        ArrayHelper::map($franquias, 'id', 'nome'),
-        ['prompt' => 'Nenhuma franquia..', 'class' => 'form-control select2']
+    ArrayHelper::map($franquias, 'id', 'nome'),
+    ['prompt' => 'Nenhuma franquia..', 'class' => 'form-control select2']
     ) ?>
 
     <?= $form->field($model, 'imagemCapa')->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
 
     <?= $form->field($model, 'distribuidora_id')->dropDownList(
-        ArrayHelper::map($distribuidoras, 'id', 'nome'),
-        ['prompt' => 'Selecione a Distribuidora', 'class' => 'form-control select2']
+    ArrayHelper::map($distribuidoras, 'id', 'nome'),
+    ['prompt' => 'Selecione a Distribuidora', 'class' => 'form-control select2']
     ) ?>
 
     <?= $form->field($model, 'editora_id')->dropDownList(
-        ArrayHelper::map($editoras, 'id', 'nome'),
-        ['prompt' => 'Selecione a Editora', 'class' => 'form-control select2']
+    ArrayHelper::map($editoras, 'id', 'nome'),
+    ['prompt' => 'Selecione a Editora', 'class' => 'form-control select2']
     ) ?>
 
     <?= $form->field($model, 'tags')->checkboxList(
-        ArrayHelper::map($tags, 'id', 'nome'),
+    ArrayHelper::map($tags, 'id', 'nome'),
     ) ?>
 
     <?= $form->field($model, 'generos')->checkboxList(
-        ArrayHelper::map($generos, 'id', 'nome'),
+    ArrayHelper::map($generos, 'id', 'nome'),
     )->label('Géneros') ?>
 
     <div class="form-group">

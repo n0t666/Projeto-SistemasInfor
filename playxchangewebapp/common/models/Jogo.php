@@ -199,15 +199,17 @@ class Jogo extends \yii\db\ActiveRecord
             [
                 'class'      => AttributeBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['dataLancamento'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['dataLancamento'],
+                    ActiveRecord::EVENT_AFTER_FIND => ['dataLancamento'],
                 ],
-                'value'       => date('Y-m-d'),
+                'value'       => date('d-m-Y'),
+            ],
+            [
+                'class'      => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['dataLancamento'],
+                ],
+                'value'       => date('d-m-Y'),
             ],
         ];
     }
-
-
-
-
 }

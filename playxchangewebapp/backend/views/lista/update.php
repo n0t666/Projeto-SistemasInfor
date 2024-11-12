@@ -3,7 +3,7 @@
 /* @var $this yii\web\View */
 /* @var $model common\models\Lista */
 
-$this->title = 'Update Lista: ' . $model->id;
+$this->title = 'Atualizar Lista: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Listas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
