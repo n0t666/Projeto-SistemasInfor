@@ -38,6 +38,10 @@ class ChaveController extends Controller
                         'roles' => ['admin','funcionario','moderador'],
                     ],
                 ],
+                'denyCallback' => function () {
+                    \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
+                    $this->goHome();
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,

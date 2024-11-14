@@ -9,6 +9,7 @@ use common\models\Franquia;
 use common\models\Genero;
 use common\models\Jogo;
 use common\models\Tag;
+use common\models\UploadForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -31,16 +32,20 @@ class JogoController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create','update','delete','view'],
+                        'actions' => ['create', 'update', 'delete', 'view'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['admin','funcionario','moderador'],
+                        'roles' => ['admin', 'funcionario', 'moderador'],
                     ],
                 ],
+                'denyCallback' => function () {
+                    \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
+                    $this->goHome();
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -54,31 +59,40 @@ class JogoController extends Controller
     /**
      * Lists all Jogo models.
      *
-     * @return string
+     * @return mixed
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->can('verTudo')) {
+            $searchModel = new JogoSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $searchModel = new JogoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->goHome();
+        }
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     /**
      * Displays a single Jogo model.
      * @param int $id ID
-     * @return string
+     * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if (Yii::$app->user->can('verDetalhesJogos')) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        } else {
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -88,53 +102,60 @@ class JogoController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Jogo();
-        $franquias = Franquia::find()->all();
-        $distribuidoras = Distribuidora::find()->all();
-        $editoras = Editora::find()->all();
-        $tags = Tag::find()->all();
-        $generos  = Genero::find()->all();
+        if (Yii::$app->user->can('adicionarJogos')) {
+            $model = new Jogo();
+            $modelUpload = new UploadForm();
+            $franquias = Franquia::find()->all();
+            $distribuidoras = Distribuidora::find()->all();
+            $editoras = Editora::find()->all();
+            $tags = Tag::find()->all();
+            $generos = Genero::find()->all();
 
-        if ($this->request->isPost) {
-            try {
-                if ($model->load($this->request->post()) && $model->save()) {
-                    $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
-                    $generosSelected = Yii::$app->request->post('Jogo')['generos'];
-                    if ($tagsSelected) {
-                        foreach ($tagsSelected as $tag) {
-                            $tag = Tag::findOne($tag);
-                            if ($tag) {
-                                $model->link('tags', $tag);
+            if ($this->request->isPost) {
+                try {
+                    if ($model->load($this->request->post()) && $model->save()) {
+                        $model->imagemCapa = UploadForm::getInstance($model, 'imagemCapa');
+                        $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
+                        $generosSelected = Yii::$app->request->post('Jogo')['generos'];
+                        if ($tagsSelected) {
+                            foreach ($tagsSelected as $tag) {
+                                $tag = Tag::findOne($tag);
+                                if ($tag) {
+                                    $model->link('tags', $tag);
+                                }
                             }
                         }
-                    }
-                    if($generosSelected){
-                        foreach ($generosSelected as $genero) {
-                            $genero = Genero::findOne($genero);
-                            if ($genero) {
-                                $model->link('generos', $genero);
+                        if ($generosSelected) {
+                            foreach ($generosSelected as $genero) {
+                                $genero = Genero::findOne($genero);
+                                if ($genero) {
+                                    $model->link('generos', $genero);
+                                }
                             }
                         }
+                        return $this->redirect(['view', 'id' => $model->id]);
                     }
-                    return $this->redirect(['view', 'id' => $model->id]);
+                } catch (\Exception  $e) {
+                    throw new ServerErrorHttpException($e->getMessage());
                 }
+            } else {
+                $model->loadDefaultValues();
             }
-            catch (\Exception  $e) {
-                throw new ServerErrorHttpException($e->getMessage());
-            }
+
+
+            return $this->render('create', [
+                'model' => $model,
+                'modelUpload' => $modelUpload,
+                'franquias' => $franquias,
+                'distribuidoras' => $distribuidoras,
+                'editoras' => $editoras,
+                'tags' => $tags,
+                'generos' => $generos,
+            ]);
         } else {
-            $model->loadDefaultValues();
+            return $this->goHome();
         }
 
-
-        return $this->render('create', [
-            'model' => $model,
-            'franquias' => $franquias,
-            'distribuidoras' => $distribuidoras,
-            'editoras' => $editoras,
-            'tags' => $tags,
-            'generos' => $generos,
-        ]);
     }
 
     /**
@@ -146,66 +167,69 @@ class JogoController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('editarJogos')) {
+            $model = $this->findModel($id);
 
-        if (!$model) {
-            throw new NotFoundHttpException("Não foi possível encontrar o jogo  solicitado.");
-        }
-
-        $franquias = Franquia::find()->all();
-        $distribuidoras = Distribuidora::find()->all();
-        $editoras = Editora::find()->all();
-        $tags = Tag::find()->all();
-        $generos = Genero::find()->all();
-
-        try
-        {
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                $tagsSelected = [];// Caso o utilizador não selecione todas as tags é necessário inicializar porque senão irá dar erro
-                $generosSelected = [];
-
-                if(Yii::$app->request->post('Jogo')['tags']){
-                    $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
-                }
-                $model->unlinkAll('tags', true);
-
-                foreach ($tagsSelected as $tagId) {
-                    $tag = Tag::findOne($tagId);
-                    if ($tag) {
-                        $model->link('tags', $tag);
-                    }
-                }
-
-                if(Yii::$app->request->post('Jogo')['generos']){
-                    $generosSelected = Yii::$app->request->post('Jogo')['generos'];
-                }
-
-                $model->unlinkAll('generos', true);
-
-                foreach ($generosSelected as $generoId) {
-                    $genero = Genero::findOne($generoId);
-                    if ($genero) {
-                        $model->link('generos', $genero);
-                    }
-                }
-
-                return $this->redirect(['view', 'id' => $model->id]);
+            if (!$model) {
+                throw new NotFoundHttpException("Não foi possível encontrar o jogo  solicitado.");
             }
 
-        }
-        catch (\Exception  $e) {
-            throw new ServerErrorHttpException($e->getMessage());
-        }
+            $franquias = Franquia::find()->all();
+            $distribuidoras = Distribuidora::find()->all();
+            $editoras = Editora::find()->all();
+            $tags = Tag::find()->all();
+            $generos = Genero::find()->all();
+
+            try {
+                if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                    $tagsSelected = [];// Caso o utilizador não selecione todas as tags é necessário inicializar porque senão irá dar erro
+                    $generosSelected = [];
+
+                    if (Yii::$app->request->post('Jogo')['tags']) {
+                        $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
+                    }
+                    $model->unlinkAll('tags', true);
+
+                    foreach ($tagsSelected as $tagId) {
+                        $tag = Tag::findOne($tagId);
+                        if ($tag) {
+                            $model->link('tags', $tag);
+                        }
+                    }
+
+                    if (Yii::$app->request->post('Jogo')['generos']) {
+                        $generosSelected = Yii::$app->request->post('Jogo')['generos'];
+                    }
+
+                    $model->unlinkAll('generos', true);
+
+                    foreach ($generosSelected as $generoId) {
+                        $genero = Genero::findOne($generoId);
+                        if ($genero) {
+                            $model->link('generos', $genero);
+                        }
+                    }
+
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+
+            } catch (\Exception  $e) {
+                throw new ServerErrorHttpException($e->getMessage());
+            }
 
 
-        return $this->render('update', [
-            'model' => $model,
-            'franquias' => $franquias,
-            'distribuidoras' => $distribuidoras,
-            'editoras' => $editoras,
-            'tags' => $tags,
-            'generos' => $generos,
-        ]);
+            return $this->render('update', [
+                'model' => $model,
+                'franquias' => $franquias,
+                'distribuidoras' => $distribuidoras,
+                'editoras' => $editoras,
+                'tags' => $tags,
+                'generos' => $generos,
+            ]);
+        } else {
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -217,16 +241,21 @@ class JogoController extends Controller
      */
     public function actionDelete($id)
     {
-        try {
-            $this->findModel($id)->delete();
-            return $this->redirect(['index']);
-        } catch (NotFoundHttpException $e) {
-            throw new NotFoundHttpException('O item solicitado não existe.');
-        } catch (\yii\db\IntegrityException $e) {
-            throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
-        } catch (\Exception $e) {
-            throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+        if (Yii::$app->user->can('removerJogos')) {
+            try {
+                $this->findModel($id)->delete();
+                return $this->redirect(['index']);
+            } catch (NotFoundHttpException $e) {
+                throw new NotFoundHttpException('O item solicitado não existe.');
+            } catch (\yii\db\IntegrityException $e) {
+                throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+            } catch (\Exception $e) {
+                throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+            }
+        } else {
+            return $this->goHome();
         }
+
     }
 
     /**

@@ -37,6 +37,10 @@ class GeneroController extends Controller
                         'roles' => ['admin','funcionario','moderador'],
                     ],
                 ],
+                'denyCallback' => function () {
+                    \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
+                    $this->goHome();
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -53,13 +57,18 @@ class GeneroController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new GeneroSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->can('verTudo')) {
+            $searchModel = new GeneroSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel,
-        ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+            ]);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -70,9 +79,14 @@ class GeneroController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->user->can('verDetalhesGeneros')) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -82,15 +96,20 @@ class GeneroController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Genero();
+        if(Yii::$app->user->can('adicionarGeneros')) {
+            $model = new Genero();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->goHome();
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -102,15 +121,19 @@ class GeneroController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(Yii::$app->user->can('editarGeneros')) {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->goHome();
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -122,9 +145,14 @@ class GeneroController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if(Yii::$app->user->can('removerGeneros')) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**

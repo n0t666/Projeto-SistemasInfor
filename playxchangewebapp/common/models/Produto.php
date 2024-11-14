@@ -51,9 +51,9 @@ class Produto extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'jogo_id' => 'Jogo ID',
-            'plataforma_id' => 'Plataforma ID',
-            'preco' => 'Preco',
+            'jogo_id' => 'Jogo',
+            'plataforma_id' => 'Plataforma',
+            'preco' => 'Preço',
             'quantidade' => 'Quantidade',
         ];
     }

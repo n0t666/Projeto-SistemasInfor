@@ -1,5 +1,7 @@
 <?php
 
+use common\models\Jogo;
+use common\models\Plataforma;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -10,6 +12,10 @@ $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Produtos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+/* @var Jogo[] $jogos */
+/* @var Plataforma[] $plataformas */
+
 ?>
 
 <div class="container-fluid">

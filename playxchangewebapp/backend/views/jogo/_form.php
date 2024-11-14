@@ -49,7 +49,7 @@ use yii\bootstrap4\ActiveForm;
     ['prompt' => 'Nenhuma franquia..', 'class' => 'form-control select2']
     ) ?>
 
-    <?= $form->field($model, 'imagemCapa')->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
+    <?= $form->field($model, 'imagemCapa')->fileInput(['maxlength' => true, 'class' => 'form-control']) ?>
 
     <?= $form->field($model, 'distribuidora_id')->dropDownList(
     ArrayHelper::map($distribuidoras, 'id', 'nome'),

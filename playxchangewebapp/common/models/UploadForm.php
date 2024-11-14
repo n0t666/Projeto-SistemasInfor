@@ -18,10 +18,11 @@ class UploadForm extends Model
         ];
     }
 
-    public function upload()
+    public function upload($alias)
     {
         if ($this->validate()) {
-            $this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $key = Yii::$app->getSecurity()->generateRandomString();
+            $this->imageFile->saveAs($alias . $key. '.' . $this->imageFile->extension);
             return true;
         } else {
             return false;

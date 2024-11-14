@@ -38,6 +38,10 @@ class ScreenshotController extends Controller
                         'roles' => ['admin','funcionario','moderador'],
                     ],
                 ],
+                'denyCallback' => function () {
+                    \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
+                    $this->goHome();
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -54,13 +58,15 @@ class ScreenshotController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ScreenshotSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->can('verTudo')){
+            $searchModel = new ScreenshotSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
     }
 
     /**
@@ -71,9 +77,14 @@ class ScreenshotController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->user->can('verDetalhesScreenshots')){
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -83,15 +94,20 @@ class ScreenshotController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Screenshot();
+        if(Yii::$app->user->can('adicionarScreenshots')){
+            $model = new Screenshot();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->goHome();
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -103,15 +119,20 @@ class ScreenshotController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(Yii::$app->user->can('editarScreenshots')){
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->goHome();
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -123,9 +144,14 @@ class ScreenshotController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if(Yii::$app->user->can('removerScreenshots')){
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**
