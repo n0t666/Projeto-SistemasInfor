@@ -43,6 +43,7 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
+
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }
@@ -72,11 +73,9 @@ class LoginForm extends Model
     {
         if ($this->_user === null) {
             $this->_user = User::findByUsername($this->username);
-            if(Yii::$app->authManager->checkAccess($this->_user->id, 'acederBackend')){
-                return $this->_user = null;
-            }
         }
 
         return $this->_user;
     }
+
 }

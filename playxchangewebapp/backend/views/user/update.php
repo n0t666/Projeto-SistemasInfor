@@ -2,6 +2,10 @@
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
+/* @var $userData Userdata */
+/* @var $roles[] */
+
+use common\models\Userdata;
 
 $this->title = 'Update User: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
@@ -15,7 +19,9 @@ $this->params['breadcrumbs'][] = 'Update';
             <div class="row">
                 <div class="col-md-12">
                     <?=$this->render('_form', [
-                        'model' => $model
+                        'model' => $model,
+                        'userData' => $userData,
+                        'roles' => $roles,
                     ]) ?>
                 </div>
             </div>

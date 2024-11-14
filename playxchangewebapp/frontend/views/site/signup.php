@@ -30,6 +30,7 @@ $img = Yii::getAlias('@web') . "/images/authForms/register2.jpg";
                             'labelOptions' => ['for' => 'floatingNome'],
                         ])->textInput(['id' => 'floatingNome', 'placeholder' => 'Nome Completo', 'required' => true, 'autocomplete' => 'off']) ?>
                     </div>
+                    
 
                     <div class="form-floating mb-3">
                         <?= $form->field($model, 'nif', [

@@ -2,9 +2,13 @@
 
 namespace backend\controllers;
 
+use backend\models\JogoSearch;
+use backend\models\UserSearch;
+use common\models\Userdata;
 use Yii;
 use common\models\User;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,10 +24,25 @@ class UserController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['create','update','delete','view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin','funcionario','moderador'],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -35,11 +54,11 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => User::find(),
-        ]);
+        $searchModel = new UserSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -54,6 +73,7 @@ class UserController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'userData' => Userdata::findOne($id),
         ]);
     }
 
@@ -64,15 +84,40 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
+        /*
         $model = new User();
+        $userData = new Userdata();
+        $authManager = Yii::$app->authManager;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $roles = $authManager->getRoles();
+
+        if ($model->load(Yii::$app->request->post()) && $userData->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                if ($model->save()) {
+                    $userData->user_id = $model->id;
+                    if ($userData->save()) {
+                        $transaction->commit();
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        throw new \Exception('Erro ao guardar o perfil do utilizador.');
+                    }
+                } else {
+                    throw new \Exception('Erro ao guardar o utilizador.');
+                }
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                throw new NotFoundHttpException($e->getMessage());
+            }
         }
+
 
         return $this->render('create', [
             'model' => $model,
+            'userData' => $userData,
+            'roles' => $roles,
         ]);
+        */
     }
 
     /**
@@ -124,4 +169,6 @@ class UserController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
 }

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Genero */
 
-$this->title = 'Create Genero';
+$this->title = 'Criar género';
 $this->params['breadcrumbs'][] = ['label' => 'Generos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

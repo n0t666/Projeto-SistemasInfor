@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\models\ChaveSearch;
+use backend\models\JogoSearch;
 use Yii;
 use common\models\Chave;
 use yii\data\ActiveDataProvider;
@@ -9,6 +11,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ServerErrorHttpException;
 
 /**
  * ChaveController implements the CRUD actions for Chave model.
@@ -25,18 +28,14 @@ class ChaveController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['create','update','delete','view'],
                         'allow' => true,
+                        'roles' => ['admin'],
                     ],
                     [
                         'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin','funcionario','moderador'],
-                    ],
-                    [
-                        'actions' => ['create,update,delete','view'],
-                        'allow' => true,
-                        'roles' => ['admin'],
                     ],
                 ],
             ],
@@ -55,13 +54,18 @@ class ChaveController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Chave::find(),
-        ]);
+        if(Yii::$app->user->can('verTudo')){
+            $searchModel = new ChaveSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -84,15 +88,23 @@ class ChaveController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Chave();
+        if(Yii::$app->user->can('criarChaves')){
+            try {
+            $model = new Chave();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('create', [
+                'model' => $model,
+            ]);} catch (\Exception  $e) {
+                throw new ServerErrorHttpException($e->getMessage());
+            }
+        }else{
+            return $this->goHome();
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -104,15 +116,28 @@ class ChaveController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(Yii::$app->user->can('editarChaves')) {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if (!$model) {
+                throw new NotFoundHttpException("Não foi possível encontrar a chave solicitada.");
+            }
+
+            try{
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }   catch (\Exception  $e) {
+                throw new ServerErrorHttpException($e->getMessage());
+            }
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        else {
+            return $this->goHome();
+        }
     }
 
     /**
@@ -124,9 +149,20 @@ class ChaveController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        if(Yii::$app->user->can('apagarChaves')) {
+            try {
+                $this->findModel($id)->delete();
+                return $this->redirect(['index']);
+            } catch (NotFoundHttpException $e) {
+                throw new NotFoundHttpException('O item solicitado não existe.');
+            } catch (\yii\db\IntegrityException $e) {
+                throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+            } catch (\Exception $e) {
+                throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+            }
+        }else{
+            return $this->goHome();
+        }
     }
 
     /**

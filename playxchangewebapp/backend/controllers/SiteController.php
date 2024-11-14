@@ -40,7 +40,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['admin','funcionario','moderador'],
+                        'roles' => ['admin', 'funcionario', 'moderador'],
                     ],
                 ],
             ],
@@ -73,10 +73,10 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $ultimosMeses = strtotime('-6 month'); // 6 meses
-        $ultimosUtilizadores = User::find()->where(['>=','created_at',$ultimosMeses])->count();
+        $ultimosUtilizadores = User::find()->where(['>=', 'created_at', $ultimosMeses])->count();
         $totalVendas = Fatura::find()->count();
         $totalJogos = Jogo::find()->count();
-        $progressoUtilizadores =  ($ultimosUtilizadores / Yii::$app->params['metas']['crescimentoUtilizadores']) * 100;
+        $progressoUtilizadores = ($ultimosUtilizadores / Yii::$app->params['metas']['crescimentoUtilizadores']) * 100;
         $progressoVendas = ($totalVendas / Yii::$app->params['metas']['crescimentoVendas']) * 100;
         $progressoJogos = ($totalJogos / Yii::$app->params['metas']['crescimentoJogos']) * 100;
 
@@ -90,7 +90,7 @@ class SiteController extends Controller
             ],
         ]);
 
-        return $this->render('index',[
+        return $this->render('index', [
             'ultimosUtilizadores' => $ultimosUtilizadores,
             'totalVendas' => $totalVendas,
             'totalJogos' => $totalJogos,
@@ -116,7 +116,13 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            if (Yii::$app->user->can('acederBackend')) {
+                return $this->goBack();
+            } else {
+                Yii::$app->user->logout();
+                return $this->redirect(['login']);
+            }
+
         }
 
         $model->password = '';
@@ -136,5 +142,20 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function beforeAction($action){
+        if (parent::beforeAction($action)) {
+            if ($action->id=='error'){
+                if(Yii::$app->user && Yii::$app->user->can('acederBackend')){
+                    $this->layout = 'main';
+                }else{
+                    $this->layout = 'blank';
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
     }
 }

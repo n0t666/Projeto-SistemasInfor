@@ -10,6 +10,7 @@ $this->title = 'Jogo: ' . $model->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+\backend\assets\CustomAsset::register($this);
 ?>
 
 <div class="container-fluid">

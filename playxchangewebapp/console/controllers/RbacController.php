@@ -15,49 +15,60 @@ class RbacController extends Controller
         $adicionarFranquias = $auth->createPermission('adicionarFranquias');
         $removerFranquias = $auth->createPermission('removerFranquias');
         $editarFranquias = $auth->createPermission('editarFranquias');
+        $verDetalhesFranquias = $auth->createPermission('verDetalhesFranquias');
         $auth->add($adicionarFranquias);
         $auth->add($removerFranquias);
         $auth->add($editarFranquias);
+        $auth->add($verDetalhesFranquias);
 
+        $verDetalhesEditoras = $auth->createPermission('verDetalhesEditoras');
         $adicionarEditoras = $auth->createPermission('adicionarEditoras');
         $removerEditoras = $auth->createPermission('removerEditoras');
         $editarEditoras = $auth->createPermission('editarEditoras');
         $auth->add($adicionarEditoras);
         $auth->add($removerEditoras);
         $auth->add($editarEditoras);
+        $auth->add($verDetalhesEditoras);
 
 
+        $verDetalhesScreenshots = $auth->createPermission('verDetalhesScreenshots');
         $adicionarScreenshots = $auth->createPermission('adicionarScreenshots');
         $removerScreenshots = $auth->createPermission('removerScreenshots');
         $editarScreenshots = $auth->createPermission('editarScreenshots');
         $auth->add($adicionarScreenshots);
         $auth->add($removerScreenshots);
         $auth->add($editarScreenshots);
+        $auth->add($verDetalhesScreenshots);
 
 
+        $verDetalhesTags = $auth->createPermission('verDetalhesTags');
         $adicionarTags = $auth->createPermission('adicionarTags');
         $removerTags = $auth->createPermission('removerTags');
         $editarTags = $auth->createPermission('editarTags');
         $auth->add($adicionarTags);
         $auth->add($removerTags);
         $auth->add($editarTags);
+        $auth->add($verDetalhesTags);
 
-
+        $verDetalhesGeneros = $auth->createPermission('verDetalhesGeneros');
         $adicionarGeneros = $auth->createPermission('adicionarGeneros');
         $removerGeneros = $auth->createPermission('removerGeneros');
         $editarGeneros = $auth->createPermission('editarGeneros');
         $auth->add($adicionarGeneros);
         $auth->add($removerGeneros);
         $auth->add($editarGeneros);
+        $auth->add($verDetalhesGeneros);
 
-
+        $verDetalhesDistribuidoras = $auth->createPermission('verDetalhesDistribuidoras');
         $adicionarDistribuidoras = $auth->createPermission('adicionarDistribuidoras');
         $removerDistribuidoras = $auth->createPermission('removerDistribuidoras');
         $editarDistribuidoras = $auth->createPermission('editarDistribuidoras');
         $auth->add($adicionarDistribuidoras);
         $auth->add($removerDistribuidoras);
         $auth->add($editarDistribuidoras);
+        $auth->add($verDetalhesDistribuidoras);
 
+        $verDetalhesCodigosProm = $auth->createPermission('verDetalhesCodigosProm');
         $adicionarCodigosProm = $auth->createPermission('adicionarCodigosProm');
         $usarCodigosProm = $auth->createPermission('usarCodigosProm');
         $editarCodigosProm = $auth->createPermission('editarCodigosProm');
@@ -70,43 +81,53 @@ class RbacController extends Controller
         $auth->add($apagarCodigosProm);
         $auth->add($ativarCodigosProm);
         $auth->add($desativarCodigosProm);
+        $auth->add($verDetalhesCodigosProm);
 
 
+        $verDetalhesMetodosEnvio = $auth->createPermission('verDetalhesMetodosEnvio');
         $adicionarMetodosEnvio = $auth->createPermission('adicionarMetodosEnvio');
         $removerMetodosEnvio = $auth->createPermission('removerMetodosEnvio');
         $editarMetodosEnvio = $auth->createPermission('editarMetodosEnvio');
         $auth->add($adicionarMetodosEnvio);
         $auth->add($removerMetodosEnvio);
         $auth->add($editarMetodosEnvio);
+        $auth->add($verDetalhesMetodosEnvio);
 
+        $verDetalhesMetodosPagamento = $auth->createPermission('verDetalhesMetodosPagamento');
         $adicionarMetodosPagamento = $auth->createPermission('adicionarMetodosPagamento');
         $removerMetodosPagamento = $auth->createPermission('removerMetodosPagamento');
         $editarMetodosPagamento = $auth->createPermission('editarMetodosPagamento');
         $auth->add($adicionarMetodosPagamento);
         $auth->add($removerMetodosPagamento);
         $auth->add($editarMetodosPagamento);
+        $auth->add($verDetalhesMetodosPagamento);
 
+        $verDetalhesJogos = $auth->createPermission('verDetalhesJogos');
         $adicionarJogos = $auth->createPermission('adicionarJogos');
         $removerJogos = $auth->createPermission('removerJogos');
         $editarJogos = $auth->createPermission('editarJogos');
         $auth->add($adicionarJogos);
         $auth->add($editarJogos);
         $auth->add($removerJogos);
+        $auth->add($verDetalhesJogos);
 
-
+        $verDetalhesProdutos = $auth->createPermission('verDetalhesProdutos');
         $adicionarProdutos = $auth->createPermission('adicionarProdutos');
         $removerProdutos = $auth->createPermission('removerProdutos');
         $editarProdutos = $auth->createPermission('editarProdutos');
         $auth->add($adicionarProdutos);
         $auth->add($removerProdutos);
         $auth->add($editarProdutos);
+        $auth->add($verDetalhesProdutos);
 
+        $verDetalhesFaq = $auth->createPermission('verDetalhesFaq');
         $adicionarFaq = $auth->createPermission('adicionarFaq');
         $removerFaq = $auth->createPermission('removerFaq');
         $editarFaq = $auth->createPermission('editarFaq');
         $auth->add($adicionarFaq);
         $auth->add($removerFaq);
         $auth->add($editarFaq);
+        $auth->add($verDetalhesFaq);
 
         $visualizarPerfil = $auth->createPermission('visualizarPerfil');
         $visualizarPerfil->description = 'Visualizar perfil público';
@@ -124,12 +145,14 @@ class RbacController extends Controller
         $destacarJogosPerfil = $auth->createPermission('destacarJogosPerfil');
         $auth->add($destacarJogosPerfil);
 
+        $verDetalhesPlataformas = $auth->createPermission('verDetalhesPlataformas');
         $adicionarPlataformas = $auth->createPermission('adicionarPlataformas');
         $removerPlataformas = $auth->createPermission('removerPlataformas');
         $editarPlataformas = $auth->createPermission('editarPlataformas');
         $auth->add($adicionarPlataformas);
         $auth->add($removerPlataformas);
         $auth->add($editarPlataformas);
+        $auth->add($verDetalhesPlataformas);
 
         $adicionarCarrinho = $auth->createPermission('adicionarItensCarrinho');
         $removerCarrinho = $auth->createPermission('removerItensCarrinho');
@@ -140,6 +163,7 @@ class RbacController extends Controller
         $auth->add($editarCarrinho);
         $auth->add($visualizarCarrinho);
 
+        $verDetalhesListas = $auth->createPermission('verDetalhesListas');
         $criarListas = $auth->createPermission('adicionarListas');
         $removerListas = $auth->createPermission('removerListas');
         $adicionarJogosListas = $auth->createPermission('adicionarJogosListas');
@@ -149,6 +173,7 @@ class RbacController extends Controller
         $definirPrivacidadeFavoritos= $auth->createPermission('definirPrivacidadeFavoritos');
         $definirPrivacidadeJogados = $auth->createPermission('definirPrivacidadeJogados');
         $alterarDisposicao =  $auth->createPermission('alterarDiposicao');
+        $auth->add($verDetalhesListas);
         $auth->add($criarListas);
         $auth->add($removerListas);
         $auth->add($adicionarJogosListas);
@@ -177,6 +202,7 @@ class RbacController extends Controller
         $auth->add($editarComentario);
         $auth->add($gostarComentario);
 
+        $verDetalhesUtilizadores = $auth->createPermission('verDetalhesUtilizadores');
         $seguirUtilizador = $auth->createPermission('seguirUtilizador');
         $deixarSeguir = $auth->createPermission('deixarSeguir');
         $bloquearUtilizador = $auth->createPermission('bloquearUtilizador');
@@ -191,6 +217,7 @@ class RbacController extends Controller
         $auth->add($denunciarUtilizador);
         $auth->add($avaliarSugestao);
         $auth->add($efetuarCompras);
+        $auth->add($verDetalhesUtilizadores);
 
 
         $alterarEstadoDenuncia = $auth->createPermission('alterarEstadoDenuncia');
@@ -210,12 +237,14 @@ class RbacController extends Controller
         $reporPassword = $auth->createPermission('reporPassword');
         $auth->add($reporPassword);
 
+        $verDetalhesSugestao = $auth->createPermission('verDetalhesSugestao');
         $criarSugestao = $auth->createPermission('criarSugestao');
         $editarSugestao = $auth->createPermission('editarSugestao');
         $apagarSugestao =  $auth->createPermission('apagarSugestao');
         $auth->add($criarSugestao);
         $auth->add($editarSugestao);
         $auth->add($apagarSugestao);
+        $auth->add($verDetalhesSugestao);
 
         $adicionarFavoritos = $auth->createPermission('adicionarFavoritos');
         $removerFavoritos = $auth->createPermission('removerFavoritos');
@@ -231,10 +260,12 @@ class RbacController extends Controller
         $removerJogados= $auth->createPermission('removerJogados');
         $visualizarTudo = $auth->createPermission('verTudo');
         $cancelarEncomenda = $auth->createPermission('cancelarEncomenda');
+        $verDetalhesEncomendas = $auth->createPermission('verDetalhesEncomendas');
         $auth->add($adicionarJogados);
         $auth->add($removerJogados);
         $auth->add($visualizarTudo);
         $auth->add($cancelarEncomenda);
+        $auth->add($verDetalhesEncomendas);
 
         $associarRoles = $auth->createPermission('associarRoles');
         $associarRoles->description = 'Associar um certo utilizador a uma role';
@@ -300,6 +331,8 @@ class RbacController extends Controller
         $auth->addChild($funcionario,$cancelarEncomenda);
         $auth->addChild($funcionario,$visualizarTudo);
         $auth->addChild($funcionario,$acederBackend);
+        $auth->addChild($funcionario,$verDetalhesEncomendas);
+        $auth->addChild($funcionario,$verDetalhesProdutos);
 
 
         $moderador = $auth->createRole('moderador');
@@ -314,6 +347,10 @@ class RbacController extends Controller
         $auth->addChild($moderador,$alterarEstadoSugestao);
         $auth->addChild($moderador,$visualizarTudo);
         $auth->addChild($moderador,$acederBackend);
+        $auth->addChild($moderador,$verDetalhesEncomendas);
+        $auth->addChild($moderador,$verDetalhesListas);
+        $auth->addChild($moderador,$verDetalhesSugestao);
+        $auth->addChild($funcionario,$verDetalhesFaq);
 
         $admin = $auth->createRole('admin');
         $auth->add($admin);
@@ -374,11 +411,22 @@ class RbacController extends Controller
         $auth->addChild($admin,$removerMetodosPagamento);
         $auth->addChild($admin,$editarMetodosPagamento);
 
-
         $auth->addChild($admin, $criarChaves);
         $auth->addChild($admin,$editarChaves);
         $auth->addChild($admin,$apagarChaves);
         $auth->addChild($admin,$associarRoles);
+
+        $auth->addChild($admin,$verDetalhesFranquias);
+        $auth->addChild($admin,$verDetalhesScreenshots);
+        $auth->addChild($admin,$verDetalhesTags);
+        $auth->addChild($admin,$verDetalhesGeneros);
+        $auth->addChild($admin,$verDetalhesDistribuidoras);
+        $auth->addChild($admin,$verDetalhesCodigosProm);
+        $auth->addChild($admin,$verDetalhesMetodosEnvio);
+        $auth->addChild($admin,$verDetalhesMetodosPagamento);
+        $auth->addChild($admin,$verDetalhesJogos);
+        $auth->addChild($admin,$verDetalhesPlataformas);
+
         $auth->assign($admin, 1);
         $auth->assign($moderador, 2);
         $auth->assign($funcionario, 3);

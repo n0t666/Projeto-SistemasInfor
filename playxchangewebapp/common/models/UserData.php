@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "userdata".
@@ -71,10 +73,10 @@ class Userdata extends \yii\db\ActiveRecord
             [['user_id', 'privacidadeSeguidores', 'privacidadeFavoritos', 'privacidadeJogos'], 'integer'],
             [['dataNascimento'], 'safe'],
             [['nome'], 'string', 'max' => 200],
-            [['nif'], 'string', 'max' => 9],
+            ['nif', 'string','min' => 9, 'max' => 9],
+            ['nif', 'unique', 'targetClass' => '\common\models\Userdata', 'message' => 'Este NIF já está associado a outra conta.'],
             [['biografia'], 'string', 'max' => 150],
             [['fotoCapa', 'fotoPerfil'], 'string', 'max' => 255],
-            [['nif'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             ['privacidadeSeguidores', 'default', 'value' => self::STATUS_PUBLIC],
             ['privacidadeSeguidores', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
@@ -296,5 +298,62 @@ class Userdata extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Userdata::class, ['id' => 'utilizador_id'])->viaTable('listabloqueios', ['utilizadorBloqueado_id' => 'id']);
     }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['dataNascimento'],
+                ],
+                'value' => function ($event) {
+                    return $this->dataNascimento ? date('d-m-Y', strtotime($this->dataNascimento)) : null;
+                },
+            ],
+        ];
+    }
+    public function getPrivacidadeSeguidoresLabel()
+    {
+        switch ($this->privacidadeSeguidores) {
+            case self::STATUS_PUBLIC:
+                return 'Público';
+            case self::STATUS_PRIVATE:
+                return 'Privado';
+            case self::STATUS_MUTUAL:
+                return 'Mútuo';
+            default:
+                return 'Desconhecido';
+        }
+    }
+
+    public function getPrivacidadeFavoritosLabel()
+    {
+        switch ($this->privacidadeFavoritos) {
+            case self::STATUS_PUBLIC:
+                return 'Público';
+            case self::STATUS_PRIVATE:
+                return 'Privado';
+            case self::STATUS_MUTUAL:
+                return 'Mútuo';
+            default:
+                return 'Desconhecido';
+        }
+    }
+
+    public function getPrivacidadeJogosLabel()
+    {
+        switch ($this->privacidadeJogos) {
+            case self::STATUS_PUBLIC:
+                return 'Público';
+            case self::STATUS_PRIVATE:
+                return 'Privado';
+            case self::STATUS_MUTUAL:
+                return 'Mútuo';
+            default:
+                return 'Desconhecido';
+        }
+    }
+
 
 }

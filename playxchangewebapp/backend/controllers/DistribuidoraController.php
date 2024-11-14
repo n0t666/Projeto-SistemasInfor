@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\models\DistribuidoraSearch;
+use backend\models\MetodoEnvioSearch;
 use Yii;
 use common\models\Distribuidora;
 use yii\data\ActiveDataProvider;
@@ -25,26 +27,21 @@ class DistribuidoraController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['view', 'create', 'update'],
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                    [
-                        'actions' => ['delete'],
+                        'actions' => ['create','update','delete','view'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['admin', 'funcionario', 'moderador'],
-                    ]
+                        'roles' => ['admin','funcionario','moderador'],
+                    ],
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -57,11 +54,11 @@ class DistribuidoraController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Distribuidora::find(),
-        ]);
+        $searchModel = new DistribuidoraSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }

@@ -2,9 +2,12 @@
 
 namespace backend\controllers;
 
+use backend\models\FranquiaSearch;
+use backend\models\GeneroSearch;
 use Yii;
 use common\models\Genero;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,10 +23,25 @@ class GeneroController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['create','update','delete','view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin','funcionario','moderador'],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -35,12 +53,12 @@ class GeneroController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Genero::find(),
-        ]);
+        $searchModel = new GeneroSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 

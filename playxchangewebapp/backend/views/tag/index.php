@@ -10,6 +10,7 @@ $this->title = 'Tags';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="row">
         <div class="col-md-12">
             <div class="card">

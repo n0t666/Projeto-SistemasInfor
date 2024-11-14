@@ -12,6 +12,8 @@ class CustomAsset extends AssetBundle
         'css/mainLayoutOverride.css',
     ];
     public $js = [
+        'js/globalSearch.js',
+
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -10,13 +10,14 @@ $this->title = 'Generos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Genero', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar Género', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
 

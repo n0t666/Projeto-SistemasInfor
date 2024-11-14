@@ -1,5 +1,6 @@
 <?php
 
+use common\models\User;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -10,6 +11,7 @@ $this->title = 'Utilizadores';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -25,12 +27,37 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'yii\grid\SerialColumn'],
 
                             'id',
-                            'username',
+                            [
+                                'attribute'=>'username',
+                                'content'=>function($model){
+                                    return $model->user->username;
+                                }
+                            ],
                             //'auth_key',
                             //'password_hash',
                             //'password_reset_token',
-                            'email:email',
-                            'status',
+                            [
+                                'attribute'=>'email',
+                                'content'=>function($model){
+                                    return Yii::$app->formatter->asEmail($model->user->email);
+                                }
+                            ],
+                            [
+                                'attribute'=>'status',
+                                'content'=>function($model){
+                                    switch ($model->user->status) {
+                                        case User::STATUS_DELETED:
+                                            return 'Banido';
+                                        case User::STATUS_INACTIVE:
+                                            return 'Inativo';
+                                        case User::STATUS_ACTIVE:
+                                            return 'Ativo';
+                                        default:
+                                            return 'Desconhecida';
+                                    }
+
+                                }
+                            ],
                             //'created_at',
                             //'updated_at',
                             //'verification_token',

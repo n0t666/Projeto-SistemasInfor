@@ -2,19 +2,18 @@
 
 namespace backend\controllers;
 
+use backend\models\JogoSearch;
 use common\models\Distribuidora;
 use common\models\Editora;
 use common\models\Franquia;
 use common\models\Genero;
 use common\models\Jogo;
 use common\models\Tag;
-use http\Exception\InvalidArgumentException;
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\helpers\VarDumper;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -27,17 +26,29 @@ class JogoController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['create','update','delete','view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin','funcionario','moderador'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -48,21 +59,11 @@ class JogoController extends Controller
     public function actionIndex()
     {
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Jogo::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $searchModel = new JogoSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -117,8 +118,6 @@ class JogoController extends Controller
                     }
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
-            } catch (\yii\base\InvalidArgumentException $e){
-                throw new InvalidArgumentException($e->getMessage());
             }
             catch (\Exception  $e) {
                 throw new ServerErrorHttpException($e->getMessage());
@@ -194,9 +193,6 @@ class JogoController extends Controller
             }
 
         }
-        catch (\yii\base\InvalidArgumentException $e){
-            throw new InvalidArgumentException($e->getMessage());
-        }
         catch (\Exception  $e) {
             throw new ServerErrorHttpException($e->getMessage());
         }
@@ -221,9 +217,16 @@ class JogoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        try {
+            $this->findModel($id)->delete();
+            return $this->redirect(['index']);
+        } catch (NotFoundHttpException $e) {
+            throw new NotFoundHttpException('O item solicitado não existe.');
+        } catch (\yii\db\IntegrityException $e) {
+            throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+        } catch (\Exception $e) {
+            throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+        }
     }
 
     /**

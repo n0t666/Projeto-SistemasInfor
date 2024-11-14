@@ -50,7 +50,7 @@ class Jogo extends \yii\db\ActiveRecord
     {
         return [
             [['nome', 'dataLancamento', 'trailerLink', 'imagemCapa', 'distribuidora_id', 'editora_id'], 'required'],
-            [['dataLancamento'], 'date', 'format' => 'php:d/m/Y'],
+            [['dataLancamento'], 'date', 'format' => 'php:d-m-Y'],
             [['descricao'], 'string'],
             [['franquia_id', 'distribuidora_id', 'editora_id'], 'integer'],
             [['nome'], 'string', 'max' => 200],
@@ -194,22 +194,40 @@ class Jogo extends \yii\db\ActiveRecord
         return $this->hasMany(Userdata::class, ['id' => 'utilizador_id'])->viaTable('utilizadoresjogos', ['jogo_id' => 'id']);
     }
 
-    public function behaviors(){
+    public function behaviors()
+    {
         return [
             [
-                'class'      => AttributeBehavior::className(),
+                'class' => AttributeBehavior::className(),
                 'attributes' => [
                     ActiveRecord::EVENT_AFTER_FIND => ['dataLancamento'],
                 ],
-                'value'       => date('d-m-Y'),
+                'value' => function ($event) {
+                    return $this->dataLancamento ? date('d-m-Y', strtotime($this->dataLancamento)) : null; // Se houver uma data de lançamento, format para algo do tipo 10/02/2024,caso contrário definir como null
+                },
             ],
             [
-                'class'      => AttributeBehavior::className(),
+                'class' => AttributeBehavior::className(),
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['dataLancamento'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['dataLancamento'],
                 ],
-                'value'       => date('d-m-Y'),
+                'value' => function ($event) {
+                    try {
+                        if (empty($this->dataLancamento)) {
+                            $this->dataLancamento = date('Y-m-d');
+                        } else {
+                            $this->dataLancamento = Yii::$app->formatter->asDate($this->dataLancamento, 'php:Y-m-d');
+                        }
+                    } catch (\Exception $e) {
+                        Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
+                        $this->dataLancamento = date('Y-m-d');
+                    }
+
+                    return $this->dataLancamento;
+                },
             ],
         ];
     }
-}
+    }
+

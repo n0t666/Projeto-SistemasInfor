@@ -19,11 +19,6 @@ use yii\bootstrap4\ActiveForm;
 /* @var Editora[] $editoras */
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
-
-
-var_dump($model->dataLancamento);
-
-
 ?>
 
 <div class="jogo-form">
@@ -38,7 +33,7 @@ var_dump($model->dataLancamento);
                 'todayHighlight' => true,
                 'todayBtn' => true,
                 'autoclose' => true,
-                'format' => 'dd/mm/yyyy'
+                'format' => 'dd-mm-yyyy'
                 ]
              ]
     )

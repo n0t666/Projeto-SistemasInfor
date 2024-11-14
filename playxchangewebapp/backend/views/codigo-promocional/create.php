@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\CodigoPromocional */
 
-$this->title = 'Create Codigo Promocional';
+$this->title = 'Criar Código Promocional';
 $this->params['breadcrumbs'][] = ['label' => 'Codigo Promocionals', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

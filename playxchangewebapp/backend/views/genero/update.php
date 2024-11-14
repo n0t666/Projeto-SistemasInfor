@@ -3,9 +3,9 @@
 /* @var $this yii\web\View */
 /* @var $model common\models\Genero */
 
-$this->title = 'Update Genero: ' . $model->id;
+$this->title = 'Atualizar Género: ' . $model->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Generos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->nome, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 

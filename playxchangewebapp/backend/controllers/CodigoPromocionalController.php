@@ -2,12 +2,16 @@
 
 namespace backend\controllers;
 
+use backend\models\ChaveSearch;
+use backend\models\CodigoPromocionalSearch;
 use Yii;
 use common\models\CodigoPromocional;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ServerErrorHttpException;
 
 /**
  * CodigoPromocionalController implements the CRUD actions for CodigoPromocional model.
@@ -20,10 +24,25 @@ class CodigoPromocionalController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['create','update','delete','view'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['admin','funcionario','moderador'],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -35,13 +54,17 @@ class CodigoPromocionalController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => CodigoPromocional::find(),
-        ]);
+        if(Yii::$app->user->can('verTudo')){
+            $searchModel = new CodigoPromocionalSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            return $this->goHome();
+        }
     }
 
     /**
@@ -65,14 +88,18 @@ class CodigoPromocionalController extends Controller
     public function actionCreate()
     {
         $model = new CodigoPromocional();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        try {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } catch (\Exception  $e) {
+            throw new ServerErrorHttpException($e->getMessage());
         }
 
         return $this->render('create', [
             'model' => $model,
         ]);
+
     }
 
     /**
@@ -86,9 +113,18 @@ class CodigoPromocionalController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (!$model) {
+            throw new NotFoundHttpException("Não foi possível encontrar o código promocional  solicitado.");
         }
+
+        try {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } catch (\Exception  $e) {
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+
 
         return $this->render('update', [
             'model' => $model,
@@ -104,9 +140,16 @@ class CodigoPromocionalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        try {
+            $this->findModel($id)->delete();
+            return $this->redirect(['index']);
+        } catch (NotFoundHttpException $e) {
+            throw new NotFoundHttpException('O item solicitado não existe.');
+        } catch (\yii\db\IntegrityException $e) {
+            throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+        } catch (\Exception $e) {
+            throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+        }
     }
 
     /**

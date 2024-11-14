@@ -73,6 +73,7 @@ class SignupForm extends Model
                 $ClientRole = $auth->getRole('cliente');
                 $auth->assign($ClientRole, $user->id);
                 $userdata = new Userdata();
+                $userdata->id = $user->id;
                 $userdata->user_id = $user->id;
                 $userdata->nif = $this->nif;
                 $userdata->nome = $this->nome;

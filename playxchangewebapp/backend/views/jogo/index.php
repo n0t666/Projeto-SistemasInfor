@@ -11,6 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="container-fluid">
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -20,9 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?= Html::a('Criar Jogo', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
-
-
-
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'columns' => [
@@ -60,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
-                            'class' => 'yii\bootstrap4\LinkPager',
+                            'class' => 'yii\bootstrap5\LinkPager',
                         ],
                         'tableOptions' => [
                             'class'=>'table table-striped'

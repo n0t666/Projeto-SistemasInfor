@@ -16,7 +16,10 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'desconto')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'isAtivo')->textInput() ?>
+    <?= $form->field($model, 'isAtivo')->dropDownList([
+        1 => 'Sim',
+        2 => 'Não'
+    ], ['prompt' => 'Selecione...']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

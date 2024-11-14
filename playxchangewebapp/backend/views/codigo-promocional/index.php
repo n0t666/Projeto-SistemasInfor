@@ -6,31 +6,33 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Codigo Promocionals';
+$this->title = 'Códigos promocionais';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Codigo Promocional', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar Código', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
-
-
-
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
-
                             'id',
                             'codigo',
                             'desconto',
-                            'isAtivo',
+                            [
+                                'attribute'=>'isAtivo',
+                                'content'=>function($model){
+                                    return $model->isAtivo ? 'Sim' : 'Não';
+                                }
+                            ],
 
                             ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
                         ],

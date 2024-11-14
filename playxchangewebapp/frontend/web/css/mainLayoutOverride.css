@@ -427,7 +427,54 @@ input[type="text"].disabled, input[type="password"].disabled, input[type="email"
     margin: 0 10px;
 }
 
-
 .site-login{
     overflow: hidden !important;
+}
+
+.header-index {
+    background-image: url('https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/239140/ss_488226f013287012e0feaed2fb7799dbe038fd00.1920x1080.jpg?t=1728908613');
+    background-size: cover;
+    background-position: center;
+    min-height: 40vh;
+    position: relative;
+    margin:  0;
+}
+
+
+
+.header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.header-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top, rgba(18, 18, 18, 0) 30%, rgba(18, 18, 18, 1) 95%),
+    radial-gradient(circle at bottom, rgba(18, 18, 18, 0) 30%, rgba(18, 18, 18, 1) 80%);
+    z-index: 2;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+}
+
+.full-width {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    padding-top: 0 !important;
 }

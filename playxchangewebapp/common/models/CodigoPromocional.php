@@ -14,6 +14,11 @@ use Yii;
  */
 class CodigoPromocional extends \yii\db\ActiveRecord
 {
+
+    CONST STATUS_DISABLED = 0; // Desconto não pode ser usado no checkout
+
+    CONST STATUS_ACTIVATED = 1; // Desconto pode ser usado no checkout
+
     /**
      * {@inheritdoc}
      */
@@ -29,10 +34,11 @@ class CodigoPromocional extends \yii\db\ActiveRecord
     {
         return [
             [['codigo', 'desconto', 'isAtivo'], 'required'],
-            [['desconto'], 'number'],
+            [['desconto'], 'integer','max'=>100],
             [['isAtivo'], 'integer'],
             [['codigo'], 'string', 'max' => 50],
             [['codigo'], 'unique'],
+            ['isAtivo', 'in', 'range' => [self::STATUS_ACTIVATED, self::STATUS_DISABLED]],
         ];
     }
 
@@ -43,9 +49,9 @@ class CodigoPromocional extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'codigo' => 'Codigo',
+            'codigo' => 'Código',
             'desconto' => 'Desconto',
-            'isAtivo' => 'Is Ativo',
+            'isAtivo' => 'Ativo',
         ];
     }
 
