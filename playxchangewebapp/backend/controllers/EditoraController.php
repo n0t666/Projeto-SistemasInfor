@@ -53,13 +53,17 @@ class EditoraController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new EditoraSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->can('verTudo')) {
+            $searchModel = new EditoraSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            return $this->goHome();
+        }
     }
 
     /**
@@ -70,9 +74,14 @@ class EditoraController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if(Yii::$app->user->can('verDetalhesEditoras')) {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -82,15 +91,18 @@ class EditoraController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Editora();
+        if(Yii::$app->user->can('adicionarEditoras')) {
+            $model = new Editora();
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->goHome();
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -102,15 +114,25 @@ class EditoraController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(Yii::$app->user->can('editarEditoras')) {
+            $model = $this->findModel($id);
+
+            if (!$model) {
+                throw new NotFoundHttpException("Não foi possível encontrar a editora solicitada.");
+            }
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->goHome();
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -122,9 +144,14 @@ class EditoraController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if(Yii::$app->user->can('removerEditoras')) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**
@@ -139,7 +166,6 @@ class EditoraController extends Controller
         if (($model = Editora::findOne($id)) !== null) {
             return $model;
         }
-
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

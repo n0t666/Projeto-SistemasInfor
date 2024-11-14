@@ -230,9 +230,11 @@ class RbacController extends Controller
         $criarChaves = $auth->createPermission('criarChaves');
         $editarChaves = $auth->createPermission('editarChaves');
         $apagarChaves = $auth->createPermission('apagarChaves');
+        $verDetalhesChaves = $auth->createPermission('verDetalhesChaves');
         $auth->add($criarChaves);
         $auth->add($editarChaves);
         $auth->add($apagarChaves);
+        $auth->add($verDetalhesChaves);
 
         $reporPassword = $auth->createPermission('reporPassword');
         $auth->add($reporPassword);
@@ -426,6 +428,7 @@ class RbacController extends Controller
         $auth->addChild($admin,$verDetalhesMetodosPagamento);
         $auth->addChild($admin,$verDetalhesJogos);
         $auth->addChild($admin,$verDetalhesPlataformas);
+        $auth->addChild($admin,$verDetalhesChaves);
 
         $auth->assign($admin, 1);
         $auth->assign($moderador, 2);
