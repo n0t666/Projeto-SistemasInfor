@@ -12,7 +12,7 @@ $this->title = 'Registar';
 $img = Yii::getAlias('@web') . "/images/authForms/register2.jpg";
 
 ?>
-<div class="site-signup my-5">
+<div class="site-signup">
     <div class="row">
         <div class="col-lg-10 col-xl-9 mx-auto">
             <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
@@ -37,7 +37,7 @@ $img = Yii::getAlias('@web') . "/images/authForms/register2.jpg";
                             'options' => ['class' => 'form-floating mb-3'],
                             'template' => "{input}\n{label}\n{error}",
                             'labelOptions' => ['for' => 'floatingNif'],
-                        ])->textInput(['id' => 'floatingNif', 'placeholder' => 'NIF', 'required' => false, 'autocomplete' => 'off','type' => 'number']) ?>
+                        ])->textInput(['id' => 'floatingNif', 'placeholder' => 'NIF', 'required' => false, 'autocomplete' => 'off']) ?>
                     </div>
 
                     <div class="form-floating mb-3">
@@ -70,11 +70,19 @@ $img = Yii::getAlias('@web') . "/images/authForms/register2.jpg";
 
                     <?php ActiveForm::end(); ?>
 
-                    <a class="d-block text-center mt-2 small" href="#">Have an account? Sign In</a>
+                    <a class="d-block text-center mt-2 small" href="#">Possuí uma conta? Entre</a>
 
-                    <hr class="my-4">
+                    <hr class="my-1">
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var content = document.getElementById('contentHolder');
+        if (content) {
+            content.style.paddingTop = "20px";
+        }
+    });
+</script>

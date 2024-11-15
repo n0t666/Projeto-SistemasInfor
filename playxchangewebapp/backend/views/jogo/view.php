@@ -11,10 +11,9 @@ $this->title = 'Jogo: ' . $model->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-\backend\assets\CustomAsset::register($this);
-$imageUrl = Url::to(Yii::getAlias('@capasJogo') . '/' . $model->imagemCapa, true);
-var_dump($imageUrl);
-var_dump(Yii::getAlias('@capasJogo'));
+\backend\assets\CustomAsset::register($this );
+// $imageUrl = Yii::getAlias('@capasJogo') . '/' . $model->imagemCapa;
+$imageUrl = Yii::getAlias('@uploadsFrontend') . '/jogos/capas/' . $model->imagemCapa;
 
 ?>
 

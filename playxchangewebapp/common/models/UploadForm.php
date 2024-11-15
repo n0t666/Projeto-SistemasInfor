@@ -23,12 +23,19 @@ class UploadForm extends Model
     public function upload($alias)
     {
         if ($this->validate()) {
+            /*
             $filename = Yii::$app->getSecurity()->generateRandomString();
             $path = Yii::getAlias($alias);
             $filePath = $path . DIRECTORY_SEPARATOR . $filename . '.' . $this->imageFile->extension;
+            */
+
+            $path = Yii::getAlias($alias);
+            $this->imageFile->name = Yii::$app->getSecurity()->generateRandomString() . '.' . $this->imageFile->extension;
+            $filePath = $path . DIRECTORY_SEPARATOR . $this->imageFile->name ;
 
             if ($this->imageFile->saveAs($filePath)) {
-                $this->filename = $filename . '.' . $this->imageFile->extension;
+                //$this->imageFile = $filename . '.' . $this->imageFile->extension;
+                //$this->filename = $filename . '.' . $this->imageFile->extension;
                 return true;
             }
             return false;

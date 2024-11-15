@@ -118,11 +118,11 @@ class JogoController extends Controller
                         $modelUploadCapa->imageFile = UploadedFile::getInstance($modelUploadCapa, 'imageFile');
                         if ($modelUploadCapa->imageFile) {
                             if ($modelUploadCapa->upload('@capasJogo')) {
-                                $model->imagemCapa = $modelUploadCapa->filename;
+                                $model->imagemCapa = $modelUploadCapa->imageFile->name;
                                 $model->save(false);
                             }
                         } else {
-                            Yii::$app->session->setFlash('error', 'Failed to upload capa.');
+                            Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
                         }
                     }
                     $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
@@ -190,11 +190,22 @@ function actionUpdate($id)
         $editoras = Editora::find()->all();
         $tags = Tag::find()->all();
         $generos = Genero::find()->all();
+        $modelUploadCapa = new UploadForm();
 
         try {
             if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
                 $tagsSelected = [];// Caso o utilizador não selecione todas as tags é necessário inicializar porque senão irá dar erro
                 $generosSelected = [];
+
+                $modelUploadCapa->imageFile = UploadedFile::getInstance($modelUploadCapa, 'imageFile');
+                if ($modelUploadCapa->imageFile) {
+                    if ($modelUploadCapa->upload('@capasJogo')) {
+                        $model->imagemCapa = $modelUploadCapa->filename;
+                        $model->save(false);
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
+                }
 
                 if (Yii::$app->request->post('Jogo')['tags']) {
                     $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
@@ -231,6 +242,7 @@ function actionUpdate($id)
 
         return $this->render('update', [
             'model' => $model,
+            'modelUploadCapa' => $modelUploadCapa,
             'franquias' => $franquias,
             'distribuidoras' => $distribuidoras,
             'editoras' => $editoras,

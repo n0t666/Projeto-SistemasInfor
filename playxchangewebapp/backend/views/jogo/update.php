@@ -1,4 +1,10 @@
 <?php
+use common\models\Distribuidora;
+use common\models\Editora;
+use common\models\Franquia;
+use common\models\Genero;
+use common\models\Tag;
+use common\models\UploadForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Jogo */
@@ -8,12 +14,7 @@
 /* @var Editora[] $editoras */
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
-
-use common\models\Distribuidora;
-use common\models\Editora;
-use common\models\Franquia;
-use common\models\Genero;
-use common\models\Tag;
+/* @var UploadForm $modelUploadCapa */
 
 $this->title = 'Atualizar Jogo: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
@@ -28,6 +29,7 @@ $this->params['breadcrumbs'][] = 'Atualizar';
                 <div class="col-md-12">
                     <?=$this->render('_form', [
                         'model' => $model,
+                        'modelUploadCapa' => $modelUploadCapa,
                         'franquias' => $franquias,
                         'distribuidoras'=>$distribuidoras,
                         'editoras'=>$editoras,

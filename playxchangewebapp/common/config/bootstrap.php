@@ -3,6 +3,11 @@
     Yii::setAlias('@frontend', dirname(dirname(__DIR__)) . '/frontend');
     Yii::setAlias('@backend', dirname(dirname(__DIR__)) . '/backend');
     Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
+    Yii::setAlias('@root', dirname(dirname(__DIR__)));
+    Yii::setAlias('@uploadsFrontend', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/');
+
     Yii::setAlias('@capasJogo', '@frontend/web/uploads/jogos/capas');
     Yii::setAlias('@screenshotsJogo', '@frontend/web/uploads/jogos/screenshots');
     Yii::setAlias('@fotosPerfil', '@frontend/web/uploads/users/perfil');
+
+

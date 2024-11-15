@@ -5,6 +5,8 @@ namespace backend\controllers;
 use backend\models\FranquiaSearch;
 use backend\models\JogoSearch;
 use backend\models\ScreenshotSearch;
+use common\models\MultiUploadForm;
+use common\models\UploadForm;
 use Yii;
 use common\models\Screenshot;
 use yii\data\ActiveDataProvider;
@@ -12,6 +14,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ScreenshotController implements the CRUD actions for Screenshot model.
@@ -96,8 +99,21 @@ class ScreenshotController extends Controller
     {
         if(Yii::$app->user->can('adicionarScreenshots')){
             $model = new Screenshot();
+            $modelUploads = new MultiUploadForm();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post())) {
+                $modelUploads->imageFiles = UploadedFile::getInstance($modelUploads, 'imageFiles');
+                if($modelUploads->imageFiles){
+                    if ($modelUploads->upload('@screenshotsJogo')) {
+                        foreach ($modelUploads->imageFiles as $file)
+                        {
+                            $screenshot = new Screenshot();
+                            $screenshot->caminho =
+
+                        }
+
+                    }
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 
