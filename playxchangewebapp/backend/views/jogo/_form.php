@@ -5,6 +5,7 @@ use common\models\Editora;
 use common\models\Franquia;
 use common\models\Genero;
 use common\models\Tag;
+use common\models\UploadForm;
 use kartik\date\DatePicker;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -19,11 +20,15 @@ use yii\bootstrap4\ActiveForm;
 /* @var Editora[] $editoras */
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
+/* @var UploadForm  $modelUploadCapa */
+
 ?>
 
 <div class="jogo-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => ['enctype' => 'multipart/form-data']
+    ]); ?>
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
 
@@ -49,7 +54,7 @@ use yii\bootstrap4\ActiveForm;
     ['prompt' => 'Nenhuma franquia..', 'class' => 'form-control select2']
     ) ?>
 
-    <?= $form->field($model, 'imagemCapa')->fileInput(['maxlength' => true, 'class' => 'form-control']) ?>
+    <?= $form->field($modelUploadCapa, 'imageFile')->fileInput(['class' => 'form-control']) ?>
 
     <?= $form->field($model, 'distribuidora_id')->dropDownList(
     ArrayHelper::map($distribuidoras, 'id', 'nome'),

@@ -5,6 +5,7 @@ use common\models\Editora;
 use common\models\Franquia;
 use common\models\Genero;
 use common\models\Tag;
+use common\models\UploadForm;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
@@ -15,6 +16,7 @@ use yii\helpers\Html;
 /* @var Editora[] $editoras */
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
+/* @var UploadForm $modelUploadCapa */
 
 $this->title = 'Criar Jogo';
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
@@ -28,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-md-12">
                     <?=$this->render('_form', [
                         'model' => $model,
-                        'uploadModel' => $uploadModel,
+                        'modelUploadCapa' => $modelUploadCapa,
                         'franquias' => $franquias,
                         'distribuidoras'=>$distribuidoras,
                         'editoras'=>$editoras,

@@ -16,6 +16,7 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use yii\web\UploadedFile;
 
 /**
  * JogoController implements the CRUD actions for Jogo model.
@@ -104,7 +105,7 @@ class JogoController extends Controller
     {
         if (Yii::$app->user->can('adicionarJogos')) {
             $model = new Jogo();
-            $modelUpload = new UploadForm();
+            $modelUploadCapa = new UploadForm();
             $franquias = Franquia::find()->all();
             $distribuidoras = Distribuidora::find()->all();
             $editoras = Editora::find()->all();
@@ -114,38 +115,46 @@ class JogoController extends Controller
             if ($this->request->isPost) {
                 try {
                     if ($model->load($this->request->post()) && $model->save()) {
-                        $model->imagemCapa = UploadForm::getInstance($model, 'imagemCapa');
-                        $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
-                        $generosSelected = Yii::$app->request->post('Jogo')['generos'];
-                        if ($tagsSelected) {
-                            foreach ($tagsSelected as $tag) {
-                                $tag = Tag::findOne($tag);
-                                if ($tag) {
-                                    $model->link('tags', $tag);
-                                }
+                        $modelUploadCapa->imageFile = UploadedFile::getInstance($modelUploadCapa, 'imageFile');
+                        if ($modelUploadCapa->imageFile) {
+                            if ($modelUploadCapa->upload('@capasJogo')) {
+                                $model->imagemCapa = $modelUploadCapa->filename;
+                                $model->save(false);
                             }
+                        } else {
+                            Yii::$app->session->setFlash('error', 'Failed to upload capa.');
                         }
-                        if ($generosSelected) {
-                            foreach ($generosSelected as $genero) {
-                                $genero = Genero::findOne($genero);
-                                if ($genero) {
-                                    $model->link('generos', $genero);
-                                }
-                            }
-                        }
-                        return $this->redirect(['view', 'id' => $model->id]);
                     }
-                } catch (\Exception  $e) {
-                    throw new ServerErrorHttpException($e->getMessage());
+                    $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
+                    if ($tagsSelected) {
+                        foreach ($tagsSelected as $tag) {
+                            $tag = Tag::findOne($tag);
+                            if ($tag) {
+                                $model->link('tags', $tag);
+                            }
+                        }
+                    }
+                    $generosSelected = Yii::$app->request->post('Jogo')['generos'];
+                    if ($generosSelected) {
+                        foreach ($generosSelected as $genero) {
+                            $genero = Genero::findOne($genero);
+                            if ($genero) {
+                                $model->link('generos', $genero);
+                            }
+                        }
+                    }
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } catch (\Exception $e) {
+                    Yii::$app->session->setFlash('error', 'Um erro ocorreu ao guardar o jogo: ' . $e->getMessage());
+                    return $this->redirect(['create']);
                 }
             } else {
                 $model->loadDefaultValues();
             }
 
-
             return $this->render('create', [
                 'model' => $model,
-                'modelUpload' => $modelUpload,
+                'modelUploadCapa' => $modelUploadCapa,
                 'franquias' => $franquias,
                 'distribuidoras' => $distribuidoras,
                 'editoras' => $editoras,
@@ -153,124 +162,128 @@ class JogoController extends Controller
                 'generos' => $generos,
             ]);
         } else {
+            Yii::$app->session->setFlash('error', 'Sem permissões para efetuar a ação!.');
             return $this->goHome();
         }
-
     }
 
+
     /**
-     * Updates an existing Jogo model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        if (Yii::$app->user->can('editarJogos')) {
-            $model = $this->findModel($id);
+ * Updates an existing Jogo model.
+ * If update is successful, the browser will be redirected to the 'view' page.
+ * @param int $id ID
+ * @return string|\yii\web\Response
+ * @throws NotFoundHttpException if the model cannot be found
+ */
+public
+function actionUpdate($id)
+{
+    if (Yii::$app->user->can('editarJogos')) {
+        $model = $this->findModel($id);
 
-            if (!$model) {
-                throw new NotFoundHttpException("Não foi possível encontrar o jogo  solicitado.");
-            }
+        if (!$model) {
+            throw new NotFoundHttpException("Não foi possível encontrar o jogo  solicitado.");
+        }
 
-            $franquias = Franquia::find()->all();
-            $distribuidoras = Distribuidora::find()->all();
-            $editoras = Editora::find()->all();
-            $tags = Tag::find()->all();
-            $generos = Genero::find()->all();
+        $franquias = Franquia::find()->all();
+        $distribuidoras = Distribuidora::find()->all();
+        $editoras = Editora::find()->all();
+        $tags = Tag::find()->all();
+        $generos = Genero::find()->all();
 
-            try {
-                if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-                    $tagsSelected = [];// Caso o utilizador não selecione todas as tags é necessário inicializar porque senão irá dar erro
-                    $generosSelected = [];
+        try {
+            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+                $tagsSelected = [];// Caso o utilizador não selecione todas as tags é necessário inicializar porque senão irá dar erro
+                $generosSelected = [];
 
-                    if (Yii::$app->request->post('Jogo')['tags']) {
-                        $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
+                if (Yii::$app->request->post('Jogo')['tags']) {
+                    $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
+                }
+                $model->unlinkAll('tags', true);
+
+                foreach ($tagsSelected as $tagId) {
+                    $tag = Tag::findOne($tagId);
+                    if ($tag) {
+                        $model->link('tags', $tag);
                     }
-                    $model->unlinkAll('tags', true);
-
-                    foreach ($tagsSelected as $tagId) {
-                        $tag = Tag::findOne($tagId);
-                        if ($tag) {
-                            $model->link('tags', $tag);
-                        }
-                    }
-
-                    if (Yii::$app->request->post('Jogo')['generos']) {
-                        $generosSelected = Yii::$app->request->post('Jogo')['generos'];
-                    }
-
-                    $model->unlinkAll('generos', true);
-
-                    foreach ($generosSelected as $generoId) {
-                        $genero = Genero::findOne($generoId);
-                        if ($genero) {
-                            $model->link('generos', $genero);
-                        }
-                    }
-
-                    return $this->redirect(['view', 'id' => $model->id]);
                 }
 
-            } catch (\Exception  $e) {
-                throw new ServerErrorHttpException($e->getMessage());
+                if (Yii::$app->request->post('Jogo')['generos']) {
+                    $generosSelected = Yii::$app->request->post('Jogo')['generos'];
+                }
+
+                $model->unlinkAll('generos', true);
+
+                foreach ($generosSelected as $generoId) {
+                    $genero = Genero::findOne($generoId);
+                    if ($genero) {
+                        $model->link('generos', $genero);
+                    }
+                }
+
+                return $this->redirect(['view', 'id' => $model->id]);
             }
 
-
-            return $this->render('update', [
-                'model' => $model,
-                'franquias' => $franquias,
-                'distribuidoras' => $distribuidoras,
-                'editoras' => $editoras,
-                'tags' => $tags,
-                'generos' => $generos,
-            ]);
-        } else {
-            return $this->goHome();
+        } catch (\Exception  $e) {
+            throw new ServerErrorHttpException($e->getMessage());
         }
 
+
+        return $this->render('update', [
+            'model' => $model,
+            'franquias' => $franquias,
+            'distribuidoras' => $distribuidoras,
+            'editoras' => $editoras,
+            'tags' => $tags,
+            'generos' => $generos,
+        ]);
+    } else {
+        return $this->goHome();
     }
 
-    /**
-     * Deletes an existing Jogo model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        if (Yii::$app->user->can('removerJogos')) {
-            try {
-                $this->findModel($id)->delete();
-                return $this->redirect(['index']);
-            } catch (NotFoundHttpException $e) {
-                throw new NotFoundHttpException('O item solicitado não existe.');
-            } catch (\yii\db\IntegrityException $e) {
-                throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
-            } catch (\Exception $e) {
-                throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
-            }
-        } else {
-            return $this->goHome();
+}
+
+/**
+ * Deletes an existing Jogo model.
+ * If deletion is successful, the browser will be redirected to the 'index' page.
+ * @param int $id ID
+ * @return \yii\web\Response
+ * @throws NotFoundHttpException if the model cannot be found
+ */
+public
+function actionDelete($id)
+{
+    if (Yii::$app->user->can('removerJogos')) {
+        try {
+            $this->findModel($id)->delete();
+            return $this->redirect(['index']);
+        } catch (NotFoundHttpException $e) {
+            throw new NotFoundHttpException('O item solicitado não existe.');
+        } catch (\yii\db\IntegrityException $e) {
+            throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+        } catch (\Exception $e) {
+            throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
         }
-
+    } else {
+        return $this->goHome();
     }
 
-    /**
-     * Finds the Jogo model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Jogo the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Jogo::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
+}
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+/**
+ * Finds the Jogo model based on its primary key value.
+ * If the model is not found, a 404 HTTP exception will be thrown.
+ * @param int $id ID
+ * @return Jogo the loaded model
+ * @throws NotFoundHttpException if the model cannot be found
+ */
+protected
+function findModel($id)
+{
+    if (($model = Jogo::findOne(['id' => $id])) !== null) {
+        return $model;
     }
+
+    throw new NotFoundHttpException('The requested page does not exist.');
+}
 }

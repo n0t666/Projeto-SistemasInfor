@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -11,6 +12,10 @@ $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 \backend\assets\CustomAsset::register($this);
+$imageUrl = Url::to(Yii::getAlias('@capasJogo') . '/' . $model->imagemCapa, true);
+var_dump($imageUrl);
+var_dump(Yii::getAlias('@capasJogo'));
+
 ?>
 
 <div class="container-fluid">
@@ -18,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <?php if ($model->imagemCapa): ?>
                 <div class="jogo-capa mb-4 d-flex justify-content-center">
-                    <img src="<?= Yii::getAlias('@web') . '/uploads/capa/' . $model->imagemCapa ?>" class="img-fluid rounded shadow" alt="Imagem Capa">
+                    <img src="<?= $imageUrl ?>" class="img-fluid rounded shadow" alt="Imagem Capa">
                 </div>
             <?php endif; ?>
             <div class="row">

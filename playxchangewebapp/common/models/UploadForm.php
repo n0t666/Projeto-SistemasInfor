@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
 class UploadForm extends Model
@@ -10,6 +11,7 @@ class UploadForm extends Model
      * @var UploadedFile
      */
     public $imageFile;
+    public $filename;
 
     public function rules()
     {
@@ -21,12 +23,19 @@ class UploadForm extends Model
     public function upload($alias)
     {
         if ($this->validate()) {
-            $key = Yii::$app->getSecurity()->generateRandomString();
-            $this->imageFile->saveAs($alias . $key. '.' . $this->imageFile->extension);
-            return true;
+            $filename = Yii::$app->getSecurity()->generateRandomString();
+            $path = Yii::getAlias($alias);
+            $filePath = $path . DIRECTORY_SEPARATOR . $filename . '.' . $this->imageFile->extension;
+
+            if ($this->imageFile->saveAs($filePath)) {
+                $this->filename = $filename . '.' . $this->imageFile->extension;
+                return true;
+            }
+            return false;
         } else {
             return false;
         }
     }
+
 
 }
