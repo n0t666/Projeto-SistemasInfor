@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\JogoSearch;
 use backend\models\MetodoPagamentoSearch;
+use common\models\UploadForm;
 use Yii;
 use common\models\MetodoPagamento;
 use yii\data\ActiveDataProvider;
@@ -11,6 +12,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * MetodoPagamentoController implements the CRUD actions for MetodoPagamento model.
@@ -97,13 +99,25 @@ class MetodoPagamentoController extends Controller
     {
         if(Yii::$app->user->can('adicionarMetodosPagamento')){
             $model = new MetodoPagamento();
+            $modelUpload = new UploadForm();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post())) {
+                $modelUpload->imageFile = UploadedFile::getInstance($modelUpload, 'imageFile');
+                if ($modelUpload->imageFile) {
+                    if ($modelUpload->upload('@utilsPath')) {
+                        $model->logotipo = $modelUpload->imageFile->name;
+                        $model->save();
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
+                }
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 
             return $this->render('create', [
                 'model' => $model,
+                'modelUpload' => $modelUpload
             ]);
         }else{
             return $this->goHome();
@@ -122,13 +136,25 @@ class MetodoPagamentoController extends Controller
     {
         if(Yii::$app->user->can('editarMetodosPagamento')) {
             $model = $this->findModel($id);
+            $modelUpload = new UploadForm();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post())) {
+                $modelUpload->imageFile = UploadedFile::getInstance($modelUpload, 'imageFile');
+                if ($modelUpload->imageFile) {
+                    if ($modelUpload->upload('@utilsPath')) {
+                        $model->logotipo = $modelUpload->imageFile->name;
+                        $model->save();
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
+                }
+                $model->save();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 
             return $this->render('update', [
                 'model' => $model,
+                'modelUpload' => $modelUpload
             ]);
         }else{
             return $this->goHome();

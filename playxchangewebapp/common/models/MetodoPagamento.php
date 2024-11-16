@@ -46,7 +46,7 @@ class MetodoPagamento extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'isAtivo' => 'Is Ativo',
+            'isAtivo' => 'Ativo',
             'logotipo' => 'Logotipo',
         ];
     }

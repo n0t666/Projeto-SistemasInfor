@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\FranquiaSearch;
 use backend\models\JogoSearch;
 use backend\models\ScreenshotSearch;
+use common\models\Jogo;
 use common\models\MultiUploadForm;
 use common\models\UploadForm;
 use Yii;
@@ -59,15 +60,22 @@ class ScreenshotController extends Controller
      * Lists all Screenshot models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($jogoId)
     {
-        if(Yii::$app->user->can('verTudo')){
-            $searchModel = new ScreenshotSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $jogo = $this->findGame($jogoId);
 
+        if(Yii::$app->user->can('verTudo')){
+            $query = Screenshot::find()->where(['jogo_id'=>$jogoId]);
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'pagination' => [
+                    'pageSize' => 10,
+                ],
+            ]);
             return $this->render('index', [
-                'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'jogo' => $jogo,
+
             ]);
         }
     }
@@ -95,36 +103,49 @@ class ScreenshotController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($jogoId)
     {
+        $jogo = $this->findGame($jogoId);
+
         if(Yii::$app->user->can('adicionarScreenshots')){
             $model = new Screenshot();
-            $modelUploads = new MultiUploadForm();
+            $modelUpload = new UploadForm();
 
             if ($model->load(Yii::$app->request->post())) {
-                $modelUploads->imageFiles = UploadedFile::getInstance($modelUploads, 'imageFiles');
-                if($modelUploads->imageFiles){
-                    if ($modelUploads->upload('@screenshotsJogo')) {
-                        foreach ($modelUploads->imageFiles as $file)
-                        {
-                            $screenshot = new Screenshot();
-                            $screenshot->caminho =
+                $modelUpload->imageFile = UploadedFile::getInstance($modelUpload, 'imageFile');
+                if ($modelUpload->imageFile) {
+                    if ($modelUpload->upload('@screenshotsJogoPath')) {
+                            $model->jogo_id = $jogoId;
+                            $model->filename = $modelUpload->imageFile->name;
 
-                        }
-
+                            if (!$model->save()) {
+                                $errors = $model->getErrors();
+                                Yii::$app->session->setFlash('error', 'Erro ao guardar a screenshot: ' . $modelUpload->imageFile->name);
+                                return $this->redirect(['create']);
+                            }
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Falha ao fazer o upload do arquivo.');
+                        return $this->redirect(['create', 'jogoId' => $jogoId]);
                     }
                 }
-                return $this->redirect(['view', 'id' => $model->id]);
+
+                if ($model->save()) {
+                    return $this->redirect(['index', 'jogoId' => $jogo->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Falha ao guardar o modelo.');
+                }
             }
 
             return $this->render('create', [
                 'model' => $model,
+                'modelUpload' => $modelUpload,
+                'jogo' => $jogo,
             ]);
-        }else{
+        } else {
             return $this->goHome();
         }
-
     }
+
 
     /**
      * Updates an existing Screenshot model.
@@ -133,8 +154,10 @@ class ScreenshotController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $jogoId)
     {
+        $jogo = $this->findGame($jogoId);
+
         if(Yii::$app->user->can('editarScreenshots')){
             $model = $this->findModel($id);
 
@@ -144,6 +167,7 @@ class ScreenshotController extends Controller
 
             return $this->render('update', [
                 'model' => $model,
+                'jogo' => $jogo,
             ]);
         }else{
             return $this->goHome();
@@ -161,9 +185,11 @@ class ScreenshotController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('removerScreenshots')){
-            $this->findModel($id)->delete();
+            $model = $this->findModel($id);
+            $jogo = $model->jogo_id;
+            $model->delete();
 
-            return $this->redirect(['index']);
+            return $this->redirect(['index', 'jogoId' => $jogo]);
         }else{
             return $this->goHome();
         }
@@ -184,5 +210,14 @@ class ScreenshotController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findGame($id)
+    {
+        if (($game = Jogo::findOne($id)) !== null) {
+            return $game;
+        }
+
+        throw new NotFoundHttpException('The requested game does not exist.');
     }
 }

@@ -84,6 +84,7 @@ class MetodoEnvioController extends Controller
                 'model' => $this->findModel($id),
             ]);
         }else{
+            \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
             return $this->goHome();
         }
 
@@ -107,6 +108,7 @@ class MetodoEnvioController extends Controller
                 'model' => $model,
             ]);
         }else{
+            \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
             return $this->goHome();
         }
 
@@ -132,6 +134,7 @@ class MetodoEnvioController extends Controller
                 'model' => $model,
             ]);
         }else{
+            \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
             return $this->goHome();
         }
 
@@ -151,6 +154,7 @@ class MetodoEnvioController extends Controller
 
             return $this->redirect(['index']);
         }else{
+            \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
             return $this->goHome();
         }
 

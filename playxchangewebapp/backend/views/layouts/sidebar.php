@@ -42,7 +42,6 @@
                         'items' => [
                             ['label' => 'Jogos', 'icon' => 'gamepad', 'url' => ['/jogo'],'active' => Yii::$app->controller->id === 'jogo'],
                             ['label' => 'Franquias', 'icon' => 'tag', 'url' => ['/franquia'], 'active' => Yii::$app->controller->id === 'franquia'],
-                            ['label' => 'Screenshots', 'icon' => 'images', 'url' => ['/screenshot'], 'active' => Yii::$app->controller->id === 'screenshot'],
                             ['label' => 'Distribuidoras', 'icon' => 'store', 'url' => ['/distribuidora'], 'active' => Yii::$app->controller->id === 'distribuidora'],
                             ['label' => 'Tags', 'icon' => 'tags', 'url' => ['/tag'], 'active' => Yii::$app->controller->id === 'tag'],
                             ['label' => 'Editoras', 'icon' => 'book', 'url' => ['/editora'], 'active' => Yii::$app->controller->id === 'editora'],

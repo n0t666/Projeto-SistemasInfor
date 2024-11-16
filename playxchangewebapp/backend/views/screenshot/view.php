@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Screenshot */
 
 $this->title = 'Screenshot: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Screenshots', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Screenshots', 'url' => ['index', 'jogoId' => $model->jogo_id]];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -15,28 +15,55 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-12 text-center">
+                    <!-- Display the screenshot image outside the DetailView -->
+                    <?= Html::img(Yii::getAlias('@screenshotsJogoUrl' . '/' . $model->filename), [
+                        'alt' => $model->filename,
+                         'class' => 'img-fluid',
+                         'style' => 'max-width: 80%; max-height: 400px; height: auto;'
+                    ]) ?>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
-                    <p>
-                        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-                            'class' => 'btn btn-danger',
-                            'data' => [
-                                'confirm' => 'Are you sure you want to delete this item?',
-                                'method' => 'post',
-                            ],
-                        ]) ?>
-                    </p>
                     <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
-                            'id',
-                            'jogo_id',
-                            'caminho',
+                            //'id',
+                            [
+                                'label' => 'Jogo',
+                                'attribute' => 'jogo_id',
+                                'format' => 'html',
+                                'value' => function ($model) {
+                                    return $model->jogo->nome;
+
+                                },
+                            ],
+                            [
+                                'attribute' => 'filename',
+                                'label' => 'Nome Ficheiro',
+                            ],
                         ],
                     ]) ?>
                 </div>
                 <!--.col-md-12-->
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <?= Html::a('Atualizar', ['update', 'id' => $model->id], [
+                        'class' => 'btn btn-primary btn-sm btn-block',
+                    ]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= Html::a('Apagar', ['delete', 'id' => $model->id], [
+                        'class' => 'btn btn-danger btn-sm btn-block',
+                        'data' => [
+                            'confirm' => 'Tem a certeza que deseja apagar?',
+                            'method' => 'post',
+                        ],
+                    ]) ?>
+                </div>
             </div>
             <!--.row-->
         </div>

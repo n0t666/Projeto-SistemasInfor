@@ -1,34 +1,43 @@
 <?php
 
+use common\models\UploadForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\PlataformaSearch */
 /* @var $form yii\widgets\ActiveForm */
+
 ?>
 
 <div class="row mt-2">
     <div class="col-md-12">
+        <?php $form = ActiveForm::begin([
+            'action' => ['index'],
+            'method' => 'get',
+            'id' => 'search-form'
+        ]); ?>
+        <div class="input-group">
+            <?= $form->field($model, 'globalSearch')->textInput([
+                'class' => 'form-control',
+                'placeholder' => 'Pesquisar...',
+            ])->label(false) ?>
+            <div class="input-group-addon pl-2  ">
+                <?= Html::submitButton(
+                    '<i class="fas fa-search"></i>',
+                    ['class' => 'btn btn-primary']
+                ) ?>
+                <?= Html::resetButton(
+                    '<i class="fas fa-undo"></i>',
+                    ['class' => 'btn btn-outline-secondary', 'onclick' => 'resetForm()']
+                ) ?>
+            </div>
+        </div>
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
-
-    <?= $form->field($model, 'id') ?>
-
-    <?= $form->field($model, 'nome') ?>
-
-    <?= $form->field($model, 'logotipo') ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
 
     </div>
     <!--.col-md-12-->
 </div>
+
+

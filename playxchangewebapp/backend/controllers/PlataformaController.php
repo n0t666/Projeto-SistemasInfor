@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\UploadForm;
 use Yii;
 use common\models\Plataforma;
 use backend\models\PlataformaSearch;
@@ -9,6 +10,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * PlataformaController implements the CRUD actions for Plataforma model.
@@ -96,13 +98,25 @@ class PlataformaController extends Controller
     {
         if(Yii::$app->user->can('adicionarPlataformas')){
             $model = new Plataforma();
+            $modelUpload = new UploadForm();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post())) {
+                $modelUpload->imageFile = UploadedFile::getInstance($modelUpload, 'imageFile');
+                if ($modelUpload->imageFile) {
+                    if ($modelUpload->upload('@utilsPath')) {
+                        $model->logotipo = $modelUpload->imageFile->name;
+                        $model->save();
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao fazer o upload do logo.');
+                }
+                $model->save();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 
             return $this->render('create', [
                 'model' => $model,
+                'modelUpload' => $modelUpload,
             ]);
         }else{
             return $this->goHome();
@@ -121,13 +135,25 @@ class PlataformaController extends Controller
     {
         if(Yii::$app->user->can('editarPlataformas')){
             $model = $this->findModel($id);
+            $modelUpload = new UploadForm();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post())) {
+                $modelUpload->imageFile = UploadedFile::getInstance($modelUpload, 'imageFile');
+                if ($modelUpload->imageFile) {
+                    if ($modelUpload->upload('@utilsPath')) {
+                        $model->logotipo = $modelUpload->imageFile->name;
+                        $model->save();
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'Erro ao fazer o upload do logo.');
+                }
+                $model->save();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 
             return $this->render('update', [
                 'model' => $model,
+                'modelUpload' => $modelUpload,
             ]);
         }else{
             return $this->goHome();

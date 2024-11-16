@@ -9,7 +9,6 @@ use Yii;
  *
  * @property int $id
  * @property int $jogo_id
- * @property string $caminho
  *
  * @property Jogo $jogo
  */
@@ -29,7 +28,7 @@ class Screenshot extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['jogo_id', 'caminho'], 'required'],
+            [['jogo_id'], 'required'],
             [['jogo_id'], 'integer'],
             [['filename'], 'string', 'max' => 255],
             [['jogo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Jogo::class, 'targetAttribute' => ['jogo_id' => 'id']],

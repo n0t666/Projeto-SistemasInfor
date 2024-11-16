@@ -17,7 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
+                            <?php if (Yii::$app->user->can('criarChaves')): ?>
                             <?= Html::a('Criar Chave', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 

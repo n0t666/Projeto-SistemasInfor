@@ -11,22 +11,21 @@ $this->title = 'Plataformas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Plataforma', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar Plataforma', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
 
 
-                    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
-                        'filterModel' => $searchModel,
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 

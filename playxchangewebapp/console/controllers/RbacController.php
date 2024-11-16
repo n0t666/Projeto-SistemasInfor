@@ -429,6 +429,7 @@ class RbacController extends Controller
         $auth->addChild($admin,$verDetalhesJogos);
         $auth->addChild($admin,$verDetalhesPlataformas);
         $auth->addChild($admin,$verDetalhesChaves);
+        $auth->addChild($admin,$adicionarMetodosEnvio);
 
         $auth->assign($admin, 1);
         $auth->assign($moderador, 2);

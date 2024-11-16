@@ -17,16 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <p>
-                        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-                            'class' => 'btn btn-danger',
-                            'data' => [
-                                'confirm' => 'Are you sure you want to delete this item?',
-                                'method' => 'post',
-                            ],
-                        ]) ?>
-                    </p>
                     <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
@@ -38,6 +28,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]) ?>
                 </div>
                 <!--.col-md-12-->
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <?= Html::a('Atualizar', ['update', 'id' => $model->id], [
+                        'class' => 'btn btn-primary btn-sm btn-block',
+                    ]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= Html::a('Apagar', ['delete', 'id' => $model->id], [
+                        'class' => 'btn btn-danger btn-sm btn-block',
+                        'data' => [
+                            'confirm' => 'Tem a certeza que deseja apagar?',
+                            'method' => 'post',
+                        ],
+                    ]) ?>
+                </div>
             </div>
             <!--.row-->
         </div>

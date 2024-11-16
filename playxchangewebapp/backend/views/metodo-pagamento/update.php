@@ -2,8 +2,11 @@
 
 /* @var $this yii\web\View */
 /* @var $model common\models\MetodoPagamento */
+/* @var $modelUpload UploadForm */
 
-$this->title = 'Update Metodo Pagamento: ' . $model->id;
+use common\models\UploadForm;
+
+$this->title = 'Atualizar Método de Pagamento: ' . $model->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Metodo Pagamentos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -15,7 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
             <div class="row">
                 <div class="col-md-12">
                     <?=$this->render('_form', [
-                        'model' => $model
+                        'model' => $model,
+                        'modelUpload' => $modelUpload
                     ]) ?>
                 </div>
             </div>

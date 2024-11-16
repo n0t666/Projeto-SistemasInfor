@@ -18,7 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Criar Jogo', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php if (Yii::$app->user->can('adicionarJogos')): ?>
+                                <?= Html::a('Criar Jogo', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?= GridView::widget([
@@ -54,7 +56,23 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return $model->editora ? $model->editora->nome : 'N/A';
                                 }
                             ],
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'format' => 'raw',
+                                'content' => function ($model) {
+                                    if (Yii::$app->user->can('verTudo')) {
+                                        return Html::a('Ver Screenshots', ['screenshot/index', 'jogoId' => $model->id], ['class' => 'btn btn-info']);
+                                    }
+                                    return '';
+                                }
+                            ],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesJogos'),
+                                    'update' => Yii::$app->user->can('editarJogos'),
+                                    'delete' => Yii::$app->user->can('removerJogos'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [

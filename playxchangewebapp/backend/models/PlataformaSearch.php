@@ -11,6 +11,9 @@ use common\models\Plataforma;
  */
 class PlataformaSearch extends Plataforma
 {
+
+    public $globalSearch;
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +21,8 @@ class PlataformaSearch extends Plataforma
     {
         return [
             [['id'], 'integer'],
-            [['nome', 'logotipo'], 'safe'],
+            [['nome'], 'safe'],
+            [['globalSearch'], 'string', 'max' => 255],
         ];
     }
 
@@ -46,23 +50,26 @@ class PlataformaSearch extends Plataforma
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-        ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'logotipo', $this->logotipo]);
+        if (!empty($this->globalSearch)) {
+            $query->andFilterWhere(['or',
+                ['like', 'nome', $this->globalSearch],
+                ['like', 'id', $this->globalSearch],
+            ]);
+        }
 
         return $dataProvider;
     }

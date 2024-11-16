@@ -21,7 +21,7 @@ use yii\bootstrap4\ActiveForm;
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
 /* @var UploadForm  $modelUploadCapa */
-
+/* @var UploadForm  $modelUploadScreenshots */
 ?>
 
 <div class="jogo-form">
@@ -54,7 +54,10 @@ use yii\bootstrap4\ActiveForm;
     ['prompt' => 'Nenhuma franquia..', 'class' => 'form-control select2']
     ) ?>
 
-    <?= $form->field($modelUploadCapa, 'imageFile')->fileInput(['class' => 'form-control']) ?>
+    <?= $form->field($modelUploadCapa, 'imageFile')->fileInput(['class' => 'form-control','id'=>'inputCapa'])->label('Foto de Capa') ?>
+
+    <?= $form->field($modelUploadScreenshots, 'imageFiles[]')->fileInput(['class' => 'form-control','multiple' => true, 'accept' => 'image/*','id'=>'inputScreenshots'])->label('Screenshots') ?>
+    <div class="mt-3" id="screenshotPreview"></div>
 
     <?= $form->field($model, 'distribuidora_id')->dropDownList(
     ArrayHelper::map($distribuidoras, 'id', 'nome'),

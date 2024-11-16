@@ -18,7 +18,7 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'isAtivo')->dropDownList([
         1 => 'Sim',
-        2 => 'Não'
+        0 => 'Não'
     ], ['prompt' => 'Selecione...']) ?>
 
     <div class="form-group">

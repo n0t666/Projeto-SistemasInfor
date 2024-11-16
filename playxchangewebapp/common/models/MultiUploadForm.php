@@ -16,11 +16,21 @@ class MultiUploadForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'imageFiles' => 'Imagens',
+        ];
+    }
+
     public function upload($alias){
+        $path = Yii::getAlias($alias);
+
         if ($this->validate()) {
             foreach ($this->imageFiles as $file) {
-                $key = Yii::$app->getSecurity()->generateRandomString();
-                $file->saveAs($alias . $key . '.' . $file->extension);
+                $file->name = Yii::$app->getSecurity()->generateRandomString() . '.' . $file->extension;
+                $filePath = $path . DIRECTORY_SEPARATOR . $file->name;
+                $file->saveAs($filePath);
             }
             return true;
         } else {

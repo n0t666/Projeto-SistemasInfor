@@ -1,7 +1,10 @@
 <?php
 
+use common\models\Jogo;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\Screenshot */
+/* @var $jogo Jogo */
 
 $this->title = 'Atualizar Screenshot: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Screenshots', 'url' => ['index']];
@@ -15,7 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
             <div class="row">
                 <div class="col-md-12">
                     <?=$this->render('_form', [
-                        'model' => $model
+                        'model' => $model,
+                        '$jogo' => $jogo
                     ]) ?>
                 </div>
             </div>

@@ -46,3 +46,35 @@
 .user-backend-card{
     margin-top: 80px;
 }
+
+.custom-carousel {
+    border-radius: 10px; /* Rounded corners for the carousel */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+    overflow: hidden;
+}
+
+.carousel-item img.custom-img {
+    object-fit: cover;
+    height: 400px; /* Set a custom height */
+    border-radius: 8px; /* Optional: Rounded corners for images */
+}
+
+.carousel-indicators {
+    bottom: -30px; /* Adjust the position of the indicators */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Customize control icons */
+    border-radius: 50%; /* Rounded control icons */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%; /* Adjust control size */
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Hover effect on controls */
+}

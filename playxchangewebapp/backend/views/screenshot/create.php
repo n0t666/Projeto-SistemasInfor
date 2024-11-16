@@ -1,12 +1,16 @@
 <?php
 
+use common\models\Jogo;
+use common\models\MultiUploadForm;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Screenshot */
+/* @var $modelUpload MultiUploadForm */
+/* @var $jogo Jogo */
 
 $this->title = 'Criar Screenshot';
-$this->params['breadcrumbs'][] = ['label' => 'Screenshots', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Screenshots', 'url' => ['index','jogoId' => $jogo->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -16,7 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="row">
                 <div class="col-md-12">
                     <?=$this->render('_form', [
-                        'model' => $model
+                        'model' => $model,
+                        'modelUpload' => $modelUpload,
+                        'jogo' => $jogo,
                     ]) ?>
                 </div>
             </div>

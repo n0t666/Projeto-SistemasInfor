@@ -17,6 +17,7 @@ use yii\helpers\Html;
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
 /* @var UploadForm $modelUploadCapa */
+/* @var UploadForm $modelUploadScreenshots */
 
 $this->title = 'Criar Jogo';
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
@@ -31,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?=$this->render('_form', [
                         'model' => $model,
                         'modelUploadCapa' => $modelUploadCapa,
+                        'modelUploadScreenshots' => $modelUploadScreenshots,
                         'franquias' => $franquias,
                         'distribuidoras'=>$distribuidoras,
                         'editoras'=>$editoras,

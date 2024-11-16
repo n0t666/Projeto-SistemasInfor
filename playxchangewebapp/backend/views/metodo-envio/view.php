@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\MetodoEnvio */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Metodo Envios', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Métdos de Envio', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>

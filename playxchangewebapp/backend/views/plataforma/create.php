@@ -1,11 +1,13 @@
 <?php
 
+use common\models\UploadForm;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Plataforma */
+/* @var $modelUpload UploadForm */
 
-$this->title = 'Create Plataforma';
+$this->title = 'Criar Plataforma';
 $this->params['breadcrumbs'][] = ['label' => 'Plataformas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,7 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="row">
                 <div class="col-md-12">
                     <?=$this->render('_form', [
-                        'model' => $model
+                        'model' => $model,
+                        'modelUpload' => $modelUpload
                     ]) ?>
                 </div>
             </div>

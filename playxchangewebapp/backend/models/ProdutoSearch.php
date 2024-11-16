@@ -11,6 +11,8 @@ use common\models\produto;
  */
 class ProdutoSearch extends produto
 {
+    public $globalSearch;
+
     /**
      * {@inheritdoc}
      */
@@ -19,6 +21,7 @@ class ProdutoSearch extends produto
         return [
             [['id', 'jogo_id', 'plataforma_id', 'quantidade'], 'integer'],
             [['preco'], 'number'],
+            [['globalSearch'], 'string', 'max' => 255],
         ];
     }
 
@@ -42,6 +45,8 @@ class ProdutoSearch extends produto
     {
         $query = produto::find();
 
+        $query->joinWith(['jogo', 'plataforma']);
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -59,14 +64,15 @@ class ProdutoSearch extends produto
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'jogo_id' => $this->jogo_id,
-            'plataforma_id' => $this->plataforma_id,
-            'preco' => $this->preco,
-            'quantidade' => $this->quantidade,
-        ]);
+
+
+        if (!empty($this->globalSearch)) {
+            $query->andFilterWhere(['or', // Caso o termo de pesquisa dê match com o nome, descricao,distribuido, editora ou franquia
+                ['like', 'produtos.id', $this->globalSearch],
+                ['like', 'jogos.nome', $this->globalSearch],
+                ['like', 'plataformas.nome', $this->globalSearch],
+            ]);
+        }
 
         return $dataProvider;
     }

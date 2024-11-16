@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Metodo Pagamento', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar Método de Pagamento', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
 
@@ -27,10 +27,21 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
+                            //'id',
                             'nome',
-                            'isAtivo',
-                            'logotipo',
+                            [
+                                'attribute' => 'isAtivo',
+                                'value' => function($model) {
+                                    return $model->isAtivo ? 'Sim' : 'Não';
+                                }
+                            ],
+                            [
+                                'attribute' => 'logotipo',
+                                'value' => function($model) {
+                                    return Html::img('@utilsUrl/' . $model->logotipo, ['alt' => 'Logotipo', 'style' => 'max-width: 100px;']);
+                                },
+                                'format' => 'raw',
+                            ],
 
                             ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
                         ],

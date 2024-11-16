@@ -1,5 +1,6 @@
 <?php
 
+use yii\bootstrap4\Carousel;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
@@ -13,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 \backend\assets\CustomAsset::register($this );
 // $imageUrl = Yii::getAlias('@capasJogo') . '/' . $model->imagemCapa;
-$imageUrl = Yii::getAlias('@uploadsFrontend') . '/jogos/capas/' . $model->imagemCapa;
+$imageUrl = Yii::getAlias('@capasJogoUrl') . '/'. $model->imagemCapa;
 
 ?>
 
@@ -83,7 +84,7 @@ $imageUrl = Yii::getAlias('@uploadsFrontend') . '/jogos/capas/' . $model->imagem
                         <h5>Tags</h5>
                         <div class="badge-container">
                             <?php foreach ($model->tags as $tag): ?>
-                                <span class="badge badge-primary badge-pill model-details-badge"><?= Html::encode($tag->nome) ?></span>
+                                <span class="badge badge-primary badge-pill model-details-badge py-3"><?= Html::encode($tag->nome) ?></span>
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -92,7 +93,7 @@ $imageUrl = Yii::getAlias('@uploadsFrontend') . '/jogos/capas/' . $model->imagem
                         <h5>Géneros</h5>
                         <div class="badge-container-details">
                             <?php foreach ($model->generos as $genero): ?>
-                                <span class="badge badge-dark badge-pill model-details-badge"><?= Html::encode($genero->nome) ?></span>
+                                <span class="badge badge-danger badge-pill model-details-badge py-3"><?= Html::encode($genero->nome) ?></span>
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -105,4 +106,23 @@ $imageUrl = Yii::getAlias('@uploadsFrontend') . '/jogos/capas/' . $model->imagem
         <!--.card-body-->
     </div>
     <!--.card-->
+    <div class="mt-4 mb-5">
+        <h5>Capturas de Ecrã</h5>
+        <?= Carousel::widget([
+            'items' => array_map(function ($screenshot) {
+                return [
+                    'content' => Html::img(Yii::getAlias('@screenshotsJogoUrl') . '/' . $screenshot->filename, ['alt' => 'Screenshot', 'class' => 'd-block w-100 custom-img']),
+                    'caption' => '',  // Optional: Add captions if needed
+                ];
+            }, $model->screenshots),
+            'options' => [
+                'class' => 'carousel slide custom-carousel',
+            ],
+            'controls' => ['Anterior', 'Próxima'],
+        ]); ?>
+    </div>
+
+
+
+
 </div>

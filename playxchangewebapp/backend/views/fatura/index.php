@@ -17,7 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Fatura', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php if (Yii::$app->user->can('efetuarCompras')): ?>
+                                <?= Html::a('Criar Fatura', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -30,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             'id',
                             'utilizador_id',
-                            'metodo_id',
+                            //'metodo_id',
                             'envio_id',
                             'codigo_id',
                             //'dataEncomenda',

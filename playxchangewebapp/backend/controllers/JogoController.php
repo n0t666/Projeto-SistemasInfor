@@ -8,6 +8,8 @@ use common\models\Editora;
 use common\models\Franquia;
 use common\models\Genero;
 use common\models\Jogo;
+use common\models\MultiUploadForm;
+use common\models\Screenshot;
 use common\models\Tag;
 use common\models\UploadForm;
 use Yii;
@@ -106,6 +108,7 @@ class JogoController extends Controller
         if (Yii::$app->user->can('adicionarJogos')) {
             $model = new Jogo();
             $modelUploadCapa = new UploadForm();
+            $modelUploadScreenshots = new MultiUploadForm();
             $franquias = Franquia::find()->all();
             $distribuidoras = Distribuidora::find()->all();
             $editoras = Editora::find()->all();
@@ -116,13 +119,35 @@ class JogoController extends Controller
                 try {
                     if ($model->load($this->request->post()) && $model->save()) {
                         $modelUploadCapa->imageFile = UploadedFile::getInstance($modelUploadCapa, 'imageFile');
+                        $modelUploadScreenshots->imageFiles = UploadedFile::getInstances($modelUploadScreenshots, 'imageFiles');
                         if ($modelUploadCapa->imageFile) {
-                            if ($modelUploadCapa->upload('@capasJogo')) {
+                            if ($modelUploadCapa->upload('@capasJogoPath')) {
                                 $model->imagemCapa = $modelUploadCapa->imageFile->name;
                                 $model->save(false);
                             }
                         } else {
                             Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
+                        }
+
+                        if ($modelUploadScreenshots->imageFiles) {
+                            if ($modelUploadScreenshots->upload('@screenshotsJogoPath')) {
+                                foreach ($modelUploadScreenshots->imageFiles as $file) {
+                                    $screenshot = new Screenshot();
+                                    $screenshot->jogo_id = $model->id;
+                                    $screenshot->filename=$file->name;;
+
+                                    if ($screenshot->validate() && $screenshot->save()) {
+                                    } else {
+                                        $errors = $screenshot->getErrors();
+                                        Yii::$app->session->setFlash('error', 'Erro ao guardar a screenshot: ' . implode(', ', $errors));
+                                        return $this->redirect(['create']);
+                                    }
+
+                                }
+                            }else{
+                                Yii::$app->session->setFlash('error', 'Falha ao fazer o upload das screenshots.');
+                                return $this->redirect(['create']);
+                            }
                         }
                     }
                     $tagsSelected = Yii::$app->request->post('Jogo')['tags'];
@@ -155,6 +180,7 @@ class JogoController extends Controller
             return $this->render('create', [
                 'model' => $model,
                 'modelUploadCapa' => $modelUploadCapa,
+                'modelUploadScreenshots' => $modelUploadScreenshots,
                 'franquias' => $franquias,
                 'distribuidoras' => $distribuidoras,
                 'editoras' => $editoras,

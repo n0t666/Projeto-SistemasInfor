@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Metodo Envios';
+$this->title = 'Métodos de Envio';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Metodo Envio', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar Método Envio', ['create'], ['class' => 'btn btn-success']) ?>
                         </div>
                     </div>
 
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
+                            //'id',
                             'nome',
 
                             ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\MetodoEnvio */
 
-$this->title = 'Create Metodo Envio';
+$this->title = 'Criar Método Envio';
 $this->params['breadcrumbs'][] = ['label' => 'Metodo Envios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

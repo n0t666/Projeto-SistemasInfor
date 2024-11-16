@@ -15,10 +15,11 @@ use common\models\UploadForm;
 /* @var Tag[] $tags */
 /* @var Genero[] $generos */
 /* @var UploadForm $modelUploadCapa */
+/* @var UploadForm $modelUploadScreenshots */
 
-$this->title = 'Atualizar Jogo: ' . $model->id;
+$this->title = 'Atualizar Jogo: ' . $model->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Jogos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->nome, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Atualizar';
 ?>
 
@@ -30,6 +31,7 @@ $this->params['breadcrumbs'][] = 'Atualizar';
                     <?=$this->render('_form', [
                         'model' => $model,
                         'modelUploadCapa' => $modelUploadCapa,
+                        'modelUploadScreenshots' => $modelUploadScreenshots,
                         'franquias' => $franquias,
                         'distribuidoras'=>$distribuidoras,
                         'editoras'=>$editoras,
