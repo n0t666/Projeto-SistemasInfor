@@ -311,6 +311,36 @@ class Userdata extends \yii\db\ActiveRecord
                     return $this->dataNascimento ? date('d-m-Y', strtotime($this->dataNascimento)) : null;
                 },
             ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['fotoCapa'],
+                ],
+                'value' => function ($event) {
+                    if (!empty($this->fotoCapa) && file_exists($this->fotoCapa)) {
+                        return Yii::getAlias('@PerfilUrl') . '/' . $this->fotoCapa;
+                    }else{
+                        return Yii::getAlias('@imagesUrl') . '/' . 'default_background.png';
+
+                    }
+
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['fotoPerfil'],
+                ],
+                'value' => function ($event) {
+                    if (!empty($this->fotoPerfil) && file_exists($this->fotoPerfil)) {
+                        return Yii::getAlias('@PerfilUrl') . '/' . $this->fotoPerfil;
+                    }else{
+                        return Yii::getAlias('@imagesUrl') . '/' . 'default_user.jpg';
+
+                    }
+
+                },
+            ],
         ];
     }
     public function getPrivacidadeSeguidoresLabel()
@@ -354,6 +384,10 @@ class Userdata extends \yii\db\ActiveRecord
                 return 'Desconhecido';
         }
     }
+
+
+
+
 
 
 }

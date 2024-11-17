@@ -45,17 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute'=>'status',
                                 'content'=>function($model){
-                                    switch ($model->user->status) {
-                                        case User::STATUS_DELETED:
-                                            return 'Banido';
-                                        case User::STATUS_INACTIVE:
-                                            return 'Inativo';
-                                        case User::STATUS_ACTIVE:
-                                            return 'Ativo';
-                                        default:
-                                            return 'Desconhecida';
-                                    }
-
+                                    return $model->user->getStatusLabel();
                                 }
                             ],
                             //'created_at',

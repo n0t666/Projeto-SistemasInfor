@@ -215,4 +215,22 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasOne(UserData::class, ['user_id' => 'id']);
     }
+
+
+    /*
+     * Função para traduzir o número do estado num texto humano possível de ler
+     */
+    public function getStatusLabel()
+    {
+        switch ($this->status) {
+            case self::STATUS_ACTIVE:
+                return 'Ativo';
+            case self::STATUS_INACTIVE:
+                return 'Inativo';
+            case self::STATUS_DELETED:
+                return 'Bloqueado';
+            default:
+                return 'Desconhecido';
+        }
+    }
 }

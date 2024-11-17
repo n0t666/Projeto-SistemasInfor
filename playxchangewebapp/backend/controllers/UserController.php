@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\JogoSearch;
+use backend\models\SignupForm;
 use backend\models\UserSearch;
 use common\models\Userdata;
 use Yii;
@@ -98,40 +99,17 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        /*
-        $model = new User();
-        $userData = new Userdata();
-        $authManager = Yii::$app->authManager;
+        $model = new SignupForm();
 
-        $roles = $authManager->getRoles();
-
-        if ($model->load(Yii::$app->request->post()) && $userData->load(Yii::$app->request->post())) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                if ($model->save()) {
-                    $userData->user_id = $model->id;
-                    if ($userData->save()) {
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    } else {
-                        throw new \Exception('Erro ao guardar o perfil do utilizador.');
-                    }
-                } else {
-                    throw new \Exception('Erro ao guardar o utilizador.');
-                }
-            } catch (\Exception $e) {
-                $transaction->rollBack();
-                throw new NotFoundHttpException($e->getMessage());
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+            Yii::$app->session->setFlash('success', 'Registration successful. Please check your email for verification.');
+            return $this->redirect(['index']);
         }
 
 
         return $this->render('create', [
             'model' => $model,
-            'userData' => $userData,
-            'roles' => $roles,
         ]);
-        */
     }
 
     /**
@@ -144,14 +122,80 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         if(Yii::$app->user->can('editarDetalhesUtilizadores')){
-            $model = $this->findModel($id);
+            $user = $this->findModel($id);
+            $model = new SignupForm();
+            $model->username = $user->username;
+            $model->email = $user->email;
+            $model->nif = $user->profile->nif;
+            $model->nome = $user->profile->nome;
+            $model->status = $user->status;
+            $auth = Yii::$app->authManager;
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            $roles = $auth->getRolesByUser($user->id); // Obter em formato de array
+
+            if($roles){ //Necessário de obter de facto o nome do role do utilizador
+                $role = reset($roles); // Obter a primeira role, visto que neste caso o sistem só permite 1 role por utilizador
+                $model->role = $role->name;
+            }
+
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $transaction = Yii::$app->db->beginTransaction();
+                try{
+
+                    if ($model->password) {
+                        $user->setPassword($model->password);
+                    }
+
+                    if ($model->username !== $user->username) {
+                        if (User::findOne(['username' => $model->username])) {
+                            $model->addError('username', 'Este username já foi usado.');
+                            return false;
+                        }
+                        $user->username = $model->username;
+                    }
+
+                    if ($model->email !== $user->email) {
+                        if (User::findOne(['email' => $model->email])) {
+                            $model->addError('email', 'Este email já foi usado.');
+                            return false;
+                        }
+                        $user->email = $model->email;
+                    }
+
+                    $user->save(false);
+
+                    if (!empty($model->role)) {
+                        $auth->revokeAll($user->id);
+                        $role = $auth->getRole($model->role);
+                        $auth->assign($role, $user->id);
+                    }
+
+                    $profile = $user->profile;
+                    $profile->nome = $model->nome;
+
+                    if ($profile->nif !== $model->nif) {
+                        if (Userdata::findOne(['nif' => $model->nif])) {
+                            $model->addError('email', 'Este NIF já foi usado.');
+                            return false;
+                        }
+                        $profile->nif = $model->nif;
+                    }
+
+                    $profile->save(false);
+
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', 'Utilizador atualizado com sucesso!.');
+                    return $this->redirect(['index']);
+                }catch (\Exception $e) {
+                    $transaction->rollBack();
+                    Yii::$app->session->setFlash('error', 'Falha ao atualizar dados!.');
+                }
             }
 
             return $this->render('update', [
                 'model' => $model,
+                'userId' => $user->id,
             ]);
         }else{
             return $this->goHome();

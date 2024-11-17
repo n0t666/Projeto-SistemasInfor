@@ -15,15 +15,12 @@ $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
-$profilePicUrl = 'https://i.pinimg.com/originals/b2/ea/a0/b2eaa0d4918d54021f9c7aa3fc3d3cf3.jpg';
-$bannerUrl = 'https://i.pinimg.com/originals/99/cd/d3/99cdd33cd7d9b838ef55303aa00ca934.jpg'
-
 ?>
 
 <div class="container-fluid">
-    <div class="user-banner mb-4" style="background-image: url('<?= $bannerUrl ?>'); height: 250px; background-size: cover; background-position: center;">
+    <div class="user-banner mb-4" style="background-image: url('<?= $userData->fotoCapa ?>'); height: 250px; background-size: cover; background-position: center;">
         <div class="profile-picture d-flex justify-content-center position-absolute" style="bottom: -60px; left: 50%; transform: translateX(-50%);">
-            <img src="<?= $profilePicUrl ?>" alt="User Profile Picture" class="img-fluid rounded-circle border border-light" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;">
+            <img src="<?= $userData->fotoPerfil ?>" alt="User Profile Picture" class="img-fluid rounded-circle border border-light" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;">
         </div>
     </div>
     <div class="card user-backend-card">
@@ -39,7 +36,13 @@ $bannerUrl = 'https://i.pinimg.com/originals/99/cd/d3/99cdd33cd7d9b838ef55303aa0
                             //'password_hash',
                             //'password_reset_token',
                             'email:email',
-                            'status',
+                            [
+                                'attribute' => 'status',
+                                'value' => function($model) {
+                                    return $model->getStatusLabel();
+                                },
+                                'label' => 'Status',
+                            ],
                             [
                                 'attribute' => 'Criado em',
                                 'value' => Yii::$app->formatter->asDatetime($model->created_at, 'php:m-d-Y H:i:s'),
@@ -49,6 +52,14 @@ $bannerUrl = 'https://i.pinimg.com/originals/99/cd/d3/99cdd33cd7d9b838ef55303aa0
                                 'attribute' => 'updated_at',
                                 'value' => Yii::$app->formatter->asDatetime($model->updated_at, 'php:m-d-Y H:i:s'),
                                 'label' => 'Atualizado em',
+                            ],
+                            [
+                                'attribute' => 'roles',
+                                'label' => 'Roles',
+                                'value' => function ($model) {
+                                    $roles = Yii::$app->authManager->getRolesByUser($model->id);
+                                    return reset($roles)->name; // Primeiro role tendo em conta especificações do sistema
+                                },
                             ],
                             //'verification_token',
                         ],

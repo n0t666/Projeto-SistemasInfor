@@ -2,11 +2,12 @@
 
 use common\models\Jogo;
 use common\models\MultiUploadForm;
+use common\models\UploadForm;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Screenshot */
-/* @var $modelUpload MultiUploadForm */
+/* @var $modelUpload UploadForm */
 /* @var $jogo Jogo */
 
 $this->title = 'Criar Screenshot';

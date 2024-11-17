@@ -125,10 +125,7 @@ class JogoController extends Controller
                                 $model->imagemCapa = $modelUploadCapa->imageFile->name;
                                 $model->save(false);
                             }
-                        } else {
-                            Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
                         }
-
                         if ($modelUploadScreenshots->imageFiles) {
                             if ($modelUploadScreenshots->upload('@screenshotsJogoPath')) {
                                 foreach ($modelUploadScreenshots->imageFiles as $file) {
@@ -144,9 +141,6 @@ class JogoController extends Controller
                                     }
 
                                 }
-                            }else{
-                                Yii::$app->session->setFlash('error', 'Falha ao fazer o upload das screenshots.');
-                                return $this->redirect(['create']);
                             }
                         }
                     }
@@ -217,20 +211,44 @@ function actionUpdate($id)
         $tags = Tag::find()->all();
         $generos = Genero::find()->all();
         $modelUploadCapa = new UploadForm();
+        $modelUploadScreenshots = new MultiUploadForm();
 
         try {
-            if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            if ($this->request->isPost && $model->load($this->request->post())) {
                 $tagsSelected = [];// Caso o utilizador não selecione todas as tags é necessário inicializar porque senão irá dar erro
                 $generosSelected = [];
 
                 $modelUploadCapa->imageFile = UploadedFile::getInstance($modelUploadCapa, 'imageFile');
+                $modelUploadScreenshots->imageFiles = UploadedFile::getInstances($modelUploadScreenshots, 'imageFiles');
                 if ($modelUploadCapa->imageFile) {
-                    if ($modelUploadCapa->upload('@capasJogo')) {
-                        $model->imagemCapa = $modelUploadCapa->filename;
-                        $model->save(false);
+                    if ($modelUploadCapa->upload('@capasJogoPath')) {
+                        if(UtilsController::deleteFile(Yii::getAlias('@capasJogoPath'). '/' . $model->imagemCapa)){
+                            $model->imagemCapa = $modelUploadCapa->imageFile->name;
+                            $model->save();
+                        }else{
+                            Yii::$app->session->setFlash('error', 's ao fazer o upload da capa.');
+                            return $this->redirect(['update', 'id' => $model->id]);
+                        }
                     }
                 } else {
                     Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
+                }
+                if ($modelUploadScreenshots->imageFiles) {
+                    if ($modelUploadScreenshots->upload('@screenshotsJogoPath')) {
+                        foreach ($modelUploadScreenshots->imageFiles as $file) {
+                            $screenshot = new Screenshot();
+                            $screenshot->jogo_id = $model->id;
+                            $screenshot->filename=$file->name;;
+
+                            if ($screenshot->validate() && $screenshot->save()) {
+                            } else {
+                                $errors = $screenshot->getErrors();
+                                Yii::$app->session->setFlash('error', 'Erro ao guardar a screenshot: ' . implode(', ', $errors));
+                                return $this->redirect(['update', 'id' => $model->id]);
+                            }
+
+                        }
+                    }
                 }
 
                 if (Yii::$app->request->post('Jogo')['tags']) {
@@ -269,6 +287,7 @@ function actionUpdate($id)
         return $this->render('update', [
             'model' => $model,
             'modelUploadCapa' => $modelUploadCapa,
+            'modelUploadScreenshots' => $modelUploadScreenshots,
             'franquias' => $franquias,
             'distribuidoras' => $distribuidoras,
             'editoras' => $editoras,
@@ -291,6 +310,7 @@ function actionUpdate($id)
 public
 function actionDelete($id)
 {
+
     if (Yii::$app->user->can('removerJogos')) {
         try {
             $this->findModel($id)->delete();

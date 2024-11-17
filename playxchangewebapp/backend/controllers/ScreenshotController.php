@@ -157,6 +157,7 @@ class ScreenshotController extends Controller
     public function actionUpdate($id, $jogoId)
     {
         $jogo = $this->findGame($jogoId);
+        $modelUpload = new UploadForm();
 
         if(Yii::$app->user->can('editarScreenshots')){
             $model = $this->findModel($id);
@@ -168,6 +169,7 @@ class ScreenshotController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'jogo' => $jogo,
+                'modelUpload' => $modelUpload,
             ]);
         }else{
             return $this->goHome();
@@ -187,13 +189,18 @@ class ScreenshotController extends Controller
         if(Yii::$app->user->can('removerScreenshots')){
             $model = $this->findModel($id);
             $jogo = $model->jogo_id;
-            $model->delete();
+            $filePath = Yii::getAlias('@screenshotsJogoPath') . '/' . $model->filename;
 
-            return $this->redirect(['index', 'jogoId' => $jogo]);
+            if(UtilsController::deleteFile($filePath)){
+                $model->delete();
+                Yii::$app->session->setFlash('success', 'Screenshot removida com sucesso!.');
+                return $this->redirect(['index', 'jogoId' => $jogo]);
+            }else{
+                Yii::$app->session->setFlash('error', 'Erro ao apagar.');
+            }
         }else{
             return $this->goHome();
         }
-
     }
 
     /**

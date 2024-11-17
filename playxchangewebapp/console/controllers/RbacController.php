@@ -352,7 +352,8 @@ class RbacController extends Controller
         $auth->addChild($moderador,$verDetalhesEncomendas);
         $auth->addChild($moderador,$verDetalhesListas);
         $auth->addChild($moderador,$verDetalhesSugestao);
-        $auth->addChild($funcionario,$verDetalhesFaq);
+        $auth->addChild($moderador,$verDetalhesFaq);
+        $auth->addChild($moderador,$verDetalhesUtilizadores);
 
         $admin = $auth->createRole('admin');
         $auth->add($admin);
@@ -430,6 +431,7 @@ class RbacController extends Controller
         $auth->addChild($admin,$verDetalhesPlataformas);
         $auth->addChild($admin,$verDetalhesChaves);
         $auth->addChild($admin,$adicionarMetodosEnvio);
+        $auth->addChild($admin,$verDetalhesUtilizadores);
 
         $auth->assign($admin, 1);
         $auth->assign($moderador, 2);

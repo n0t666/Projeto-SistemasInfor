@@ -1,10 +1,12 @@
 <?php
 
 use common\models\Jogo;
+use common\models\UploadForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Screenshot */
 /* @var $jogo Jogo */
+/* @var $modelUpload UploadForm */
 
 $this->title = 'Atualizar Screenshot: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Screenshots', 'url' => ['index']];
@@ -19,7 +21,8 @@ $this->params['breadcrumbs'][] = 'Update';
                 <div class="col-md-12">
                     <?=$this->render('_form', [
                         'model' => $model,
-                        '$jogo' => $jogo
+                        'modelUpload' => $modelUpload,
+                        'jogo' => $jogo
                     ]) ?>
                 </div>
             </div>

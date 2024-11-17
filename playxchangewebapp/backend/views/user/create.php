@@ -9,7 +9,7 @@ use yii\helpers\Html;
 /* @var $roles[] */
 
 $this->title = 'Criar utilizador';
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -20,8 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-md-12">
                     <?=$this->render('_form', [
                         'model' => $model,
-                        'userData' => $userData,
-                        'roles' => $roles,
                     ]) ?>
                 </div>
             </div>

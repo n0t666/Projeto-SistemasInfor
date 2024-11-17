@@ -1,5 +1,6 @@
 <?php
 
+use backend\models\SignupForm;
 use common\models\User;
 use common\models\Userdata;
 use kartik\date\DatePicker;
@@ -8,10 +9,8 @@ use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\User */
+/* @var $model SignupForm */
 /* @var $form yii\bootstrap4\ActiveForm */
-/* @var $userData Userdata */
-/* @var $roles[] */
 ?>
 
 <div class="user-form">
@@ -22,28 +21,27 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'status')->dropDownList([
-        User::STATUS_ACTIVE => 'Ativo',
-        User::STATUS_INACTIVE => 'Inativo',
-        User::STATUS_DELETED => 'Banido',
-    ]) ?>
+    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
-    <?= $form->field($userData, 'nome')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'nif')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($userData, 'nif')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'role')->dropDownList(
+        ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'), // Map the roles to the dropdown
+        ['prompt' => 'Selecione um Papel'] // Optional prompt
+    ) ?>
+
+    <?= $form->field($model, 'status')->dropDownList(
+        [
+            User::STATUS_ACTIVE => 'Ativo',
+            User::STATUS_INACTIVE => 'Inativo',
+            User::STATUS_DELETED => 'Banido',
+        ],
+        ['prompt' => 'Selecione o Status']
+    ) ?>
 
 
-    <?= $form->field($userData, 'dataNascimento')->widget(DatePicker::class, [
-            'options' => ['placeholder' => 'Introduza a data de nascimento ...'],
-            'pluginOptions' => [
-                'todayHighlight' => true,
-                'todayBtn' => true,
-                'autoclose' => true,
-                'format' => 'dd-mm-yyyy'
-            ]
-        ]
-    )
-    ?>
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
