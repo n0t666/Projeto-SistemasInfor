@@ -50,10 +50,10 @@ class SugestaoFuncionalidade extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'utilizador_id' => 'Utilizador ID',
-            'descricao' => 'Descricao',
-            'titulo' => 'Titulo',
-            'dataSugestao' => 'Data Sugestao',
+            'utilizador_id' => 'Utilizador',
+            'descricao' => 'Descrição',
+            'titulo' => 'Título',
+            'dataSugestao' => 'Data da Sugestão',
             'estado' => 'Estado',
         ];
     }

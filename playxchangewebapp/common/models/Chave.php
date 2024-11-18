@@ -52,12 +52,12 @@ class Chave extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'produto_id' => 'Produto ID',
-            'plataforma_id' => 'Plataforma ID',
+            'produto_id' => 'Produto',
+            'plataforma_id' => 'Plataforma',
             'chave' => 'Chave',
-            'dataGeracao' => 'Data Geracao',
-            'dataExpiracao' => 'Data Expiracao',
-            'isUsada' => 'Is Usada',
+            'dataGeracao' => 'Data de Geração',
+            'dataExpiracao' => 'Data de Expiração',
+            'isUsada' => 'Usada',
         ];
     }
 

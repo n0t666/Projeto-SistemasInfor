@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
+                            <?php if (Yii::$app->user->can('adicionarMetodosPagamento')): ?>
                             <?= Html::a('Criar Método de Pagamento', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -43,7 +45,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'format' => 'raw',
                             ],
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesMetodosEnvio'),
+                                    'update' => Yii::$app->user->can('editarMetodosPagamento'),
+                                    'delete' => Yii::$app->user->can('removerMetodosPagamento'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [

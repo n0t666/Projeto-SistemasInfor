@@ -19,7 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
+                            <?php if (Yii::$app->user->can('adicionarScreenshots')): ?>
                             <?= Html::a('Criar Screenshot', ['create', 'jogoId' => $jogo->id], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?= GridView::widget([
@@ -44,8 +46,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },
                             ],
                             ['class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesScreenshots'),
+                                    'update' => Yii::$app->user->can('editarScreenshots'),
+                                    'delete' => Yii::$app->user->can('removerScreenshots'),
+                                ],
                                 'urlCreator' => function ($action, $model, $key, $index) use ($jogo) {
-                                    if($action === 'update'){
+                                    if ($action === 'update') {
                                         return Url::to(['screenshot/update', 'id' => $model->id, 'jogoId' => $jogo->id]);
                                     }
                                     return Url::to([$action, 'id' => $model->id]);

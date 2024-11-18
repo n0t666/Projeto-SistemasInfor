@@ -16,7 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Sugestao Funcionalidade', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php if (Yii::$app->user->can('criarSugestao')): ?>
+                            <?= Html::a('Criar Sugestão de Funcionalidade', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -27,14 +29,21 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
+                            //'id',
                             'utilizador_id',
                             'descricao:ntext',
                             'titulo',
                             'dataSugestao',
                             //'estado',
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesSugestao'),
+                                    'update' => Yii::$app->user->can('editarSugestao'),
+                                    'delete' => Yii::$app->user->can('apagarSugestao'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [

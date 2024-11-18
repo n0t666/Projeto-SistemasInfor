@@ -62,7 +62,7 @@ AppAsset::register($this);
             $username = Yii::$app->user->identity->username;
             $profilePicture = 'https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg';
 
-            echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']); // Dropdown item
+            echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
 
 
             echo Html::beginTag('a', [
@@ -89,37 +89,36 @@ AppAsset::register($this);
                 . Html::submitButton('Logout', ['class' => 'dropdown-item'])
                 . Html::endForm());
             echo Html::endTag('ul');
-
-            echo Html::endTag('li');
-            echo Html::button('<i class="fas fa-search"></i>', [
-                'class' => 'btn btn-outline-light d-none d-md-block ms-2',
-                'title' => 'Pesquisar',
-                'id' => 'search_1'
-            ]);
-
-            echo Html::beginTag('div', ['class' => 'd-md-none']);
-            echo Html::beginTag('form', [
-                'action' => '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/site/search',
-                'method' => 'get',
-                'class' => 'd-flex mt-2',
-            ]);
-
-            echo Html::input('text', 'query', '', [
-                'id' => 'search_input',
-                'class' => 'form-control shadow-none',
-                'placeholder' => 'Pesquise aqui...',
-                'aria-label' => 'Procurar'
-            ]);
-
-            echo Html::endTag('form');
-            echo Html::endTag('div');
         }
+        echo Html::endTag('li');
+        echo Html::button('<i class="fas fa-search"></i>', [
+            'class' => 'btn btn-outline-light d-none d-md-block ms-2',
+            'title' => 'Pesquisar',
+            'id' => 'search_1'
+        ]);
+
+        echo Html::beginTag('div', ['class' => 'd-md-none']);
+        echo Html::beginTag('form', [
+            'action' => '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/site/search',
+            'method' => 'get',
+            'class' => 'd-flex mt-2',
+        ]);
+
+        echo Html::input('text', 'query', '', [
+            'id' => 'search_input',
+            'class' => 'form-control shadow-none',
+            'placeholder' => 'Pesquise aqui...',
+            'aria-label' => 'Procurar'
+        ]);
+
+        echo Html::endTag('form');
+        echo Html::endTag('div');
         NavBar::end();
         ?>
     </header>
     <main role="main" class="flex-shrink-0">
         <div class="container" id="contentHolder">
-            <div class="search_input_top mb-3" id="search_input_box">
+            <div class="search_input_top" id="search_input_box">
                 <div class="container">
                     <?= Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex justify-content-between search-inner']);
                     echo Html::textInput('query', null, [
@@ -127,6 +126,11 @@ AppAsset::register($this);
                         'placeholder' => 'Pesquise aqui...',
                         'id' => 'search_input',
                         'aria-label' => 'Procurar',
+                    ]);
+                    echo Html::tag('span', '', [
+                        'class' => 'fas fa-times',
+                        'id' => 'close_search',
+                        'title' => 'Fechar'
                     ]);
                     echo Html::endForm(); ?>
                 </div>

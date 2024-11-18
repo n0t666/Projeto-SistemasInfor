@@ -223,9 +223,23 @@ class RbacController extends Controller
         $alterarEstadoDenuncia = $auth->createPermission('alterarEstadoDenuncia');
         $alterarEstadoEncomenda = $auth->createPermission('alterarEstadoEncomenda');
         $alterarEstadoSugestao = $auth->createPermission('alterarEstadoSugestao');
+        $editarDenuncia = $auth->createPermission('editarDenuncia');
+        $editarDenuncia->description = 'Edição de uma denuncia em particular feita por um cliente';
+        $editarDenuncias = $auth->createPermission('editarDenuncias');
+        $editarDenuncias->description = 'Edição em geral de todas as denuncias';
+        $apagarDenuncia = $auth->createPermission('apagarDenuncia');
+        $apagarDenuncia->description = 'Apagar denuncia particular feita por um cliente';
+        $apagarDenuncias = $auth->createPermission('apagarDenuncias');
+        $apagarDenuncias->description = 'Apagar denuncias no geral';
+        $verDetalhesDenuncias = $auth->createPermission('verDetalhesDenuncias');
         $auth->add($alterarEstadoDenuncia);
         $auth->add($alterarEstadoEncomenda);
         $auth->add($alterarEstadoSugestao);
+        $auth->add($editarDenuncia);
+        $auth->add($editarDenuncias);
+        $auth->add($apagarDenuncia);
+        $auth->add($apagarDenuncias);
+        $auth->add($verDetalhesDenuncias);
 
         $criarChaves = $auth->createPermission('criarChaves');
         $editarChaves = $auth->createPermission('editarChaves');
@@ -279,6 +293,9 @@ class RbacController extends Controller
         $acederFrontend = $auth->createPermission('acederFrontend');
         $auth->add($acederFrontend);
 
+        $adicionarUtilizadores = $auth->createPermission('adicionarUtilizadores');
+        $auth->add($adicionarUtilizadores);
+
         $cliente = $auth->createRole('cliente');
         $auth->add($cliente);
         $auth->addChild($cliente, $usarCodigosProm);
@@ -324,6 +341,8 @@ class RbacController extends Controller
         $auth->addChild($cliente, $removerJogados);
         $auth->addChild($cliente, $editarComentario);
         $auth->addChild($cliente, $acederFrontend);
+        $auth->addChild($cliente,$editarDenuncia);
+        $auth->addChild($cliente, $apagarDenuncia);
 
         $funcionario = $auth->createRole('funcionario');
         $auth->add($funcionario);
@@ -354,6 +373,9 @@ class RbacController extends Controller
         $auth->addChild($moderador,$verDetalhesSugestao);
         $auth->addChild($moderador,$verDetalhesFaq);
         $auth->addChild($moderador,$verDetalhesUtilizadores);
+        $auth->addChild($moderador,$editarDenuncias);
+        $auth->addChild($moderador, $apagarDenuncias);
+        $auth->addChild($moderador, $verDetalhesDenuncias);
 
         $admin = $auth->createRole('admin');
         $auth->add($admin);
@@ -432,6 +454,7 @@ class RbacController extends Controller
         $auth->addChild($admin,$verDetalhesChaves);
         $auth->addChild($admin,$adicionarMetodosEnvio);
         $auth->addChild($admin,$verDetalhesUtilizadores);
+        $auth->addChild($admin,$adicionarUtilizadores);
 
         $auth->assign($admin, 1);
         $auth->assign($moderador, 2);

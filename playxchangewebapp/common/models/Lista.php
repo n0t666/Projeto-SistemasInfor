@@ -54,9 +54,9 @@ class Lista extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'descricao' => 'Descricao',
-            'dataCriacao' => 'Data Criacao',
-            'idUtilizador' => 'Id Utilizador',
+            'descricao' => 'Descrição',
+            'dataCriacao' => 'Data de Criação',
+            'idUtilizador' => 'Utilizador',
             'privacidade' => 'Privacidade',
         ];
     }

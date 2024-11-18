@@ -17,7 +17,7 @@ class UtilsController extends Controller
                     return false;
                 }
             } else {
-                return false;
+                return true;
             }
         }catch (\Exception $e){
             return false;

@@ -7,10 +7,13 @@ use backend\models\MetodoEnvioSearch;
 use Yii;
 use common\models\Distribuidora;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ServerErrorHttpException;
 
 /**
  * DistribuidoraController implements the CRUD actions for Distribuidora model.
@@ -97,15 +100,17 @@ class DistribuidoraController extends Controller
     public function actionCreate()
     {
         if(Yii::$app->user->can('adicionarDistribuidoras')) {
-            $model = new Distribuidora();
-
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            try {
+                $model = new Distribuidora();
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            } catch (Exception $e) {
+                throw new ServerErrorHttpException($e->getMessage());
             }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }else{
             return $this->goHome();
         }
@@ -127,8 +132,12 @@ class DistribuidoraController extends Controller
                 throw new NotFoundHttpException("Não foi possível encontrar a distribuidora solicitada.");
             }
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            try {
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            } catch (Exception $e) {
+                throw new ServerErrorHttpException($e->getMessage());
             }
 
             return $this->render('update', [
@@ -150,9 +159,16 @@ class DistribuidoraController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('removerDistribuidoras')) {
-            $this->findModel($id)->delete();
-
-            return $this->redirect(['index']);
+            try {
+                $this->findModel($id)->delete();
+                return $this->redirect(['index']);
+            } catch (NotFoundHttpException $e) {
+                throw new NotFoundHttpException('O item solicitado não existe.');
+            } catch (\yii\db\IntegrityException $e) {
+                throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+            } catch (\Exception $e) {
+                throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+            }
         }else{
             return $this->goHome();
         }

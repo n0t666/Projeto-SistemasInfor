@@ -56,11 +56,11 @@ class Fatura extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'utilizador_id' => 'Utilizador ID',
-            'pagamento_id' => 'Pagamento ID',
-            'envio_id' => 'Envio ID',
-            'codigo_id' => 'Codigo ID',
-            'dataEncomenda' => 'Data Encomenda',
+            'utilizador_id' => 'Utilizador',
+            'pagamento_id' => 'Método de Pagamento',
+            'envio_id' => 'Método de Expedição',
+            'codigo_id' => 'Codigo Promocional',
+            'dataEncomenda' => 'Data da Encomenda',
             'total' => 'Total',
             'estado' => 'Estado',
         ];

@@ -196,7 +196,8 @@ class ScreenshotController extends Controller
                 Yii::$app->session->setFlash('success', 'Screenshot removida com sucesso!.');
                 return $this->redirect(['index', 'jogoId' => $jogo]);
             }else{
-                Yii::$app->session->setFlash('error', 'Erro ao apagar.');
+                Yii::$app->session->setFlash('error', 'Erro ao apagar, não foi possivel remover o arquivo.');
+                return $this->redirect(['index', 'jogoId' => $jogo]);
             }
         }else{
             return $this->goHome();

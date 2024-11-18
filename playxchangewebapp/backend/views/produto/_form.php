@@ -2,6 +2,7 @@
 
 use common\models\Jogo;
 use common\models\Plataforma;
+use kartik\number\NumberControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
@@ -29,9 +30,29 @@ use yii\bootstrap4\ActiveForm;
         ['prompt' => 'Selecione a plataforma', 'class' => 'form-control select2']
     ) ?>
 
-    <?= $form->field($model, 'preco')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'preco')->widget(NumberControl::classname(), [
+        'maskedInputOptions' => [
+            'digits' => 0,
+            'allowMinus' => false,
+            'rightAlign' => false,
+            'suffix' => ' €',
+        ],
+        'options' => ['class' => 'form-control']
+    ]) ?>
 
-    <?= $form->field($model, 'quantidade')->textInput() ?>
+
+
+    <?= $form->field($model, 'quantidade')->widget(NumberControl::classname(), [
+        'maskedInputOptions' => [
+            'digits' => 0,
+            'allowMinus' => false,
+            'rightAlign' => false
+        ],
+        'displayOptions' => [
+                'placeholder' => 'Introduza uma quantidade válida...'
+            ],
+        'options' => ['class' => 'form-control']
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

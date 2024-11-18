@@ -108,21 +108,21 @@ $imageUrl = Yii::getAlias('@capasJogoUrl') . '/'. $model->imagemCapa;
     <!--.card-->
     <div class="mt-4 mb-5">
         <h5>Capturas de Ecrã</h5>
-        <?= Carousel::widget([
-            'items' => array_map(function ($screenshot) {
-                return [
-                    'content' => Html::img(Yii::getAlias('@screenshotsJogoUrl') . '/' . $screenshot->filename, ['alt' => 'Screenshot', 'class' => 'd-block w-100 custom-img']),
-                    'caption' => '',  // Optional: Add captions if needed
-                ];
-            }, $model->screenshots),
-            'options' => [
-                'class' => 'carousel slide custom-carousel',
-            ],
-            'controls' => ['Anterior', 'Próxima'],
-        ]); ?>
+        <?php
+        if($model->screenshots &&  !empty($model->screenshots)){
+            echo Carousel::widget([
+                'items' => array_map(function ($screenshot) {
+                    return [
+                        'content' => Html::img(Yii::getAlias('@screenshotsJogoUrl') . '/' . $screenshot->filename, ['alt' => 'Screenshot', 'class' => 'd-block w-100 custom-img']),
+                        'caption' => '',
+                    ];
+                }, $model->screenshots),
+                'options' => [
+                    'class' => 'carousel slide custom-carousel',
+                ],
+                'controls' => ['Anterior', 'Próxima'],
+            ]);
+        }
+        ?>
     </div>
-
-
-
-
 </div>

@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
+                            //'id',
                             'produto_id',
                             'plataforma_id',
                             'chave',
@@ -38,12 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
                             //'dataExpiracao',
                             //'isUsada',
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesChaves'),
+                                    'update' => Yii::$app->user->can('editarChaves'),
+                                    'delete' => Yii::$app->user->can('apagarChaves'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
-                        ]
+                        ],
                     ]); ?>
 
 

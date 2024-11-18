@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
+                            //'id',
                             'utilizador_id',
                             //'metodo_id',
                             'envio_id',
@@ -39,12 +39,18 @@ $this->params['breadcrumbs'][] = $this->title;
                             //'total',
                             //'estado',
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesEncomendas'),
+                                    'delete' => Yii::$app->user->can('cancelarEncomenda'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
-                        ]
+                        ],
                     ]); ?>
 
 

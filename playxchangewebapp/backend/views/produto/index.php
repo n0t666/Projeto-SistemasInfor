@@ -19,7 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
+                            <?php if (Yii::$app->user->can('adicionarProdutos')): ?>
                             <?= Html::a('Criar Produto', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -30,13 +32,39 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
-                            'jogo_id',
-                            'plataforma_id',
-                            'preco',
-                            'quantidade',
-
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            //'id',
+                            [
+                                'attribute'=>'jogo_id',
+                                'content'=>function($model){
+                                    return $model->jogo->nome;
+                                }
+                            ],
+                            [
+                                'attribute'=>'plataforma_id',
+                                'content'=>function($model){
+                                    return $model->plataforma->nome;
+                                }
+                            ],
+                            [
+                                'attribute'=>'preco',
+                                'content'=>function($model){
+                                    return $model->preco . '€';
+                                }
+                            ],
+                            [
+                                'attribute'=>'quantidade',
+                                'content'=>function($model){
+                                    return $model->quantidade . ' unidades';
+                                }
+                            ],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesProdutos'),
+                                    'update' => Yii::$app->user->can('editarProdutos'),
+                                    'delete' => Yii::$app->user->can('removerProdutos'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [

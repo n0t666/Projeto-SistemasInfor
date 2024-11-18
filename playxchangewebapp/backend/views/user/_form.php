@@ -27,10 +27,12 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
+    <?php if (Yii::$app->user->can('associarRoles')): ?>
     <?= $form->field($model, 'role')->dropDownList(
-        ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'), // Map the roles to the dropdown
-        ['prompt' => 'Selecione um Papel'] // Optional prompt
+        ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'name'),
+        ['prompt' => 'Selecione um Papel']
     ) ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'status')->dropDownList(
         [

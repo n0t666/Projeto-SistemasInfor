@@ -2,13 +2,17 @@
 
 namespace backend\controllers;
 
+use backend\models\FaqSearch;
 use Yii;
 use common\models\Faq;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ServerErrorHttpException;
 
 /**
  * FaqController implements the CRUD actions for Faq model.
@@ -56,11 +60,11 @@ class FaqController extends Controller
     public function actionIndex()
     {
         if(Yii::$app->user->can('verTudo')) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Faq::find(),
-            ]);
+            $searchModel = new FaqSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
             return $this->render('index', [
+                'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
             ]);
         }else{
@@ -94,15 +98,18 @@ class FaqController extends Controller
     public function actionCreate()
     {
         if(Yii::$app->user->can('adicionarFaq')) {
-            $model = new Faq();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            try {
+                $model = new Faq();
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            } catch (\Exception  $e) {
+                throw new ServerErrorHttpException($e->getMessage());
             }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }else{
             return $this->goHome();
         }
@@ -121,13 +128,16 @@ class FaqController extends Controller
         if(Yii::$app->user->can('editarFaq')) {
             $model = $this->findModel($id);
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            try {
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            } catch (\Exception  $e) {
+                throw new ServerErrorHttpException($e->getMessage());
             }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }else{
             return $this->goHome();
         }
@@ -144,9 +154,17 @@ class FaqController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('removerFaq')) {
-            $this->findModel($id)->delete();
 
-            return $this->redirect(['index']);
+            try {
+                $this->findModel($id)->delete();
+                return $this->redirect(['index']);
+            } catch (NotFoundHttpException $e) {
+                throw new NotFoundHttpException('O item solicitado não existe.');
+            } catch (\yii\db\IntegrityException $e) {
+                throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+            } catch (\Exception $e) {
+                throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+            }
         }else{
             return $this->goHome();
         }

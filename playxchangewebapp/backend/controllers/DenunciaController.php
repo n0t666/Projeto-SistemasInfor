@@ -2,23 +2,18 @@
 
 namespace backend\controllers;
 
-use backend\models\JogoSearch;
-use backend\models\ListaSearch;
 use Yii;
-use common\models\Lista;
-use yii\data\ActiveDataProvider;
-use yii\db\Exception;
-use yii\db\StaleObjectException;
+use common\models\Denuncia;
+use backend\models\DenunciaSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\ServerErrorHttpException;
 
 /**
- * ListaController implements the CRUD actions for Lista model.
+ * DenunciaController implements the CRUD actions for Denuncia model.
  */
-class ListaController extends Controller
+class DenunciaController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -32,7 +27,7 @@ class ListaController extends Controller
                     [
                         'actions' => ['create','update','delete','view'],
                         'allow' => true,
-                        'roles' => ['admin'],
+                        'roles' => ['admin','moderador'],
                     ],
                     [
                         'actions' => ['index'],
@@ -55,13 +50,13 @@ class ListaController extends Controller
     }
 
     /**
-     * Lists all Lista models.
+     * Lists all Denuncia models.
      * @return mixed
      */
     public function actionIndex()
     {
         if(Yii::$app->user->can('verTudo')){
-            $searchModel = new ListaSearch();
+            $searchModel = new DenunciaSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
             return $this->render('index', [
@@ -75,16 +70,17 @@ class ListaController extends Controller
     }
 
     /**
-     * Displays a single Lista model.
-     * @param int $id ID
+     * Displays a single Denuncia model.
+     * @param int $denunciante_id Denunciante ID
+     * @param int $denunciado_id Denunciado ID
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($denunciante_id, $denunciado_id)
     {
-        if(Yii::$app->user->can('verDetalhesListas')){
+        if(Yii::$app->user->can('verDetalhesDenuncias')) {
             return $this->render('view', [
-                'model' => $this->findModel($id),
+                'model' => $this->findModel($denunciante_id, $denunciado_id),
             ]);
         }else{
             return $this->goHome();
@@ -93,53 +89,46 @@ class ListaController extends Controller
     }
 
     /**
-     * Creates a new Lista model.
+     * Creates a new Denuncia model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        if(Yii::$app->user->can('adicionarListas')) {
 
-            try {
-                $model = new Lista();
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            } catch (Exception $e) {
-                throw new ServerErrorHttpException($e->getMessage());
+        if (Yii::$app->user->can('denunciarUtilizador')) {
+            $model = new Denuncia();
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'denunciante_id' => $model->denunciante_id, 'denunciado_id' => $model->denunciado_id]);
             }
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }else{
             return $this->goHome();
         }
-
     }
 
     /**
-     * Updates an existing Lista model.
+     * Updates an existing Denuncia model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
+     * @param int $denunciante_id Denunciante ID
+     * @param int $denunciado_id Denunciado ID
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($denunciante_id, $denunciado_id)
     {
-        if(Yii::$app->user->can('editarListas')) {
-            $model = $this->findModel($id);
+        if (Yii::$app->user->can('editarDenuncias')) {
+            $model = $this->findModel($denunciante_id, $denunciado_id);
 
-            try {
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            } catch (Exception $e) {
-                throw new ServerErrorHttpException($e->getMessage());
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'denunciante_id' => $model->denunciante_id, 'denunciado_id' => $model->denunciado_id]);
             }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }else{
             return $this->goHome();
         }
@@ -147,26 +136,19 @@ class ListaController extends Controller
     }
 
     /**
-     * Deletes an existing Lista model.
+     * Deletes an existing Denuncia model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
+     * @param int $denunciante_id Denunciante ID
+     * @param int $denunciado_id Denunciado ID
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($denunciante_id, $denunciado_id)
     {
-        if(Yii::$app->user->can('removerListas')) {
+        if (Yii::$app->user->can('apagarDenuncias')) {
+            $this->findModel($denunciante_id, $denunciado_id)->delete();
 
-            try {
-                $this->findModel($id)->delete();
-                return $this->redirect(['index']);
-            } catch (NotFoundHttpException $e) {
-                throw new NotFoundHttpException('O item solicitado não existe.');
-            } catch (\yii\db\IntegrityException $e) {
-                throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
-            } catch (\Exception $e) {
-                throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
-            }
+            return $this->redirect(['index']);
         }else{
             return $this->goHome();
         }
@@ -174,15 +156,16 @@ class ListaController extends Controller
     }
 
     /**
-     * Finds the Lista model based on its primary key value.
+     * Finds the Denuncia model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Lista the loaded model
+     * @param int $denunciante_id Denunciante ID
+     * @param int $denunciado_id Denunciado ID
+     * @return Denuncia the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($denunciante_id, $denunciado_id)
     {
-        if (($model = Lista::findOne($id)) !== null) {
+        if (($model = Denuncia::findOne(['denunciante_id' => $denunciante_id, 'denunciado_id' => $denunciado_id])) !== null) {
             return $model;
         }
 

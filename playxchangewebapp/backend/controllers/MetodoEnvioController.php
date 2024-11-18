@@ -7,10 +7,13 @@ use backend\models\MetodoEnvioSearch;
 use Yii;
 use common\models\MetodoEnvio;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ServerErrorHttpException;
 
 /**
  * MetodoEnvioController implements the CRUD actions for MetodoEnvio model.
@@ -100,13 +103,16 @@ class MetodoEnvioController extends Controller
         if(Yii::$app->user->can('adicionarMetodosEnvio')) {
             $model = new MetodoEnvio();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            try {
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            } catch (Exception $e) {
+                throw new ServerErrorHttpException($e->getMessage());
             }
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }else{
             \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
             return $this->goHome();
@@ -126,13 +132,16 @@ class MetodoEnvioController extends Controller
         if(Yii::$app->user->can('editarMetodosEnvio')) {
             $model = $this->findModel($id);
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            try {
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            } catch (Exception $e) {
+                throw new ServerErrorHttpException($e->getMessage());
             }
-
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }else{
             \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
             return $this->goHome();
@@ -150,9 +159,17 @@ class MetodoEnvioController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('removerMetodosEnvio')) {
-            $this->findModel($id)->delete();
 
-            return $this->redirect(['index']);
+            try {
+                $this->findModel($id)->delete();
+                return $this->redirect(['index']);
+            } catch (NotFoundHttpException $e) {
+                throw new NotFoundHttpException('O item solicitado não existe.');
+            } catch (\yii\db\IntegrityException $e) {
+                throw new ServerErrorHttpException('Não é possível eliminar este item porque está associado a outro registro.');
+            } catch (\Exception $e) {
+                throw new ServerErrorHttpException('Ocorreu um erro inesperado: ' . $e->getMessage());
+            }
         }else{
             \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
             return $this->goHome();

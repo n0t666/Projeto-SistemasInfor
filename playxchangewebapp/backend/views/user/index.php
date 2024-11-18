@@ -18,7 +18,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
+                            <?php if (Yii::$app->user->can('adicionarUtilizadores')): ?>
                             <?= Html::a('Criar Utilizador', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?= GridView::widget([
@@ -26,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
+                            //'id',
                             [
                                 'attribute'=>'username',
                                 'content'=>function($model){
@@ -52,7 +54,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             //'updated_at',
                             //'verification_token',
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesUtilizadores'),
+                                    'update' => Yii::$app->user->can('editarDetalhesUtilizadores'),
+                                    'delete' => Yii::$app->user->can('banirUtilizador'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [

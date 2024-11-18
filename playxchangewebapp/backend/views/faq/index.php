@@ -17,7 +17,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <?= Html::a('Create Faq', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php if (Yii::$app->user->can('adicionarFaq')): ?>
+                            <?= Html::a('Criar FAQ', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -28,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
+                            //'id',
                             'pergunta',
                             'descricao:ntext',
 
@@ -37,7 +39,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
-                        ]
+                        ],
+                        [
+                            'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                            'visibleButtons' => [
+                                'view' => Yii::$app->user->can('verDetalhesFaq'),
+                                'update' => Yii::$app->user->can('editarFaq'),
+                                'delete' => Yii::$app->user->can('removerFaq'),
+                            ],
+                        ],
                     ]); ?>
 
 
