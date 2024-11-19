@@ -18,6 +18,11 @@ use Yii;
  */
 class Denuncia extends \yii\db\ActiveRecord
 {
+    const STATUS_PROCESSING = 0;
+    const STATUS_REFUSED = 1;
+    const STATUS_BANNED = 2;
+
+
     /**
      * {@inheritdoc}
      */
@@ -74,5 +79,19 @@ class Denuncia extends \yii\db\ActiveRecord
     public function getDenunciante()
     {
         return $this->hasOne(Userdata::class, ['id' => 'denunciante_id']);
+    }
+
+    public function getStatusLabel()
+    {
+        switch ($this->estado) {
+            case self::STATUS_PROCESSING:
+                return 'A processar';
+            case self::STATUS_REFUSED:
+                return 'Recusado';
+            case self::STATUS_BANNED:
+                return 'Banido';
+            default:
+                return 'Desconhecido';
+        }
     }
 }

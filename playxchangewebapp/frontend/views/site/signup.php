@@ -70,7 +70,7 @@ $img = Yii::getAlias('@web') . "/images/authForms/register2.jpg";
 
                     <?php ActiveForm::end(); ?>
 
-                    <a class="d-block text-center mt-2 small" href="#">Possuí uma conta? Entre</a>
+                    <a class="d-block text-center mt-2 small" href="login">Possuí uma conta? Entre</a>
 
                     <hr class="my-1">
                 </div>

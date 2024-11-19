@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Jogo;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -76,6 +77,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $query = Jogo::find()->joinWith('utilizadoresjogos u');
+
+        /*
+        $jogos = $query
+            ->orderBy(['dataLancamento' => SORT_DESC,'COUNT(u.id)' => SORT_DESC])
+            ->where(['u.isJogado' => 1])
+            ->limit(6)
+            ->all();;
+            dd($jogos);
+        */
+
         return $this->render('index');
     }
 

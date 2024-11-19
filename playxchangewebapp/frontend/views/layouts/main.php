@@ -1,6 +1,7 @@
 <?php
 
 /** @var \yii\web\View $this */
+
 /** @var string $content */
 
 use common\widgets\Alert;
@@ -21,10 +22,10 @@ AppAsset::register($this);
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <?php $this->registerCsrfMetaTags() ?>
-        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96"/>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+        <link rel="shortcut icon" href="/favicon.ico"/>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
@@ -89,6 +90,18 @@ AppAsset::register($this);
                 . Html::submitButton('Logout', ['class' => 'dropdown-item'])
                 . Html::endForm());
             echo Html::endTag('ul');
+
+            echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
+            echo Html::beginTag('a', [
+                'class' => 'btn btn-outline-light d-none d-md-block ms-2',
+                'href' => 'carrinho',
+            ]);
+            echo '<i class="fas fa-shopping-basket"></i>';
+            echo '  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark mt-1">
+            99+
+            <span class="visually-hidden">número itens carrinho</span>
+            </span>';
+            echo Html::endTag('a');
         }
         echo Html::endTag('li');
         echo Html::button('<i class="fas fa-search"></i>', [

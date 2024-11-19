@@ -27,13 +27,31 @@ $this->params['breadcrumbs'][] = $this->title;
                         'dataProvider' => $dataProvider,
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
-
-                            'denunciante_id',
-                            'denunciado_id',
-                            'motivo:ntext',
-                            'dataDenuncia',
-                            'estado',
-
+                            [
+                                'attribute'=>'denunciante_id',
+                                'content'=>function($model){
+                                    return $model->denunciante->user->username;
+                                }
+                            ],
+                            [
+                                'attribute'=>'denunciado_id',
+                                'content'=>function($model){
+                                    return $model->denunciado->user->username;
+                                }
+                            ],
+                            //'motivo:ntext',
+                            [
+                                'attribute'=>'dataDenuncia',
+                                'content'=>function($model){
+                                    return Yii::$app->formatter->asDatetime($model->dataDenuncia,'php:d-m-Y');
+                                }
+                            ],
+                            [
+                                'attribute'=>'estado',
+                                'content'=>function($model){
+                                    return $model->getStatusLabel();
+                                }
+                            ],
                             ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],

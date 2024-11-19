@@ -31,7 +31,7 @@ $imageUrl = Yii::getAlias('@capasJogoUrl') . '/'. $model->imagemCapa;
                     <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
-                            'id',
+                            //'id',
                             'nome',
                             [
                                 'attribute' => 'dataLancamento',
