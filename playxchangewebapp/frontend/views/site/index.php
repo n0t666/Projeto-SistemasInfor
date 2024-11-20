@@ -2,6 +2,8 @@
 
 /** @var yii\web\View $this */
 
+use yii\bootstrap5\Html;
+
 $this->title = 'Página inicial';
 ?>
 <div class="full-width mt-5">
@@ -10,7 +12,7 @@ $this->title = 'Página inicial';
         <div class="header-content container-fluid">
             <h1 class="display-4 fw-bold">Gestão e Compra de Videojogos Facilitada</h1>
             <p class="lead">Organiza a tua coleção de videojogos e conecta-te com amigos.</p>
-            <a href="/site/signup" class="btn btn-primary btn-lg mt-3">Cria a tua conta agora!</a>
+            <?= Html::a('Cria a tua conta agora!', ['/site/signup'], ['class' => 'btn btn-primary btn-lg mt-3']); ?>
         </div>
     </div>
 </div>

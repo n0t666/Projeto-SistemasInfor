@@ -77,16 +77,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $query = Jogo::find()->joinWith('utilizadoresjogos u');
-
-        /*
-        $jogos = $query
-            ->orderBy(['dataLancamento' => SORT_DESC,'COUNT(u.id)' => SORT_DESC])
+        $query = Jogo::find()
+            ->joinWith('utilizadoresjogos u')
+            ->groupBy('id')
+            ->orderBy([
+                'dataLancamento' => SORT_DESC,
+                'COUNT(u.id)' => SORT_DESC,
+            ])
             ->where(['u.isJogado' => 1])
-            ->limit(6)
-            ->all();;
-            dd($jogos);
-        */
+            ->limit(6);
+
+        $jogos = $query->all();
+
 
         return $this->render('index');
     }
