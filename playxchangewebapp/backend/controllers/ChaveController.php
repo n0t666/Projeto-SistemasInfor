@@ -4,6 +4,9 @@ namespace backend\controllers;
 
 use backend\models\ChaveSearch;
 use backend\models\JogoSearch;
+use common\models\Franquia;
+use common\models\Jogo;
+use common\models\Produto;
 use Yii;
 use common\models\Chave;
 use yii\data\ActiveDataProvider;
@@ -99,13 +102,17 @@ class ChaveController extends Controller
         if(Yii::$app->user->can('criarChaves')){
             try {
             $model = new Chave();
+            $produtos = Produto::find()->all();
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post())) {
+                $model->plataforma_id = $model->produto->plataforma_id;
+                $model->save();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 
             return $this->render('create', [
                 'model' => $model,
+                'produtos' => $produtos,
             ]);} catch (\Exception  $e) {
                 throw new ServerErrorHttpException($e->getMessage());
             }
@@ -126,18 +133,23 @@ class ChaveController extends Controller
     {
         if(Yii::$app->user->can('editarChaves')) {
             $model = $this->findModel($id);
+            $produtos = Produto::find()->all();
+
 
             if (!$model) {
                 throw new NotFoundHttpException("Não foi possível encontrar a chave solicitada.");
             }
 
             try{
-                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                if ($model->load(Yii::$app->request->post())) {
+                    $model->plataforma_id = $model->produto->plataforma_id;
+                    $model->save();
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
 
                 return $this->render('update', [
                     'model' => $model,
+                    'produtos' => $produtos,
                 ]);
             }   catch (\Exception  $e) {
                 throw new ServerErrorHttpException($e->getMessage());

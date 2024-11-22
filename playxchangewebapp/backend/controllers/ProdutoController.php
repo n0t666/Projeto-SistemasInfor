@@ -129,6 +129,8 @@ class ProdutoController extends Controller
     {
         if(Yii::$app->user->can('editarProdutos')){
             $model = $this->findModel($id);
+            $jogos = Jogo::find()->all();
+            $plataformas = Plataforma::find()->all();
 
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -136,6 +138,8 @@ class ProdutoController extends Controller
 
             return $this->render('update', [
                 'model' => $model,
+                'jogos' => $jogos,
+                'plataformas' => $plataformas,
             ]);
         }else{
             return $this->goHome();

@@ -56,7 +56,7 @@ class Plataforma extends \yii\db\ActiveRecord
      */
     public function getChaves()
     {
-        return $this->hasMany(Ch::class, ['plataforma_id' => 'id']);
+        return $this->hasMany(Chave::class, ['plataforma_id' => 'id']);
     }
 
     /**

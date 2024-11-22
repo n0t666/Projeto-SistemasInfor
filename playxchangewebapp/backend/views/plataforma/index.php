@@ -33,7 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             //'id',
                             'nome',
-                            'logotipo',
+                            [
+                                'attribute' => 'logotipo',
+                                'value' => function($model) {
+                                    return Html::img('@utilsUrl/' . $model->logotipo, ['alt' => 'Logotipo', 'style' => 'max-width: 100px;']);
+                                },
+                                'format' => 'raw',
+                            ],
 
                             [
                                 'class' => 'hail812\adminlte3\yii\grid\ActionColumn',

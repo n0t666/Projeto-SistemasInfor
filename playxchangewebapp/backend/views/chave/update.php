@@ -15,7 +15,8 @@ $this->params['breadcrumbs'][] = 'Atualizar';
             <div class="row">
                 <div class="col-md-12">
                     <?=$this->render('_form', [
-                        'model' => $model
+                        'model' => $model,
+                        'produtos' => $produtos,
                     ]) ?>
                 </div>
             </div>

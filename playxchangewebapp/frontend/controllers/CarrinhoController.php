@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use common\models\Carrinho;
 use frontend\models\CarrinhoSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,28 +21,46 @@ class CarrinhoController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['create','index','update'],
+                        'allow' => true,
+                        'roles' => ['cliente'],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
     }
 
-    /**
-     * Lists all Carrinho models.
-     * @return mixed
-     */
+
     public function actionIndex()
     {
-        $searchModel = new CarrinhoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->can('visualizarItensCarrinho')) {
+            $userId = Yii::$app->user->id;
+            $model = Carrinho::find()->where(['utilizador_id' => $userId])->one();
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            if(!$model) {
+                $model = new Carrinho();
+                $model->utilizador_id = $userId;
+                $model->save();
+            }
+
+
+            return $this->render('index', [
+                'model' => $model,
+            ]);
+        }else{
+            return $this->goHome();
+        }
+
     }
 
     /**

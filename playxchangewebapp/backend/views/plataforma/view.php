@@ -32,7 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attributes' => [
                             //'id',
                             'nome',
-                            'logotipo',
+                            [
+                                'attribute' => 'logotipo',
+                                'value' => function($model) {
+                                    return Html::img('@utilsUrl/' . $model->logotipo, ['alt' => 'Logotipo', 'style' => 'max-width: 100px;']);
+                                },
+                                'format' => 'raw',
+                            ],
                         ],
                     ]) ?>
                 </div>

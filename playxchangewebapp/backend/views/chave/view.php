@@ -21,12 +21,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'attributes' => [
                             //'id',
-                            'produto_id',
-                            'plataforma_id',
+                            [
+                                'attribute' => 'produto_id',
+                                'value' => $model->produto->jogo->nome,
+                            ],
+                            [
+                                'attribute' => 'plataforma_id',
+                                'value' => $model->plataforma->nome,
+                            ],
                             'chave',
                             'dataGeracao',
                             'dataExpiracao',
-                            'isUsada',
+                            [
+                                'attribute' => 'isUsada',
+                                'value' => function($model) {
+                                    return $model->isUsada ? 'Sim' : 'Não';
+                                }
+                            ],
                         ],
                     ]) ?>
 

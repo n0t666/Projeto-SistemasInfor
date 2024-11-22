@@ -27,9 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'attributes' => [
                             //'id',
-                            'jogo_id',
-                            'plataforma_id',
-                            'preco',
+                            [
+                                'attribute' => 'jogo_id',
+                                'value' => $model->jogo->nome,
+                            ],
+                            [
+                                'attribute' => 'plataforma_id',
+                                'value' => $model->plataforma->nome,
+                            ],
+                            [
+                                'attribute'=>'preco',
+                                'content'=>function($model){
+                                    return $model->preco . '€';
+                                }
+                            ],
                             'quantidade',
                         ],
                     ]) ?>

@@ -164,8 +164,7 @@ $this->title = $model->nome;
                 </div>
                 <?php ActiveForm::end(); ?>
                 <?php endif; ?>
-
-                <!-- Star Rating Row -->
+                
                 <div class="row mb-4 text-center">
                     <?php $form = ActiveForm::begin([
                         'id' => 'avaliacao-form',

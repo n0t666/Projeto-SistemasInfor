@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "chaves".
@@ -35,9 +37,10 @@ class Chave extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['produto_id', 'plataforma_id', 'chave'], 'required'],
+            [['produto_id', 'chave'], 'required'],
             [['produto_id', 'plataforma_id', 'isUsada'], 'integer'],
-            [['dataGeracao', 'dataExpiracao'], 'safe'],
+            [['dataGeracao', 'dataExpiracao'], 'date', 'format' => 'php:d-m-Y'],
+            //[['dataGeracao', 'dataExpiracao'], 'safe'],
             [['chave'], 'string', 'max' => 255],
             [['chave'], 'unique'],
             [['plataforma_id'], 'exist', 'skipOnError' => true, 'targetClass' => Plataforma::class, 'targetAttribute' => ['plataforma_id' => 'id']],
@@ -89,5 +92,70 @@ class Chave extends \yii\db\ActiveRecord
     public function getProduto()
     {
         return $this->hasOne(Produto::class, ['id' => 'produto_id']);
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['dataGeracao'],
+                ],
+                'value' => function ($event) {
+                    return $this->dataGeracao ? date('d-m-Y', strtotime($this->dataGeracao)) : null;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['dataGeracao'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['dataGeracao'],
+                ],
+                'value' => function ($event) {
+                    try {
+                        if (empty($this->dataGeracao)) {
+                            $this->dataGeracao = date('Y-m-d');
+                        }else{
+                            $this->dataGeracao = null;
+                        }
+                    } catch (\Exception $e) {
+                        Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
+                        $this->dataLancamento = date('Y-m-d');
+                    }
+
+                    return $this->dataGeracao;
+                },
+            ],
+
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['dataExpiracao'],
+                ],
+                'value' => function ($event) {
+                    return $this->dataGeracao ? date('d-m-Y', strtotime($this->dataGeracao)) : null;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['dataExpiracao'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['dataExpiracao'],
+                ],
+                'value' => function ($event) {
+                    try {
+                        if (empty($this->dataExpiracao)) {
+                            $this->dataExpiracao = date('Y-m-d');
+                        }
+                    } catch (\Exception $e) {
+                        Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
+                        $this->dataExpiracao = null;
+                    }
+
+                    return $this->dataExpiracao;
+                },
+            ],
+        ];
     }
 }

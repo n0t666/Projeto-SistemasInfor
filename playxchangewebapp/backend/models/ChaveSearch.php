@@ -44,11 +44,8 @@ class ChaveSearch extends Chave
     {
         $query = Chave::find();
 
-        $query->alias('denuncia');
-        $query->joinWith([
-            'denunciante denuncianteAlias',
-            'denunciado denunciadoAlias',
-        ]);
+        $query->joinWith(['produto.jogo']);
+
 
         // add conditions that should always apply here
 
@@ -69,9 +66,8 @@ class ChaveSearch extends Chave
 
         if (!empty($this->globalSearch)) {
             $query->andFilterWhere(['or',
-                ['like', 'denuncianteAlias.nome', $this->globalSearch],
-                ['like', 'denunciadoAlias.nome', $this->globalSearch],
-                ['like', 'denuncia.motivo', $this->globalSearch],
+                ['like', 'jogos.nome', $this->globalSearch],
+                ['like', 'chave', $this->globalSearch],
             ]);
         }
 

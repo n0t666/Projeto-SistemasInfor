@@ -31,12 +31,27 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'yii\grid\SerialColumn'],
 
                             //'id',
-                            'produto_id',
-                            'plataforma_id',
+                            [
+                                'attribute'=>'produto_id',
+                                'content'=>function($model){
+                                    return $model->produto->jogo->nome;
+                                }
+                            ],
+                            [
+                                'attribute'=>'produto_id',
+                                'content'=>function($model){
+                                    return $model->plataforma->nome;
+                                }
+                            ],
                             'chave',
-                            'dataGeracao',
+                            //'dataGeracao',
                             //'dataExpiracao',
-                            //'isUsada',
+                            [
+                                'attribute' => 'isUsada',
+                                'value' => function($model) {
+                                    return $model->isUsada ? 'Sim' : 'Não';
+                                }
+                            ],
 
                             [
                                 'class' => 'hail812\adminlte3\yii\grid\ActionColumn',

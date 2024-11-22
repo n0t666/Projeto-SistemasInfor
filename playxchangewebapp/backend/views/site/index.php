@@ -95,15 +95,6 @@ $this->title = 'Página inicial';
                             'headerOptions' => ['class' => 'text-center'],
                             'contentOptions' => ['class' => 'text-right'],
                         ],
-                        [
-                            'label' => 'Nome',
-                            'attribute' => 'jogo_id',
-                            'value' => function ($model) {
-                                return $model->jogo->nome;
-                            },
-                            'headerOptions' => ['class' => 'text-center'],
-                            'contentOptions' => ['class' => 'text-center'],
-                        ],
                     ],
                     'tableOptions' => ['class' => 'table table-sm table-striped table-bordered m-0'],
                 ]); ?>
