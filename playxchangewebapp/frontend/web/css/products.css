@@ -1,0 +1,119 @@
+.product-poster img{
+    height: 500px;
+    width: 370px;
+    border-radius: 10px !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.product-poster{
+
+}
+
+.toggle-details #gameTab {
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.toggle-details .nav-pills .nav-link {
+    background-color: transparent !important;
+    color: var(--primary-color);
+    border-bottom: none;
+    padding-bottom: 10px;
+    margin-right: 30px;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.toggle-details .nav-pills .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: transparent;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.toggle-details .nav-pills .nav-link.active::after {
+    background-color: var(--primary-color);
+    width: 100%;
+}
+
+.toggle-details .nav-pills .nav-link.active {
+    color: white !important;
+}
+
+
+.toggle-details .nav-pills .nav-link:hover::after {
+    background-color: var(--primary-color);
+    width: 100%;
+}
+
+.toggle-details .nav-pills .nav-link:hover {
+    color: var(--primary-color);
+}
+
+.toggle-details .nav-pills .nav-link.active::after {
+    background-color: white;
+    width: 100%;
+}
+
+
+.rating-container {
+    border: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.rating-container .filled-stars {
+    color: var(--primary-color);
+    border: none !important;
+    background-color: transparent !important;
+    -webkit-text-stroke: 0px transparent !important;
+    text-shadow: none !important;
+}
+
+.rating-container .empty-stars .star {
+    color: var(--subtext-color);
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.rating-stars {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.rating-input {
+    border: none !important;
+    background-color: transparent !important;
+}
+.clear-rating-active:hover{
+    color: var(--error-color);
+}
+
+.view-game{
+
+
+}
+
+.interaction-holder{
+    font-size: 1.2em !important;
+    i{
+        font-size: 1.5em !important;
+    }
+
+    #gameTabContent{
+        i{
+            font-size: 1em !important;
+        }
+    }
+}
+
+.interaction-holder .container{
+    background-color: var(--card-bg-left);
+    height: auto;
+}

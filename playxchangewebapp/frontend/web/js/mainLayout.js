@@ -1,16 +1,48 @@
 $(function(){
+    const $navbar = $('.navbar');
+
 
     $("#search_input_box").hide();
     $("#search_1").on("click", function () {
-        $("#search_input_box").slideToggle(300, function() { // Increase the duration to make it smoother
-            $("#search_input").focus();
-        });
-        $("#contentHolder").animate({ "padding-top": "50px" }, 300); // Use animate() for smoother padding change
+        if ($("#search_input_box").is(":hidden")) {
+            $("#search_input_box").slideDown(300, function() {
+                $("#search_input").focus();
+            });
+        } else {
+            $("#search_input_box").slideUp(300);
+        }
     });
 
     $("#close_search").on("click", function () {
-        $("#search_input_box").slideUp(300); // Slow down slide up as well for consistency
+        $("#search_input_box").slideUp(300);
+        $("#contentHolder").stop(true).animate({ "padding-top": "0px" }, 300);
     });
+
+
+    if ($navbar.length) {
+        function updateNavbarStyles() {
+            if ($(window).scrollTop() > 50) {
+                $navbar.addClass('navbar-scrolled').removeClass('navbar-desktop');
+            } else {
+                $navbar.removeClass('navbar-scrolled');
+                if ($(window).width() >= 1400) {
+                    $navbar.addClass('navbar-desktop');
+                } else {
+                    $navbar.removeClass('navbar-desktop');
+                }
+            }
+        }
+
+        $(document).on('scroll', updateNavbarStyles);
+
+        $(window).on('resize', updateNavbarStyles);
+
+        updateNavbarStyles();
+    }
+
+
+
+
 
 
 

@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "avaliacoes".
@@ -33,7 +34,7 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['utilizador_id', 'jogo_id', 'numEstrelas', 'dataAvaliacao'], 'required'],
+            [['utilizador_id', 'jogo_id', 'numEstrelas'], 'required'],
             [['utilizador_id', 'jogo_id'], 'integer'],
             [['numEstrelas'], 'number'],
             [['dataAvaliacao'], 'safe'],
@@ -60,14 +61,14 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            'timestamp' => [
-                TimestampBehavior::className(),
+            [
+                'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'dataAvaliacao',
                 'updatedAtAttribute' => false,
-             ],
+                'value' => new Expression('NOW()'),
+            ],
         ];
     }
-
     /**
      * Gets query for [[Jogo]].
      *

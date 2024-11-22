@@ -64,6 +64,12 @@ body {
     z-index: 999;
     text-align: center;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.search_index{
+    padding-top: 30px;
 }
 
 #search_input_box #close_search {
@@ -74,15 +80,59 @@ body {
     padding-right: 0;
 }
 
+#search_input_box #close_search:hover {
+    color: var(--error-color);
+}
+
+
 body {
     background-color: #121212;
     color: #FFFFFF;
 }
 
-
-.navbar-dark  {
+.navbar {
     background-color: #1E1E1E !important;
+    border-radius: 15px;
+    width: 65%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin: 0 auto;
+
 }
+
+
+.navbar-scrolled {
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 1400px) {
+    .navbar {
+        width: 100% !important;
+    }
+}
+
+
+.navbar-toggler {
+    border: none;
+    background-color: #BB86FC;
+    border-radius: 5px;
+    padding: 5px 10px; /
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.navbar-toggler:hover {
+    background-color: #9C4DFF;
+    transform: scale(1.1);
+}
+
+.navbar-item {
+    margin: auto 4px;
+}
+
+
+
 
 .btn-primary {
     background-color: #BB86FC;
@@ -600,6 +650,7 @@ figure img {
     gap: 10px;
     text-align: center;
 }
+
 .game-card:hover .center-buttons {
     display: flex;
 }
@@ -608,34 +659,34 @@ figure img {
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 400px; /* Fixed height for the card */
+    height: 400px;
     transition: border 0.3s ease;
 }
 
 .game-poster {
     width: 100%;
-    height: 100%; /* Ensures the poster fills the card */
-    object-fit: cover; /* Ensures the image covers the entire card area without distortion */
+    height: 100%;
+    object-fit: cover;
 }
 
 .center-links {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Center the container both vertically and horizontally */
+    transform: translate(-50%, -50%);
     z-index: 10;
-    display: none; /* Hidden by default */
+    display: none;
     flex-direction: column;
-    align-items: center; /* Center the links horizontally */
-    justify-content: center; /* Center the links vertically */
+    align-items: center;
+    justify-content: center;
     gap: 15px;
     text-align: center;
-    width: 150px; /* Set a fixed width for the container */
-    height: 200px; /* Set a fixed height for the container */
+    width: 150px;
+    height: auto;
 }
 
 .game-card:hover {
-    border: var(--focus-border-color) 3px solid; /* Border change on hover */
+    border: var(--focus-border-color) 3px solid;
 }
 
 .game-card:hover .center-links {
@@ -673,6 +724,8 @@ figure img {
     opacity: 0.9;
     text-decoration: none;
 }
+
+
 
 .product__details__cart__option {
     margin-bottom: 25px;
@@ -1087,3 +1140,178 @@ figure img {
 .footer__copyright__text p a {
     color: #e53637;
 }
+
+.btn-favorite.ativo {
+    color: #F28123;
+}
+
+.btn-favorite:hover.ativo {
+    color: #F59D53;
+}
+
+.btn-played.ativo {
+    color: #03DAC5;
+}
+
+.btn-played:hover.ativo {
+    color: #02A89C;
+}
+
+.btn-wishlist.ativo {
+    color: #BB86FC;
+}
+
+.btn-wishlist:hover.ativo {
+    color: #9C4DFF;
+}
+
+.btn-wishlist .btn-played  {
+    color: var(--disabled-text-color);
+}
+
+
+
+
+.pagination {
+    justify-content: center;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 2%;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-item .page-link {
+    color: var(--text-color);
+    background-color: var(--section-background);
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+
+.pagination .page-item .page-link:hover,
+.pagination .page-item .page-link:focus {
+    color: var(--btn-primary-text);
+    background-color: var(--primary-color);
+    border-color: var(--primary-hover);
+    outline: none;
+}
+
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--btn-primary-text);
+}
+
+
+.pagination .page-item.disabled .page-link {
+    color: var(--disabled-text-color);
+    background-color: var(--section-background);
+    border-color: var(--border-color);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+.pagination .page-item a:hover {
+    color: var(--primary-color);
+}
+
+.pagination .page-item a:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    color: var(--primary-hover);
+}
+
+
+.pagination .page-item:first-child .page-link {
+    border-left: 1px solid var(--border-color);
+}
+
+.pagination .page-item:last-child .page-link {
+    border-right: 1px solid var(--border-color);
+}
+
+.form-select {
+    background-color: var(--section-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--focus-border-color);
+    box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.5);
+}
+
+
+.form-select:hover {
+    border-color: var(--primary-hover);
+    background-color: var(--card-bg-left);
+}
+
+/* Disabled form-select */
+.form-select:disabled {
+    background-color: #333333;
+    color: var(--disabled-text-color);
+    cursor: not-allowed;
+    border-color: var(--border-color);
+}
+
+
+.form-select option {
+    background-color: var(--section-background);
+    color: var(--text-color);
+    padding: 10px;
+}
+
+
+.form-select option:hover {
+    background-color: var(--primary-hover);
+    color: var(--btn-primary-text);
+}
+
+
+.form-select:invalid {
+    color: var(--placeholder-color);
+    background-color: var(--section-background);
+}
+
+
+.form-select::after {
+    content: "\f0d7";
+    font-family: 'FontAwesome';
+    color: var(--text-color);
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 20px;
+}
+
+.form-select:focus::after {
+    color: var(--focus-border-color);
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+
+
+
+
+

@@ -11,6 +11,7 @@ class CustomAsset extends AssetBundle
     public $css = [
         'css/mainLayoutOverride.css',
         '//fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap',
+        'css/products.css',
     ];
     public $js = [
     ];
