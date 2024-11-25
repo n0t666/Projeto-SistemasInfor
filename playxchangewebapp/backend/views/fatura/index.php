@@ -24,21 +24,40 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
 
 
-
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
                             //'id',
-                            'utilizador_id',
+                            [
+                                'attribute'=>'utilizador_id',
+                                'content'=>function($model){
+                                    return $model->utilizador->user->username;
+                                }
+                            ],
                             //'metodo_id',
-                            'envio_id',
-                            'codigo_id',
-                            //'dataEncomenda',
-                            //'total',
-                            //'estado',
-
+                            //'envio_id',
+                            //'codigo_id',
+                            [
+                                'attribute'=>'dataEncomenda',
+                                'content'=>function($model){
+                                    return $model->total . '€';
+                                }
+                            ],
+                            'dataEncomenda',
+                            [
+                                'attribute'=>'total',
+                                'content'=>function($model){
+                                    return $model->total . '€';
+                                }
+                            ],
+                            [
+                                'attribute'=>'estado',
+                                'content'=>function($model){
+                                    return $model->getEstadoLabel();
+                                }
+                            ],
                             [
                                 'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
                                 'visibleButtons' => [

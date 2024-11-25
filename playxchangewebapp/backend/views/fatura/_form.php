@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 
@@ -12,20 +13,22 @@ use yii\bootstrap4\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'utilizador_id')->textInput() ?>
+    <?= $form->field($model, 'estado')->dropDownList(
+        [
+                $model::ESTADO_PENDING => 'Pendente',
+                $model::ESTADO_PAID => 'Pago',
+                $model::ESTADO_SHIPPED => 'Enviado',
+                $model::ESTADO_DELIVERED => 'Entregue',
+                $model::ESTADO_COMPLETED => 'Completado',
+                $model::ESTADO_CANCELLED => 'Cancelado',
+                $model::ESTADO_REFUNDED => 'Reembolsado',
+        ],
+        ['prompt' => 'Estado da encomenda...', 'class' => 'form-control']
+    ) ?>
 
-    <?= $form->field($model, 'envio_id')->textInput() ?>
-
-    <?= $form->field($model, 'codigo_id')->textInput() ?>
-
-    <?= $form->field($model, 'dataEncomenda')->textInput() ?>
-
-    <?= $form->field($model, 'total')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'estado')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

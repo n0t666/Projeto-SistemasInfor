@@ -11,21 +11,29 @@ use common\models\MetodoEnvio;
 use common\models\MetodoPagamento;
 use Yii;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use function PHPUnit\Framework\exactly;
 
 class FaturaController extends Controller
 {
 
-    public function actionIndex(){
+    public function actionIndex()
+    {
+        $user = Yii::$app->user->identity->profile;
+
+        if(!$user){
+            throw new NotFoundHttpException();
+        }
+
+        $faturas = $user->faturas;
 
 
         return $this->render('index', [
+            'faturas' => $faturas,
 
         ]);
 
     }
-
-
     public function actionCheckout()
     {
         try {
@@ -107,8 +115,6 @@ class FaturaController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            die();
             Yii::$app->session->setFlash('error', 'Erro ao processar a sua compra.');
             return $this->redirect(['/carrinho']);
         }

@@ -1,0 +1,101 @@
+.order-list {
+    background-color: var(--section-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+}
+
+.order-item {
+    background-color: var(--card-bg-left);
+    border-left: 4px solid var(--primary-color);
+    transition: background-color 0.3s ease;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.order-item:hover {
+    background-color: var(--card-bg-right);
+}
+
+.order-details {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.order-poster {
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.order-item .badge {
+    font-size: 0.9rem;
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--header-line-color);
+    padding-bottom: 10px;
+}
+
+button.btn-outline-primary {
+    background-color: var(--primary-color);
+    color: #121212;
+    border: 1px solid var(--primary-color);
+}
+
+button.btn-outline-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+@media (min-width: 768px) {
+    .order-list {
+        padding: 2rem;
+    }
+
+    .order-item {
+        font-size: 1.1rem;
+    }
+
+    .order-poster {
+        width: 100px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 767px) {
+    .order-item {
+        font-size: 1rem;
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .order-poster {
+        width: 100%;
+        max-width: 120px;
+        height: auto;
+        margin: 10px 0;
+    }
+
+    .order-details {
+        margin-bottom: 10px;
+    }
+
+    button.btn-outline-primary {
+        margin-top: 10px;
+    }
+}
+
+img {
+    max-width: 100%;
+    max-height: 150px;
+    width: 100%;
+    height: auto;
+}

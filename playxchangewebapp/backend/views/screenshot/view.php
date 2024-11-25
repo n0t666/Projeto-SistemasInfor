@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="row mt-4">
                 <div class="col-md-6">
-                    <?= Html::a('Atualizar', ['update', 'id' => $model->id], [
+                    <?= Html::a('Atualizar', ['update', 'id' => $model->id,'jogoId' => $model->jogo_id], [
                         'class' => 'btn btn-primary btn-sm btn-block',
                     ]) ?>
                 </div>

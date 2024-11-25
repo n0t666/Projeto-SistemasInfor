@@ -158,10 +158,15 @@ class RbacController extends Controller
         $removerCarrinho = $auth->createPermission('removerItensCarrinho');
         $editarCarrinho = $auth->createPermission('editarItensCarrinho');
         $visualizarCarrinho = $auth->createPermission('visualizarItensCarrinho');
+        $visualizarEncomendas = $auth->createPermission('visualizarEncomendas');
+        $visualizarEncomendas->description = 'Visualizar todas as encomendas feitas com sucesso';
+        $visualizarDetalhesEncomendas = $auth->createPermission('visualizarDetalhesEncomendas');
         $auth->add($adicionarCarrinho);
         $auth->add($removerCarrinho);
         $auth->add($editarCarrinho);
         $auth->add($visualizarCarrinho);
+        $auth->add($visualizarEncomendas);
+        $auth->add($visualizarDetalhesEncomendas);
 
         $verDetalhesListas = $auth->createPermission('verDetalhesListas');
         $criarListas = $auth->createPermission('adicionarListas');
@@ -343,6 +348,8 @@ class RbacController extends Controller
         $auth->addChild($cliente, $acederFrontend);
         $auth->addChild($cliente,$editarDenuncia);
         $auth->addChild($cliente, $apagarDenuncia);
+        $auth->addChild($cliente, $visualizarEncomendas);
+        $auth->addChild($cliente, $visualizarDetalhesEncomendas);
 
         $funcionario = $auth->createRole('funcionario');
         $auth->add($funcionario);
@@ -453,8 +460,10 @@ class RbacController extends Controller
         $auth->addChild($admin,$verDetalhesPlataformas);
         $auth->addChild($admin,$verDetalhesChaves);
         $auth->addChild($admin,$adicionarMetodosEnvio);
+        $auth->addChild($admin,$editarMetodosEnvio);
         $auth->addChild($admin,$verDetalhesUtilizadores);
         $auth->addChild($admin,$adicionarUtilizadores);
+        $auth->addChild($admin,$removerMetodosEnvio);
 
         $auth->assign($admin, 1);
         $auth->assign($moderador, 2);

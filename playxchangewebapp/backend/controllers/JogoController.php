@@ -220,20 +220,15 @@ function actionUpdate($id)
 
                 $modelUploadCapa->imageFile = UploadedFile::getInstance($modelUploadCapa, 'imageFile');
                 $modelUploadScreenshots->imageFiles = UploadedFile::getInstances($modelUploadScreenshots, 'imageFiles');
-                if ($modelUploadCapa->imageFile) {
+                if ($modelUploadCapa->imageFile && $modelUploadCapa->imageFile!='') {
                     if ($modelUploadCapa->upload('@capasJogoPath')) {
                         if(UtilsController::deleteFile(Yii::getAlias('@capasJogoPath'). '/' . $model->imagemCapa)){
                             $model->imagemCapa = $modelUploadCapa->imageFile->name;
                             $model->save();
-                        }else{
-                            Yii::$app->session->setFlash('error', 's ao fazer o upload da capa.');
-                            return $this->redirect(['update', 'id' => $model->id]);
                         }
                     }
-                } else {
-                    Yii::$app->session->setFlash('error', 'Erro ao fazer o upload da capa.');
                 }
-                if ($modelUploadScreenshots->imageFiles) {
+                if ($modelUploadScreenshots->imageFiles && $modelUploadScreenshots->imageFiles!='') {
                     if ($modelUploadScreenshots->upload('@screenshotsJogoPath')) {
                         foreach ($modelUploadScreenshots->imageFiles as $file) {
                             $screenshot = new Screenshot();
@@ -275,6 +270,9 @@ function actionUpdate($id)
                         $model->link('generos', $genero);
                     }
                 }
+
+                $model->save();
+
 
                 return $this->redirect(['view', 'id' => $model->id]);
             }

@@ -31,8 +31,10 @@ class Fatura extends \yii\db\ActiveRecord
     const ESTADO_PENDING = 1;
     const ESTADO_PAID = 2;
     const ESTADO_SHIPPED = 3;
-    const ESTADO_CANCELLED = 4;
-    const ESTADO_REFUNDED = 5;
+    const ESTADO_DELIVERED = 4;
+    const ESTADO_COMPLETED = 5;
+    const ESTADO_CANCELLED = 6;
+    const ESTADO_REFUNDED = 7;
 
 
     /**
@@ -136,6 +138,15 @@ class Fatura extends \yii\db\ActiveRecord
                 'updatedAtAttribute' => false,
                 'value' => new Expression('NOW()'),
             ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['dataEncomenda'],
+                ],
+                'value' => function ($event) {
+                    return $this->dataEncomenda ? date('d-m-Y', strtotime($this->dataEncomenda)) : null;
+                },
+            ],
         ];
     }
 
@@ -150,6 +161,10 @@ class Fatura extends \yii\db\ActiveRecord
                 return 'Enviado';
             case self::ESTADO_CANCELLED:
                 return 'Cancelado';
+            case self::ESTADO_DELIVERED:
+                return 'Entregue';
+            case self::ESTADO_COMPLETED:
+                return 'Completado';
             case self::ESTADO_REFUNDED:
                 return 'Reembolsado';
             default:

@@ -162,7 +162,24 @@ class ScreenshotController extends Controller
         if(Yii::$app->user->can('editarScreenshots')){
             $model = $this->findModel($id);
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post())) {
+                $modelUpload->imageFile = UploadedFile::getInstance($modelUpload, 'imageFile');
+                if ($modelUpload->imageFile) {
+                    if ($modelUpload->upload('@screenshotsJogoPath')) {
+                        $model->jogo_id = $jogoId;
+                        $model->filename = $modelUpload->imageFile->name;
+
+                        if (!$model->save()) {
+                            $errors = $model->getErrors();
+                            Yii::$app->session->setFlash('error', 'Erro ao guardar a screenshot: ' . $modelUpload->imageFile->name);
+                            return $this->redirect(['create']);
+                        }
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Falha ao fazer o upload do arquivo.');
+                        return $this->redirect(['create', 'jogoId' => $jogoId]);
+                    }
+                }
+                $model->save();
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 

@@ -3,10 +3,10 @@
 /* @var $this yii\web\View */
 /* @var $model common\models\Fatura */
 
-$this->title = 'Update Fatura: ' . $model->id;
+$this->title = 'Atualizar Fatura';
 $this->params['breadcrumbs'][] = ['label' => 'Faturas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Atualizar';
 ?>
 
 <div class="container-fluid">

@@ -92,29 +92,38 @@ AppAsset::register($this);
             echo Html::endTag('a');
 
             echo Html::beginTag('ul', ['class' => 'dropdown-menu dropdown-menu-dark', 'aria-labelledby' => 'userDropdown']);
-            echo Html::tag('li', Html::a('Perfil', ['/site/profile'], ['class' => 'dropdown-item']));
-            echo Html::tag('li', Html::a('Encomendas', ['fatura/index'], ['class' => 'dropdown-item']));
+            if (Yii::$app->user->can('visualizarPerfil')){
+                echo Html::tag('li', Html::a('Perfil', ['/site/profile'], ['class' => 'dropdown-item']));
+            }
+
+            if(Yii::$app->user->can('visualizarEncomendas')){
+                echo Html::tag('li', Html::a('Encomendas', ['fatura/index'], ['class' => 'dropdown-item']));
+            }
             echo Html::tag('li', Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton('Logout', ['class' => 'dropdown-item'])
                 . Html::endForm());
             echo Html::endTag('ul');
-
-            echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
-            echo Html::beginTag('a', [
-                'class' => 'btn btn-outline-light d-none d-md-block ms-2',
-                'href' =>  Url::toRoute('carrinho/')
-            ]);
-            $carrinho = Yii::$app->user->identity->profile->carrinho;
-            if($carrinho){
-                $total = Yii::$app->user->identity->profile->carrinho->count;
-            }else{
-                $total = 0;
-            }
-            echo '<i class="fas fa-shopping-basket"></i>';
-            echo '  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark mt-1"> ' . $total .
-            '<span class="visually-hidden">número itens carrinho</span>
+            if (Yii::$app->user->can('visualizarItensCarrinho')){
+                echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
+                echo Html::beginTag('a', [
+                    'class' => 'btn btn-outline-light d-none d-md-block ms-2',
+                    'href' =>  Url::toRoute('carrinho/')
+                ]);
+                $carrinho = Yii::$app->user->identity->profile->carrinho;
+                if($carrinho){
+                    $total = Yii::$app->user->identity->profile->carrinho->count;
+                    if($total == null){
+                        $total = 0;
+                    }
+                }else{
+                    $total = 0;
+                }
+                echo '<i class="fas fa-shopping-basket"></i>';
+                echo '  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark mt-1"> ' . $total .
+                    '<span class="visually-hidden">número itens carrinho</span>
             </span>';
-            echo Html::endTag('a');
+                echo Html::endTag('a');
+            }
         }
         echo Html::endTag('li');
         echo Html::button('<i class="fas fa-search"></i>', [

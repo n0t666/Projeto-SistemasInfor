@@ -30,6 +30,7 @@ $this->title = $model->nome;
             <div class="mb-2">
                 <span class="h3" id="product-price"></span>
             </div>
+            <?php if (Yii::$app->user->can('adicionarItensCarrinho')): ?>
             <div class="platform-dropdown mb-3 w-100">
                 <?php $form = ActiveForm::begin(['id' => 'jogo-carrinho','action' => ['linha-carrinho/create']]); ?>
                 <?= $form->field($itemCarrinho, 'produtos_id')->dropDownList(
@@ -80,8 +81,7 @@ $this->title = $model->nome;
                 </button>
             </div>
             <?php ActiveForm::end(); ?>
-
-
+            <?php endif;?>
         </div>
 
         <div class="col-md-4">
@@ -177,7 +177,7 @@ $this->title = $model->nome;
         </div>
 
         <div class="col-md-4 interaction-holder">
-            <div class="container py-5">
+            <div class="container py-5 rounded-3">
                 <?php if (Yii::$app->user->can('adicionarFavoritos') || Yii::$app->user->can('adicionarJogados')): ?>
                 <?php $form = ActiveForm::begin(['action' => ['utilizador-jogo/update']]); ?>
                 <?= $form->field($model, 'id')->hiddenInput(['value' => $model->id])->label(false) ?>
