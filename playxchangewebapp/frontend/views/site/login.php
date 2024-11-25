@@ -65,6 +65,8 @@ $img = Yii::getAlias('@web') . "/images/authForms/login.jpg";
                         <?= Html::submitButton('Login', ['class' => 'btn btn-lg btn-primary btn-login fw-bold text-uppercase', 'name' => 'login-button']) ?>
                     </div>
 
+                    <a class="d-block text-center mt-2 small" href="signup">Não possuí uma conta? Faça registro</a>
+
                     <?php ActiveForm::end(); ?>
 
                 </div>

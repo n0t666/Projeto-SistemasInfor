@@ -177,7 +177,7 @@ class LinhaCarrinhoController extends Controller
                 $linhaCarrinho = LinhaCarrinho::findOne(['carrinhos_id' => $carrinho->id, 'produtos_id' => $produtoId]);
 
                 if ($linhaCarrinho !== null) {
-                    $carrinho->total -= ($linhaCarrinho->quantidade * $linhaCarrinho->produto->preco);
+                    $carrinho->total -= ($linhaCarrinho->quantidade * $linhaCarrinho->produtos->preco);
                     $carrinho->count -= $linhaCarrinho->quantidade;
                     $linhaCarrinho->delete();
                     $carrinho->save();
@@ -190,6 +190,8 @@ class LinhaCarrinhoController extends Controller
 
             }catch (\Exception $e) {
                 $transaction->rollBack();
+                var_dump($e->getMessage());
+                die();
                 Yii::$app->session->setFlash('error', 'Erro ao remover o produto');
             }
         }else{

@@ -62,8 +62,6 @@ class CarrinhoController extends Controller
                 ]);
 
             } catch (\Exception $e) {
-                var_dump($e->getMessage());
-                die();
                 Yii::$app->session->setFlash('error', 'Ocorreu um erro ao processar o seu carrinho.');
                 return $this->goHome();
             }

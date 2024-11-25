@@ -168,6 +168,10 @@ class UserController extends Controller
                         $user->email = $model->email;
                     }
 
+                    if($model->status !== $user->status){
+                        $user->status = $model->status;
+                    }
+
                     $user->save(false);
 
                     if (!empty($model->role)) {
