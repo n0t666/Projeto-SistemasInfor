@@ -5,17 +5,42 @@ namespace frontend\controllers;
 use common\models\Chave;
 use common\models\CodigoPromocional;
 use common\models\Fatura;
+use common\models\Jogo;
 use common\models\LinhaCarrinho;
 use common\models\LinhaFatura;
 use common\models\MetodoEnvio;
 use common\models\MetodoPagamento;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use function PHPUnit\Framework\exactly;
 
 class FaturaController extends Controller
 {
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index','checkout','create','view'],
+                        'allow' => true,
+                        'roles' => ['cliente'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
 
     public function actionIndex()
     {
@@ -257,5 +282,32 @@ class FaturaController extends Controller
             Yii::$app->session->setFlash('error', 'Não foi possível encontrar a página solicitada.');
             return $this->goHome();
         }
+    }
+
+    public function actionView($id){
+        $fatura = $this->findModel($id);
+        $user = Yii::$app->user->identity->profile;
+
+        if(!$fatura || !$user || Yii::$app->user->isGuest){
+            throw new NotFoundHttpException();
+        }
+
+        if($fatura->utilizador_id != $user->id){ // Garantir que cada cliente apenas tenho acesso ás suas faturas
+           throw new NotFoundHttpException();
+        }
+
+        return $this->render('view', [
+            'fatura' => $fatura,
+        ]);
+
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = Fatura::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

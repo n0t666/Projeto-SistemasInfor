@@ -15,7 +15,7 @@ $this->registerCssFile('@web/css/faturas.css', ['depends' => [\yii\bootstrap5\Bo
 
 </style>
 
-<div class="container my-5">
+<div class="container my-3">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
             <div class="order-list p-4 rounded-3 shadow-lg">
