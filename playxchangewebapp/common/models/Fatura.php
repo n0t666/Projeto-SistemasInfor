@@ -3,6 +3,10 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "faturas".
@@ -24,6 +28,13 @@ use Yii;
  */
 class Fatura extends \yii\db\ActiveRecord
 {
+    const ESTADO_PENDING = 1;
+    const ESTADO_PAID = 2;
+    const ESTADO_SHIPPED = 3;
+    const ESTADO_CANCELLED = 4;
+    const ESTADO_REFUNDED = 5;
+
+
     /**
      * {@inheritdoc}
      */
@@ -38,7 +49,7 @@ class Fatura extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['utilizador_id', 'pagamento_id', 'envio_id', 'dataEncomenda', 'total', 'estado'], 'required'],
+            [['utilizador_id', 'pagamento_id', 'envio_id','total', 'estado'], 'required'],
             [['utilizador_id', 'pagamento_id', 'envio_id', 'codigo_id', 'estado'], 'integer'],
             [['dataEncomenda'], 'safe'],
             [['total'], 'number'],
@@ -115,4 +126,36 @@ class Fatura extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Userdata::class, ['id' => 'utilizador_id']);
     }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'dataEncomenda',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    public function getEstadoLabel()
+    {
+        switch ($this->estado) {
+            case self::ESTADO_PENDING:
+                return 'Pendente';
+            case self::ESTADO_PAID:
+                return 'Pago';
+            case self::ESTADO_SHIPPED:
+                return 'Enviado';
+            case self::ESTADO_CANCELLED:
+                return 'Cancelado';
+            case self::ESTADO_REFUNDED:
+                return 'Reembolsado';
+            default:
+                return 'Desconhecido';
+        }
+    }
+
+
 }

@@ -75,8 +75,16 @@ $this->title = 'Página inicial';
 <script>
     document.addEventListener("DOMContentLoaded", function () { // Após os elementos da página terem sido carregados, dar override no padding em que o conteúdo da página é gerado
         var content = document.getElementById('contentHolder');
+        var search = document.getElementById('search_input_box');
+
+
         if (content) {
             content.style.paddingTop = "0";
+        }
+
+        if(search){
+            console.log(search);
+            search.style.paddingTop = "100px";
         }
     });
 

@@ -1,12 +1,18 @@
 <?php
 
 use kartik\rating\StarRating;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Jogo */
+
+$this->registerJsFile(
+    '@web/js/jogoview.js',
+    ['depends' => [\yii\web\JqueryAsset::class]]
+);
 
 $this->title = $model->nome;
 
@@ -16,31 +22,64 @@ $this->title = $model->nome;
     <div class="row">
         <div class="col-md-4 d-flex flex-column align-items-center">
 
-            <div class="product-poster mb-4">
+            <div class="product-poster mb-2">
                 <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $model->imagemCapa; ?>" alt="Game Poster"
                      class="img-fluid">
             </div>
 
-
-            <div class="product-price mb-3">
-                <span class="h3">59.99</span>
+            <div class="mb-2">
+                <span class="h3" id="product-price"></span>
             </div>
             <div class="platform-dropdown mb-3 w-100">
-                <label for="platform" class="form-label">Escolha uma plataforma:</label>
-                <select id="platform" class="form-select">
-                    <option>PC</option>
-                    <option>PS5</option>
-                    <option>Xbox</option>
-                </select>
+                <?php $form = ActiveForm::begin(['id' => 'jogo-carrinho','action' => ['linha-carrinho/create']]); ?>
+                <?= $form->field($itemCarrinho, 'produtos_id')->dropDownList(
+                    ArrayHelper::map($produtos, 'id', function($produto) {
+                        return $produto->plataforma->nome;
+                    }),
+                    [
+                        'prompt' => 'Selecione a plataforma',
+                        'class' => 'form-select',
+                        'required' => true,
+                        'id' => 'plataforma-dropdown',
+                        'options' => array_reduce($produtos, function($result, $produto) { //Obter o preço para cada produto dependendo da plataforma (através do array_reduce transformar um array num único valor)
+                            $result[$produto->plataforma_id] = ['data-preco' => $produto->preco]; //Adicionar um atributo no html para aceder depois no java
+                            return $result;
+                        }, [])
+                    ]
+                )->label(false) ?>
             </div>
             <div class="quantity-controls mb-3 w-100 d-flex justify-content-between align-items-center">
-                <button class="btn btn-secondary" id="decrement">-</button>
-                <span id="quantity" class="mx-3">1</span>
-                <button class="btn btn-secondary" id="increment">+</button>
+                <button class="btn btn-outline-primary" id="decrement" type="button" style="width: 40px; height: 40px; font-size: 20px; border-radius: 0; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-minus"></i>
+                </button>
+
+                <?= $form->field($itemCarrinho, 'quantidade')->input('number', [
+                    'class' => 'form-control text-center mx-2',
+                    'min' => 1,
+                    'max' => 5,
+                    'step' => 1,
+                    'value' => 1,
+                    'aria-label' => 'Quantidade',
+                    'style' => 'flex-grow: 1; height: 40px; font-size: 18px; border-radius: 0;',
+                    'inputmode' => 'numeric',
+                    'oninput' => 'this.value = this.value.replace(/\D+/g, "")',
+                    'required' => true,
+                ])->label(false) ?>
+
+                <button class="btn btn-outline-primary" id="increment" type="button" style="width: 40px; height: 40px; font-size: 20px; border-radius: 0; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
-            <div class="add-to-cart mb-3 w-100">
-                <button class="btn btn-primary w-100 py-2">Adicionar ao carrinho</button>
+
+            <div class="mb-3 w-100">
+                <button class="cart-button w-100">
+                    <span class="add-to-cart">Adicionar ao carrinho</span>
+                    <span class="added">Adicionado</span>
+                    <i class="fas fa-shopping-cart"></i>
+                    <i class="fas fa-box"></i>
+                </button>
             </div>
+            <?php ActiveForm::end(); ?>
 
 
         </div>
@@ -164,7 +203,7 @@ $this->title = $model->nome;
                 </div>
                 <?php ActiveForm::end(); ?>
                 <?php endif; ?>
-                
+
                 <div class="row mb-4 text-center">
                     <?php $form = ActiveForm::begin([
                         'id' => 'avaliacao-form',

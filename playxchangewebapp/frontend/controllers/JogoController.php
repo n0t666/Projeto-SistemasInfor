@@ -2,6 +2,10 @@
 
 namespace frontend\controllers;
 
+use common\models\Avaliacao;
+use common\models\Carrinho;
+use common\models\LinhaCarrinho;
+use common\models\UtilizadorJogo;
 use Yii;
 use common\models\Jogo;
 use frontend\models\JogoSearch;
@@ -50,97 +54,39 @@ class JogoController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Jogo model.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         $jogo = $this->findModel($id);
+        $produtos = $jogo->produtos;
+        $itemCarrinho = new LinhaCarrinho();
 
-        $interaction = \common\models\UtilizadorJogo::find()
+
+        $interaction = UtilizadorJogo::find()
             ->where(['jogo_id' => $jogo->id, 'utilizador_id' => Yii::$app->user->id])
             ->one();
 
-        $avaliacao = \common\models\Avaliacao::find()
+        $avaliacao = Avaliacao::find()
             ->where(['jogo_id' => $jogo->id, 'utilizador_id' => Yii::$app->user->id])
             ->one();
+
 
         if(!$avaliacao){
-            $avaliacao = new \common\models\Avaliacao();
+            $avaliacao = new Avaliacao();
             $avaliacao->jogo_id = $jogo->id;
             $avaliacao->utilizador_id = Yii::$app->user->id;
         }
+
 
 
         return $this->render('view', [
             'model' => $jogo,
             'interaction' => $interaction,
             'avaliacao' => $avaliacao,
+            'produtos' => $produtos,
+            'itemCarrinho' => $itemCarrinho
         ]);
     }
 
-    /**
-     * Creates a new Jogo model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Jogo();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Jogo model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Jogo model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Jogo model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Jogo the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Jogo::findOne($id)) !== null) {
@@ -149,4 +95,6 @@ class JogoController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
 }

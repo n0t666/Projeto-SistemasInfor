@@ -39,6 +39,7 @@ class Produto extends \yii\db\ActiveRecord
             [['jogo_id', 'plataforma_id', 'preco', 'quantidade'], 'required'],
             [['jogo_id', 'plataforma_id', 'quantidade'], 'integer'],
             [['preco'], 'number'],
+            [['jogo_id', 'plataforma_id'], 'unique', 'targetAttribute' => ['jogo_id', 'plataforma_id']],
             [['jogo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Jogo::class, 'targetAttribute' => ['jogo_id' => 'id']],
             [['plataforma_id'], 'exist', 'skipOnError' => true, 'targetClass' => Plataforma::class, 'targetAttribute' => ['plataforma_id' => 'id']],
         ];

@@ -47,72 +47,78 @@ class AvaliacaoController extends Controller
 
     public function actionAvaliar()
     {
-        if(Yii::$app->user->can('avaliarJogo'))
-        {
-            $jogoId = Yii::$app->request->post('Avaliacao')['jogo_id'];
-            $userId = Yii::$app->user->id;
+        if (Yii::$app->user->can('avaliarJogo')) {
+            try {
+                $jogoId = Yii::$app->request->post('Avaliacao')['jogo_id'];
+                $userId = Yii::$app->user->id;
 
-            $jogo = Jogo::findOne($jogoId);
-
-            if(!$jogoId || !$userId){
-                throw  new NotAcceptableHttpException();
-            }
-
-            $avaliacao = Avaliacao::findOne([
-                'jogo_id' => $jogoId,
-                'utilizador_id' => $userId
-            ]);
-
-            if (Yii::$app->request->isPost) {
-                $numEstrelas = Yii::$app->request->post('Avaliacao')['numEstrelas'];
-                if (!$avaliacao) {
-                    if (!$numEstrelas || $numEstrelas < 0.5) {
-
-                        Yii::$app->session->setFlash('error', 'Avaliação não válida. O número de estrelas deve ser maior ou igual a 0.5');
-                        return $this->goBack();
-                    }
-                    $avaliacao = new Avaliacao();
-                    $avaliacao->jogo_id = $jogoId;
-                    $avaliacao->utilizador_id = Yii::$app->user->id;
-                    $avaliacao->numEstrelas = $numEstrelas;
-
-                    if ($avaliacao->save()) {
-                        Yii::$app->session->setFlash('success', 'Avaliação criada com sucesso!');
-                    } else {
-                        Yii::error($avaliacao->errors);  // Log errors for debugging
-                        // Optionally, print errors in your view for better visibility
-                        var_dump($avaliacao->errors);
-                        die();
-                    }
-                }else{
-                    if($numEstrelas > 0){
-                        if($numEstrelas != $avaliacao->numEstrelas){
-                            $avaliacao->numEstrelas = $numEstrelas;
-                            if($avaliacao->save()){
-                                Yii::$app->session->setFlash('success', 'Avaliação atualizada com sucesso!');
-                            }else{
-                                Yii::$app->session->setFlash('error', 'Falha ao atualizar a avaliação.');
-                            }
-                        }else{
-                            Yii::$app->session->setFlash('success', 'Avaliação atualizada com sucesso!');
-                        }
-                    }elseif ($numEstrelas == ''){
-                        if ($avaliacao->delete()) {
-                            Yii::$app->session->setFlash('success', 'Avaliação removida com sucesso!');
-                        } else {
-                            Yii::$app->session->setFlash('error', 'Falha ao remover a avaliação.');
-                        }
-                    }
+                if (!$jogoId || !$userId) {
+                    throw new NotAcceptableHttpException();
                 }
-                return $this->redirect(['jogo/view', 'id' => $jogoId]);
-            }
 
-            return $this->redirect(['jogo/index']);
-        }else{
-            return $this->goHome();
+                $jogo = Jogo::findOne($jogoId);
+                if (!$jogo) {
+                    throw new NotFoundHttpException('Jogo não encontrado.');
+                }
+
+                $avaliacao = Avaliacao::findOne([
+                    'jogo_id' => $jogoId,
+                    'utilizador_id' => $userId
+                ]);
+
+                if (Yii::$app->request->isPost) {
+                    $numEstrelas = Yii::$app->request->post('Avaliacao')['numEstrelas'];
+
+
+                    if (!$avaliacao) {
+                        if (!$numEstrelas || $numEstrelas < 0.5) {
+                            Yii::$app->session->setFlash('error', 'Avaliação não válida. O número de estrelas deve ser maior ou igual a 0.5.');
+                            return $this->goBack();
+                        }
+
+                        $avaliacao = new Avaliacao();
+                        $avaliacao->jogo_id = $jogoId;
+                        $avaliacao->utilizador_id = $userId;
+                        $avaliacao->numEstrelas = $numEstrelas;
+
+                        if ($avaliacao->save()) {
+                            Yii::$app->session->setFlash('success', 'Avaliação criada com sucesso!');
+                        } else {
+                            throw new \Exception('Falha ao criar avaliação.');
+                        }
+                    } else {
+                        if ($numEstrelas > 0) {
+                            if ($numEstrelas != $avaliacao->numEstrelas) {
+                                $avaliacao->numEstrelas = $numEstrelas;
+                                if ($avaliacao->save()) {
+                                    Yii::$app->session->setFlash('success', 'Avaliação atualizada com sucesso!');
+                                } else {
+                                    throw new \Exception('Falha ao atualizar a avaliação.');
+                                }
+                            } else {
+                                Yii::$app->session->setFlash('info', 'A avaliação já estava com o mesmo valor.');
+                            }
+                        } elseif ($numEstrelas == '') {
+                            if ($avaliacao->delete()) {
+                                Yii::$app->session->setFlash('success', 'Avaliação removida com sucesso!');
+                            } else {
+                                throw new \Exception('Falha ao remover a avaliação.');
+                            }
+                        }
+                    }
+
+                    return $this->redirect(['jogo/view', 'id' => $jogoId]);
+                }
+
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', 'Ocorreu um erro ao processar a avaliação.');
+                return $this->goBack();
+            }
         }
 
+        return $this->goHome();
     }
+
 
 
 

@@ -1,0 +1,113 @@
+.custom-summary-card {
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+}
+
+.custom-summary {
+    color: var(--text-color) !important;
+    padding: 15px;
+}
+
+.total-amount {
+    color: var(--text-color) !important;
+    font-weight: bold;
+}
+
+.custom-btn-order {
+    background-color: var(--primary-color) !important;
+    color: var(--btn-primary-text) !important;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-btn-order:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+.section-title {
+    font-weight: bold;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.section-divider {
+    border: 1px solid var(--border-color);
+    margin: 20px 0;
+}
+
+
+.delivery-methods .btn-check {
+    margin-right: 10px;
+}
+
+.delivery-methods label {
+    display: inline-block;
+    padding: 12px 15px;
+    background-color: var(--section-background);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delivery-methods input:checked + label {
+    background-color: var(--primary-color);
+    color: var(--btn-primary-text);
+}
+
+.custom-accordion .accordion-header {
+    background-color: var(--section-background);
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.custom-accordion .accordion-button {
+    background-color: transparent;
+    color: var(--text-color);
+}
+
+.custom-accordion .accordion-button:not(.collapsed) {
+    background-color: var(--primary-color);
+    color: var(--btn-primary-text);
+}
+
+.custom-accordion-body {
+    background-color: var(--section-background);
+    padding: 15px;
+    color: var(--text-color);
+}
+
+.custom-summary-card {
+    background-color: var(--section-background);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.custom-summary {
+    color: var(--text-color);
+    padding: 20px;
+}
+
+.total-amount {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.custom-btn-order {
+    background-color: var(--primary-color);
+    color: var(--btn-primary-text);
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-btn-order:hover {
+    background-color: var(--primary-hover);
+}
+
+#fatura-envio_id label {
+    margin-right: 20px;
+}
+
+

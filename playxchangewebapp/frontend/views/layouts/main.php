@@ -10,6 +10,8 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\bootstrap5\Toast;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 \hail812\adminlte3\assets\FontAwesomeAsset::register($this);
@@ -61,7 +63,12 @@ AppAsset::register($this);
             );
         } else {
             $username = Yii::$app->user->identity->username;
-            $profilePicture = 'https://t3.ftcdn.net/jpg/06/33/54/78/360_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg';
+
+            if (!empty($this->fotoPerfil) && file_exists(Yii::$app->user->identity->profile->fotoPerfil)) {
+                $fotoPerfil = Yii::getAlias('@PerfilUrl') . '/' . Yii::$app->user->identity->profile->fotoPerfil;
+            } else {
+                $fotoPerfil = Yii::getAlias('@imagesUrl') . '/' . 'default_user.jpg';
+            }
 
             echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
 
@@ -75,10 +82,10 @@ AppAsset::register($this);
                 'aria-expanded' => 'false',
             ]);
 
-            echo Html::img($profilePicture, [
+            echo Html::img($fotoPerfil, [
                 'alt' => 'Profile Picture',
                 'class' => 'rounded-circle me-2',
-                'style' => 'width: 40px; height: 40px;',
+                'style' => 'width: 40px; height: 40px; object-fit: cover;',
             ]);
 
             echo Html::encode($username);
@@ -86,6 +93,7 @@ AppAsset::register($this);
 
             echo Html::beginTag('ul', ['class' => 'dropdown-menu dropdown-menu-dark', 'aria-labelledby' => 'userDropdown']);
             echo Html::tag('li', Html::a('Perfil', ['/site/profile'], ['class' => 'dropdown-item']));
+            echo Html::tag('li', Html::a('Encomendas', ['fatura/index'], ['class' => 'dropdown-item']));
             echo Html::tag('li', Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton('Logout', ['class' => 'dropdown-item'])
                 . Html::endForm());
@@ -94,12 +102,17 @@ AppAsset::register($this);
             echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
             echo Html::beginTag('a', [
                 'class' => 'btn btn-outline-light d-none d-md-block ms-2',
-                'href' => 'carrinho',
+                'href' =>  Url::toRoute('carrinho/')
             ]);
+            $carrinho = Yii::$app->user->identity->profile->carrinho;
+            if($carrinho){
+                $total = Yii::$app->user->identity->profile->carrinho->count;
+            }else{
+                $total = 0;
+            }
             echo '<i class="fas fa-shopping-basket"></i>';
-            echo '  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark mt-1">
-            99+
-            <span class="visually-hidden">número itens carrinho</span>
+            echo '  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark mt-1"> ' . $total .
+            '<span class="visually-hidden">número itens carrinho</span>
             </span>';
             echo Html::endTag('a');
         }
@@ -112,7 +125,7 @@ AppAsset::register($this);
 
         echo Html::beginTag('div', ['class' => 'd-md-none']);
         echo Html::beginTag('form', [
-            'action' => '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/site/search',
+            'action' => '/search',
             'method' => 'get',
             'class' => 'd-flex mt-2',
         ]);
@@ -151,16 +164,39 @@ AppAsset::register($this);
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
-            <?= Alert::widget() ?>
+            <?php
+            echo Html::beginTag('div', ['id' => 'messages-holder', 'class' => 'position-fixed top-0 end-0 p-3', 'style' => 'z-index: 1050;']);
+            if (Yii::$app->session->hasFlash('success')) {
+                echo Toast::widget([
+                    'title' => 'Sucesso',
+                    'body' => Yii::$app->session->getFlash('success'),
+                    'options' => [
+                        'class' => 'toast fade show bg-success text-white',
+                        'data-autohide' => 'true',
+                        'data-delay' => 100,
+                        'id' => 'success-toast',
+                    ]
+                ]);
+            }
+
+            if (Yii::$app->session->hasFlash('error')) {
+                echo Toast::widget([
+                    'title' => 'Erro',
+                    'body' => Yii::$app->session->getFlash('error'),
+                    'options' => [
+                        'class' => 'toast fade show bg-danger text-white',
+                        'data-autohide' => 'true',
+                        'data-delay' => 100,
+                        'id' => 'error-toast',
+                    ]
+                ]);
+            }
+            echo Html::endTag('div');
+            ?>
+
             <?= $content ?>
         </div>
     </main>
-
-
-
-
-
-
     <?php $this->endBody() ?>
     </body>
     </html>

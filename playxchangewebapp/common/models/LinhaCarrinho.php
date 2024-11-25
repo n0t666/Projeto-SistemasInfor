@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "linhascarrinho".
@@ -31,7 +33,7 @@ class LinhaCarrinho extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['carrinhos_id', 'produtos_id', 'quantidade'], 'required'],
+            [['quantidade'], 'required'],
             [['carrinhos_id', 'produtos_id', 'quantidade'], 'integer'],
             [['dataAdicao'], 'safe'],
             [['carrinhos_id', 'produtos_id'], 'unique', 'targetAttribute' => ['carrinhos_id', 'produtos_id']],
@@ -71,5 +73,17 @@ class LinhaCarrinho extends \yii\db\ActiveRecord
     public function getProdutos()
     {
         return $this->hasOne(Produto::class, ['id' => 'produtos_id']);
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'dataAdicao',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 }

@@ -32,7 +32,7 @@ class Carrinho extends \yii\db\ActiveRecord
     {
         return [
             [['utilizador_id'], 'required'],
-            [['utilizador_id'], 'integer'],
+            [['utilizador_id','count'], 'integer'],
             [['total'], 'number'],
             [['utilizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userdata::class, 'targetAttribute' => ['utilizador_id' => 'id']],
         ];

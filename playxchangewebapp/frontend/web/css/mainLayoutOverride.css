@@ -113,19 +113,7 @@ body {
 }
 
 
-.navbar-toggler {
-    border: none;
-    background-color: #BB86FC;
-    border-radius: 5px;
-    padding: 5px 10px; /
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, transform 0.3s;
-}
 
-.navbar-toggler:hover {
-    background-color: #9C4DFF;
-    transform: scale(1.1);
-}
 
 .navbar-item {
     margin: auto 4px;
@@ -978,6 +966,10 @@ figure img {
 
 .cart__total ul {
     margin-bottom: 25px;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .cart__total ul li {
@@ -986,6 +978,9 @@ figure img {
     color: var(--subtext-color);
     line-height: 40px;
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .cart__total ul li span {
@@ -1001,6 +996,9 @@ figure img {
     letter-spacing: 2px;
     background: var(--primary-color);
     color: var(--text-color);
+    border: none;
+    cursor: pointer;
+    width: 100%;
 }
 
 .cart__total .primary-btn:hover {
@@ -1312,6 +1310,214 @@ figure img {
 
 
 
+/* General Toast Container */
+.toast {
+    color: var(--text-color); /* Text color from the palette */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Soft shadow */
+}
 
+/* Toast Body */
+.toast-body {
+    background-color: var(--section-background);
+    color: var(--text-color);
+    padding: 15px;
+}
 
+/* Toast Header */
+.toast-header {
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: transparent;
+    color: var(--text-color);
+}
+
+/* Success Toast */
+.toast-success .toast-header {
+    background-color: #2B9E3F; /* Green background for success */
+    color: white; /* White text */
+}
+
+.toast-success .toast-body {
+    border-top: 1px solid #2B9E3F; /* Green border on top */
+}
+
+/* Warning Toast */
+.toast-warning .toast-header {
+    background-color: #FF9800; /* Amber background for warnings */
+    color: white; /* White text */
+}
+
+.toast-warning .toast-body {
+    border-top: 1px solid #FF9800; /* Amber border on top */
+}
+
+/* Error Toast */
+.toast-error .toast-header {
+    background-color: #CF6679; /* Red background for errors */
+    color: white; /* White text */
+}
+
+.toast-error .toast-body {
+    border-top: 1px solid #CF6679; /* Red border on top */
+}
+
+/* Info Toast */
+.toast-info .toast-header {
+    background-color: #0288D1;
+    color: white;
+}
+
+.toast-info .toast-body {
+    border-top: 1px solid #0288D1;
+}
+
+/* Close Button */
+.toast .btn-close {
+    color: white;
+    opacity: 0.6;
+}
+
+.toast .btn-close:hover {
+    opacity: 1;
+}
+
+.toast:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Toast Fade Animation */
+.toast {
+    animation: toast-fade-in 0.3s ease-in-out;
+}
+
+@keyframes toast-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.accordion {
+    background-color: var(--section-background);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.accordion-item {
+    background-color: var(--section-background);
+    border: none;
+}
+
+.accordion-header {
+    color: var(--text-color);
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.accordion-header:hover {
+    background-color: var(--primary-hover);
+}
+
+.accordion-button {
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 16px;
+    padding: 10px 15px;
+    border: none;
+    box-shadow: none;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--primary-color);
+    color: var(--btn-primary-text);
+}
+
+.accordion-button::after {
+    filter: invert(1);
+}
+
+.accordion-body {
+    color: var(--text-color);
+    padding: 15px;
+}
+
+.accordion-item.active .accordion-header {
+    background-color: var(--primary-color);
+    color: var(--btn-primary-text);
+}
+
+.accordion-collapse {
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    background-color: var(--section-background);
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+input[type="radio"]:hover {
+    border-color: var(--primary-hover);
+}
+
+input[type="radio"]:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: var(--btn-primary-text);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+input[type="radio"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--focus-border-color);
+}
+
+/* Disabled State */
+input[type="radio"]:disabled {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+    cursor: not-allowed;
+}
+
+input[type="radio"]:disabled::after {
+    background-color: var(--disabled-text-color);
+}
+
+.navbar-toggler{
+    border: 0 !important;
+}
+
+.navbar-toggler:focus, .navbar-toggler:active {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    border: 0 !important;
+}
 
