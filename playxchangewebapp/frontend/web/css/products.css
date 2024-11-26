@@ -135,7 +135,7 @@
     height: 60px;
     border: 0;
     border-radius: 10px;
-    background-color: #4834d4;
+    background-color: #BB86FC;
     outline: none;
     cursor: pointer;
     color: #fff;
@@ -144,7 +144,7 @@
 }
 
 .cart-button:hover {
-    background-color: #35269b;
+    background-color: #9C4DFF;
 }
 
 .cart-button:active {

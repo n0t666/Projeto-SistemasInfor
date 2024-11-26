@@ -1,19 +1,18 @@
 <?php
+
+use yii\bootstrap5\BootstrapAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\bootstrap5\Accordion;
 use yii\widgets\MaskedInput;
 
 $this->title = 'Faturas';
 
-$this->registerCssFile('@web/css/faturas.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::className()]]);
+$this->registerCssFile('@web/css/faturas.css', ['depends' => [BootstrapAsset::className()]]);
 
 
 ?>
-<style>
-
-
-</style>
 
 <div class="container my-3">
     <div class="row justify-content-center">
@@ -34,7 +33,7 @@ $this->registerCssFile('@web/css/faturas.css', ['depends' => [\yii\bootstrap5\Bo
                                 <p><strong>Estado:</strong> <span class="badge bg-success"><?= $fatura->getEstadoLabel() ?></span></p>
                             </div>
                         </div>
-                        <button class="btn btn-outline-primary mt-2">Ver detalhes</button>
+                        <a class="btn btn-outline-primary mt-2" href="<?= Url::to(['view','id' => $fatura->id])?>">Ver detalhes</a>
                     </li>
                     <?php endforeach?>
                 </ul>

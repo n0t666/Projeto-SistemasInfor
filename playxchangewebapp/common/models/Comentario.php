@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "comentarios".
@@ -82,6 +84,33 @@ class Comentario extends \yii\db\ActiveRecord
     public function getJogo()
     {
         return $this->hasOne(Jogo::class, ['id' => 'jogo_id']);
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['dataComentario'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['dataComentario'],
+                ],
+                'value' => function ($event) {
+                    try {
+                        if (empty($this->dataGeracao)) {
+                            $this->dataComentario = null;
+                        }else{
+                            $this->dataComentario = date('Y-m-d');
+                        }
+                    } catch (\Exception $e) {
+                        Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
+                        $this->dataComentario = date('Y-m-d');
+                    }
+
+                    return $this->dataComentario;
+                },
+            ],
+        ];
     }
 
 }

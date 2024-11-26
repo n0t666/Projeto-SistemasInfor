@@ -30,8 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'value' => $model->plataforma->nome,
                             ],
                             'chave',
-                            'dataGeracao',
-                            'dataExpiracao',
+                            [
+                                'attribute' => 'dataGeracao',
+                                'value' => $model->dataGeracao ? $model->dataGeracao : 'N/A',
+                            ],
+                            [
+                                'attribute' => 'dataExpiracao',
+                                'value' => $model->dataExpiracao ? $model->dataExpiracao : 'N/A',
+                            ],
                             [
                                 'attribute' => 'isUsada',
                                 'value' => function($model) {

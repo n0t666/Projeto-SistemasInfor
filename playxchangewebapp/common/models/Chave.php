@@ -115,9 +115,9 @@ class Chave extends \yii\db\ActiveRecord
                 'value' => function ($event) {
                     try {
                         if (empty($this->dataGeracao)) {
-                            $this->dataGeracao = date('Y-m-d');
-                        }else{
                             $this->dataGeracao = null;
+                        }else{
+                            $this->dataGeracao = date('Y-m-d');
                         }
                     } catch (\Exception $e) {
                         Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
@@ -146,6 +146,8 @@ class Chave extends \yii\db\ActiveRecord
                 'value' => function ($event) {
                     try {
                         if (empty($this->dataExpiracao)) {
+                            $this->dataExpiracao = null;
+                        }else{
                             $this->dataExpiracao = date('Y-m-d');
                         }
                     } catch (\Exception $e) {

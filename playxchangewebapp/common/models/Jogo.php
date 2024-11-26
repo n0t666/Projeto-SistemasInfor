@@ -194,6 +194,14 @@ class Jogo extends \yii\db\ActiveRecord
         return $this->hasMany(Userdata::class, ['id' => 'utilizador_id'])->viaTable('utilizadoresjogos', ['jogo_id' => 'id']);
     }
 
+    public function getStats(){
+        return $this::find()
+            ->joinWith('utilizadoresjogos u')
+            ->groupBy('id');
+    }
+    
+
+
     public function behaviors()
     {
         return [

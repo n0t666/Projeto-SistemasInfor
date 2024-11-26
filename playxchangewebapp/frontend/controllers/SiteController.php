@@ -90,7 +90,9 @@ class SiteController extends Controller
         $jogos = $query->all();
 
 
-        return $this->render('index');
+        return $this->render('index',[
+            'jogos' => $jogos,
+        ]);
     }
 
     /**

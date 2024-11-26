@@ -182,6 +182,11 @@ class FaturaController extends Controller
                     return $this->redirect(['/carrinho']);
                 }
 
+                if(empty($carrinho) || empty($carrinho->linhascarrinhos)){
+                    Yii::$app->session->setFlash('error', 'Não existe nenhum item no carrinho.');
+                    return $this->goHome();
+                }
+
                 $codigo = null;
                 $isCodigoUsed = true;
                 if ($codigoId) {
@@ -212,15 +217,11 @@ class FaturaController extends Controller
                     $model->codigo_id = $codigoId;
                     $user->link('codigos', $codigo);
                 }
-                $model->total = $total;
                 $model->estado = Fatura::ESTADO_PAID;
-                $model->total = $total;
 
                 if (!$model->save()) {
                     throw new \Exception('Erro ao salvar fatura.');
                 }
-
-
 
                 foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
                     $produto = $linhaCarrinho->produtos;
@@ -253,7 +254,9 @@ class FaturaController extends Controller
                 }
 
                 if ($codigo != null && !$isCodigoUsed) {
-                    $total-=$codigo->desconto;
+                    $desconto = $codigo->desconto;
+                    $valorDescontado = ($total * ($desconto / 100));
+                    $total -= $valorDescontado;
                 }
 
                 $model->total = $total;
