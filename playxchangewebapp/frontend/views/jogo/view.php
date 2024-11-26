@@ -1,8 +1,11 @@
 <?php
 
+use backend\assets\ChartJsAsset;
 use kartik\rating\StarRating;
+use practically\chartjs\widgets\Chart;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\JqueryAsset;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 
@@ -11,8 +14,10 @@ use yii\widgets\DetailView;
 
 $this->registerJsFile(
     '@web/js/jogoview.js',
-    ['depends' => [\yii\web\JqueryAsset::class]]
+    ['depends' => [JqueryAsset::class]]
 );
+
+
 
 $this->title = $model->nome;
 
@@ -224,7 +229,6 @@ $this->title = $model->nome;
                             ]
                         ]); ?>
                     </div>
-
                     <div class="col-12 text-center">
                         <?= Html::submitButton('Guardar Avaliação', ['class' => 'btn btn-primary']) ?>
                     </div>

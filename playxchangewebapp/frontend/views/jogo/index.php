@@ -11,7 +11,6 @@ use yii\widgets\ListView;
 
 $this->title = 'Jogos';
 
-
 ?>
 <div class="container my-5">
         <?= ListView::widget([ // Usar a lisview devido ao facto de facilitar a paginação e posteriormente filtros
