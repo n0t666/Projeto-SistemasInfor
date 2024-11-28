@@ -21,5 +21,10 @@ return [
                 ],
             ],
         ],
+        'formatter' => [
+            'currencyCode' => 'EUR',
+            'locale' => 'pt-PT',
+            'numberFormatterSymbols'=>[\NumberFormatter::CURRENCY_SYMBOL => '€'],
+        ],
     ],
 ];

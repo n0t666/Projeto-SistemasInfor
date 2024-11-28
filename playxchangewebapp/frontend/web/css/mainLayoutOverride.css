@@ -717,6 +717,28 @@ figure img {
     text-decoration: none;
 }
 
+.game-card:hover .center-links {
+    opacity: 1;
+}
+
+.game-stats {
+    text-align: center;
+    color: white;
+}
+
+.game-stats span {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    font-size: 1.1rem;
+}
+
+.game-stats i {
+    font-size: 1.5rem;
+    margin-right: 8px;
+}
+
+
 
 
 .product__details__cart__option {

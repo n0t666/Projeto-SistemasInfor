@@ -1,141 +1,112 @@
 <?php
+
+use yii\bootstrap5\BootstrapAsset;
+
+/* @var $fatura common\models\Fatura */
+
+$this->registerCssFile('@web/css/faturas.css', ['depends' => [BootstrapAsset::className()]]);
+
+
+
 ?>
 
-<div class="container-fluid">
 
+<div class="container-fluid">
     <div class="container">
-        <!-- Title -->
         <div class="d-flex justify-content-between align-items-center py-3">
-            <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #16123222</h2>
+            <h2 class="h5 mb-0">Encomenda #<?= $fatura->id ?></h2>
         </div>
 
-        <!-- Main content -->
         <div class="row">
-            <div class="col-lg-8">
-                <!-- Details -->
+            <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="mb-3 d-flex justify-content-between">
                             <div>
-                                <span class="me-3">22-11-2021</span>
-                                <span class="me-3">#16123222</span>
-                                <span class="me-3">Visa -1234</span>
-                                <span class="badge rounded-pill bg-info">SHIPPING</span>
-                            </div>
-                            <div class="d-flex">
-                                <button class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text"><i class="bi bi-download"></i> <span class="text">Invoice</span></button>
-                                <div class="dropdown">
-                                    <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown">
-                                        <i class="bi bi-three-dots-vertical"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Edit</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i> Print</a></li>
-                                    </ul>
-                                </div>
+                                <span class="me-3"><?= $fatura->dataEncomenda ?></span>
+                                <span class="badge rounded-pill bg-info"><?= $fatura->getEstadoLabel() ?></span>
                             </div>
                         </div>
+                        <div class="table-responsive">
                         <table class="table table-borderless">
+                            <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Chaves</th>
+                                <th>Quantidade</th>
+                                <th class="text-end">Preço</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                            </thead>
                             <tbody>
+                            <?php foreach ($linhasFatura as $linha): ?>
                             <tr>
                                 <td>
                                     <div class="d-flex mb-2">
                                         <div class="flex-shrink-0">
-                                            <img src="https://www.bootdey.com/image/280x280/87CEFA/000000" alt="" width="35" class="img-fluid">
+                                            <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $linha['produto']->jogo->imagemCapa ?>" alt="" width="35" class="img-fluid">
                                         </div>
-                                        <div class="flex-lg-grow-1 ms-3">
-                                            <h6 class="small mb-0"><a href="#" class="text-reset">Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</a></h6>
-                                            <span class="small">Color: Black</span>
+                                        <div class="ms-3" style="max-width: calc(100% - 45px);">
+                                            <h6 class="small mb-0 text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                <a href="#" class="text-reset"><?= $linha['produto']->jogo->nome  ?></a>
+                                            </h6>
+                                            <span class="small text-truncate" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Plataforma: <?= $linha['produto']->plataforma->nome  ?></span>
                                         </div>
                                     </div>
                                 </td>
-                                <td>1</td>
-                                <td class="text-end">$79.99</td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <div class="d-flex mb-2">
-                                        <div class="flex-shrink-0">
-                                            <img src="https://www.bootdey.com/image/280x280/FF69B4/000000" alt="" width="35" class="img-fluid">
-                                        </div>
-                                        <div class="flex-lg-grow-1 ms-3">
-                                            <h6 class="small mb-0"><a href="#" class="text-reset">Smartwatch IP68 Waterproof GPS and Bluetooth Support</a></h6>
-                                            <span class="small">Color: White</span>
-                                        </div>
+                                    <div class="d-flex flex-column gap-2">
+                                        <?php foreach ($linha['chaves'] as $chave): ?>
+                                            <span class="badge bg-primary text-wrap"><?= $chave->chave ?></span>
+                                        <?php endforeach; ?>
                                     </div>
                                 </td>
-                                <td>1</td>
-                                <td class="text-end">$79.99</td>
+                                <td><?= $linha['quantidade']  ?></td>
+                                <td class="text-end"><?= $linha['precoUnitario']?>€</td>
+                                <td class="text-end"><?= $linha['subtotal']?>€</td>
                             </tr>
+                            <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                             <tr>
-                                <td colspan="2">Subtotal</td>
-                                <td class="text-end">$159,98</td>
+                                <td colspan="5" class="text-end">Subtotal</td>
+                                <td class="text-end"><?= Yii::$app->formatter->asCurrency($totalSemDesconto) ?></td>
                             </tr>
                             <tr>
-                                <td colspan="2">Shipping</td>
-                                <td class="text-end">$20.00</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">Discount (Code: NEWYEAR)</td>
-                                <td class="text-danger text-end">-$10.00</td>
+                                <td colspan="5" class="text-end">Desconto (Código: <?= $fatura->codigo->codigo ?>)</td>
+                                <td class="text-danger text-end">-<?= Yii::$app->formatter->asCurrency($totalQuantidade) ?></td>
                             </tr>
                             <tr class="fw-bold">
-                                <td colspan="2">TOTAL</td>
-                                <td class="text-end">$169,98</td>
+                                <td colspan="5" class="text-end">TOTAL</td>
+                                <td class="text-end"><?= Yii::$app->formatter->asCurrency($fatura->total) ?></td>
                             </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
-                <!-- Payment -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <h3 class="h6">Payment Method</h3>
-                                <p>Visa -1234 <br>
-                                    Total: $169,98 <span class="badge bg-success rounded-pill">PAID</span></p>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex flex-column flex-sm-row justify-content-between mb-3">
+                            <div class="mb-3 mb-sm-0">
+                                <h5>Método de pagamento:</h5>
+                                <p><?= $fatura->pagamento->nome ?></p>
                             </div>
-                            <div class="col-lg-6">
-                                <h3 class="h6">Billing address</h3>
-                                <address>
-                                    <strong>John Doe</strong><br>
-                                    1355 Market St, Suite 900<br>
-                                    San Francisco, CA 94103<br>
-                                    <abbr title="Phone">P:</abbr> (123) 456-7890
-                                </address>
+                            <div class="text-sm-end">
+                                <h5>Método de envio</h5>
+                                <p><?= $fatura->envio->nome ?></p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h3 class="h6">Customer Notes</h3>
-                        <p>Sed enim, faucibus litora velit vestibulum habitasse. Cras lobortis cum sem aliquet mauris rutrum. Sollicitudin. Morbi, sem tellus vestibulum porttitor.</p>
-                    </div>
-                </div>
-                <div class="card mb-4">
-                    <!-- Shipping information -->
-                    <div class="card-body">
-                        <h3 class="h6">Shipping Information</h3>
-                        <strong>FedEx</strong>
-                        <span><a href="#" class="text-decoration-underline" target="_blank">FF1234567890</a> <i class="bi bi-box-arrow-up-right"></i> </span>
-                        <hr>
-                        <h3 class="h6">Address</h3>
-                        <address>
-                            <strong>John Doe</strong><br>
-                            1355 Market St, Suite 900<br>
-                            San Francisco, CA 94103<br>
-                            <abbr title="Phone">P:</abbr> (123) 456-7890
-                        </address>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+
+
+
 

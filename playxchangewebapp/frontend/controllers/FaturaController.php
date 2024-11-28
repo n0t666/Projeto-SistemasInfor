@@ -11,6 +11,7 @@ use common\models\LinhaFatura;
 use common\models\MetodoEnvio;
 use common\models\MetodoPagamento;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -50,12 +51,17 @@ class FaturaController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $faturas = $user->faturas;
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $user->getFaturas(),
+            'pagination' => [
+                'pageSize' =>5,
+            ],
+        ]);
 
 
         return $this->render('index', [
-            'faturas' => $faturas,
-
+            'dataProvider' => $dataProvider,
         ]);
 
     }
@@ -112,6 +118,9 @@ class FaturaController extends Controller
             if ($codigoModel) {
                 $desconto = $codigoModel->desconto;
                 $valorDescontado = ($total * ($desconto / 100));
+                if ($valorDescontado > $total) {
+                    $valorDescontado = $total;
+                }
                 $total -= $valorDescontado;
                 $codigoArray = [
                     'codigo_id' => $codigoModel->id,
@@ -213,6 +222,7 @@ class FaturaController extends Controller
                 $model->utilizador_id = $user->id;
                 $model->pagamento_id = $pagamentoId;
                 $model->envio_id = $envioId;
+                $model->total = $total;
                 if ($codigo != null && !$isCodigoUsed) {
                     $model->codigo_id = $codigoId;
                     $user->link('codigos', $codigo);
@@ -220,7 +230,7 @@ class FaturaController extends Controller
                 $model->estado = Fatura::ESTADO_PAID;
 
                 if (!$model->save()) {
-                    throw new \Exception('Erro ao salvar fatura.');
+                    throw new \Exception('Erro ao criar a fatura.');
                 }
 
                 foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
@@ -257,6 +267,9 @@ class FaturaController extends Controller
                     $desconto = $codigo->desconto;
                     $valorDescontado = ($total * ($desconto / 100));
                     $total -= $valorDescontado;
+                    if ($total < 0) {
+                        $total = 0;
+                    }
                 }
 
                 $model->total = $total;
@@ -276,8 +289,6 @@ class FaturaController extends Controller
                 if(isset($transaction)){
                     $transaction->rollBack();
                 }
-                var_dump($e->getMessage());
-                exit();
                 Yii::$app->session->setFlash('error', 'Erro ao processar a fatura.');
                 return $this->redirect(['/carrinho']);
             }
@@ -299,8 +310,40 @@ class FaturaController extends Controller
            throw new NotFoundHttpException();
         }
 
+        $linhasFatura = [];
+        $totalSemDesconto = 0;
+
+        foreach ($fatura->linhasfaturas as $linha){
+            $produto = $linha->produto_id;
+            if (!isset($linhasFatura[$produto])) {
+                $linhasFatura[$produto] = [
+                    'produto' => $linha->produto,
+                    'precoUnitario' => $linha->precoUnitario,
+                    'quantidade' => 0,
+                    'subtotal' => 0,
+                    'chaves' => []
+                ];
+            }
+
+            $linhasFatura[$produto]['quantidade'] += 1;
+            $linhasFatura[$produto]['subtotal'] += $linha->precoUnitario;
+            $linhasFatura[$produto]['chaves'][] = $linha->chave;
+
+            $totalSemDesconto += $linha->precoUnitario;
+        }
+
+        $quantidadeDesconto = 0;
+
+        if ($fatura->codigo) {
+            $desconto = $fatura->codigo->desconto;
+            $quantidadeDesconto = ($totalSemDesconto * $desconto) / 100;
+        }
+
         return $this->render('view', [
             'fatura' => $fatura,
+            'linhasFatura' => $linhasFatura,
+            'totalSemDesconto' => $totalSemDesconto,
+            'totalQuantidade' => $quantidadeDesconto,
         ]);
 
     }

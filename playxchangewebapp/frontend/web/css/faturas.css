@@ -99,3 +99,38 @@ img {
     width: 100%;
     height: auto;
 }
+
+
+
+.table.table-borderless {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table.table-borderless th,
+.table.table-borderless td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border: 1px solid var(--border-color);
+}
+
+.table.table-borderless th {
+    background-color: var(--section-background);
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.table.table-borderless td {
+    background-color: var(--card-bg-left);
+    color: var(--text-color);
+}
+
+.table.table-borderless tr:nth-child(even) {
+    background-color: var(--section-background);
+}
+
+.table.table-borderless tr:hover {
+    background-color: var(--primary-hover);
+    cursor: pointer;
+}
+

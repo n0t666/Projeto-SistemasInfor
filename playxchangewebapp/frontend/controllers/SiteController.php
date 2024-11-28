@@ -79,13 +79,14 @@ class SiteController extends Controller
     {
         $query = Jogo::find()
             ->joinWith('utilizadoresjogos u')
-            ->groupBy('id')
+            ->groupBy('jogos.id')
             ->orderBy([
                 'dataLancamento' => SORT_DESC,
                 'COUNT(u.id)' => SORT_DESC,
             ])
             ->where(['u.isJogado' => 1])
             ->limit(6);
+
 
         $jogos = $query->all();
 

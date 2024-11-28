@@ -2,6 +2,7 @@
 
 /** @var yii\web\View $this */
 
+use backend\controllers\UtilsController;
 use practically\chartjs\widgets\Chart;
 use yii\bootstrap5\Html;
 
@@ -22,22 +23,27 @@ $this->title = 'Página inicial';
 <div class="container my-5">
     <div class="row g-4">
         <?php foreach ($jogos as $jogo): ?>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-            <div class="card game-card">
-                <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa;  ?>" class="game-poster img-fluid">
-                <div class="center-links">
-                    <a href="#" class="play-now">
-                        <i class="fas fa-play"></i> <?= $jogo->nome ?>
-                    </a>
-                    <a href="#" class="view-details">
-                        <i class="fas fa-info-circle"></i> View Details
-                    </a href="#" class="view-details">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card game-card">
+                    <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa; ?>" class="game-poster img-fluid">
+                    <div class="center-links">
+                        <div class="game-stats">
+                        <span class="played">
+                            <i class="fas fa-play"></i>
+                            <?= UtilsController::number_format_short($jogo->getNumJogados()) ?>
+                        </span>
+                            <span class="wishlisted">
+                            <i class="fas fa-heart"></i>
+                            <?= UtilsController::number_format_short($jogo->getNumFavoritos()) ?>
+                        </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
         <?php endforeach; ?>
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () { // Após os elementos da página terem sido carregados, dar override no padding em que o conteúdo da página é gerado
         var content = document.getElementById('contentHolder');
