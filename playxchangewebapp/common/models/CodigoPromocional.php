@@ -75,4 +75,5 @@ class CodigoPromocional extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserData::class, ['id' => 'utilizador_id'])->viaTable('utilizacaocodigos', ['codigo_id' => 'id']);
     }
+
 }

@@ -51,6 +51,23 @@ class MetodoPagamento extends \yii\db\ActiveRecord
         ];
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        if (Yii::$app->controller && Yii::$app->controller->module->id == 'api') {
+            return [
+                'id',
+                'nome',
+                'isAtivo',
+                'logotipo' => function ($model) {
+                    return Yii::getAlias('@utilsUrl') . '/' . $model->logotipo;
+                },
+            ];
+        } else {
+            return $fields;
+        }
+    }
+
     /**
      * Gets query for [[Faturas]].
      *

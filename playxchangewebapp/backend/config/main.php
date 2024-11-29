@@ -20,6 +20,9 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'parsers'=> [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -46,6 +49,10 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/metodo-pagamento', 'pluralize'=>false],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/metodo-envio', 'pluralize'=>false],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/codigo-promocional', 'pluralize'=>false],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/carrinho',],
             ],
         ],
     ],

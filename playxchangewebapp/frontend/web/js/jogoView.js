@@ -2,8 +2,6 @@ $(function(){
     const plataformaDropdown = $("#plataforma-dropdown");
     const elementoPreco = $("#product-price");
     const cartButtons = document.querySelectorAll('.cart-button');
-
-
     plataformaDropdown.on("change", function(){ // Quando ua opção é selecionada
         const opcaoSelecionada = $(this).children("option:selected"); // Obter elemento selecionada para consultar atributo do preço
         const preco = opcaoSelecionada.data('preco');
@@ -46,9 +44,13 @@ $(function(){
                 $('#jogo-carrinho').submit();
             }, 50000);
         }
-
-
     });
+
+    $('.reviewButton').on('click', function() {
+        $('#modal-review').modal('show');
+    });
+
+
 
 
 

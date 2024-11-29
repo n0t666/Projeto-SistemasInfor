@@ -79,4 +79,24 @@ class Carrinho extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Userdata::class, ['id' => 'utilizador_id']);
     }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        return $fields;
+    }
+
+    public function extraFields()
+    {
+        $fields = parent::extraFields();
+        if (Yii::$app->controller && Yii::$app->controller->module->id == 'api') {
+            return [
+                'linhascarrinhos',
+            ];
+        } else {
+            return [];
+        }
+    }
+
 }

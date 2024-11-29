@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Avaliacao;
 use common\models\Carrinho;
+use common\models\Comentario;
 use common\models\LinhaCarrinho;
 use common\models\UtilizadorJogo;
 use Yii;
@@ -59,6 +60,7 @@ class JogoController extends Controller
         $jogo = $this->findModel($id);
         $produtos = $jogo->produtos;
         $itemCarrinho = new LinhaCarrinho();
+        $review = new Comentario();
 
 
         $interaction = UtilizadorJogo::find()
@@ -83,7 +85,8 @@ class JogoController extends Controller
             'interaction' => $interaction,
             'avaliacao' => $avaliacao,
             'produtos' => $produtos,
-            'itemCarrinho' => $itemCarrinho
+            'itemCarrinho' => $itemCarrinho,
+            'review' => $review,
         ]);
     }
 
