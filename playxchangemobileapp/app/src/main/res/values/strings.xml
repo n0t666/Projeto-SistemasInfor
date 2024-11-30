@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Playxchange</string>
+    <string name="txt_engine_description">Config Icon</string>
+    <string name="txt_hint_login_email">Email</string>
+    <string name="txt_hint_login_password">Password</string>
+    <string name="txt_login_button">Login</string>
+    <string name="txt_title_servidor">Servidor</string>
+    <string name="txt_hint_ip">Introduza o endereço ip do servidor...</string>
+    <string name="txt_confirm">Confirmar</string>
+    <string name="txt_username_login">Username</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

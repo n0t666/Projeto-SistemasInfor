@@ -14,8 +14,8 @@
         tools:targetApi="31">
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppThemeNoAction"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppThemeNoAction">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +23,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ServidorActivity"
+            android:theme="@style/AppTheme"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme"
             android:exported="true">
         </activity>
     </application>
