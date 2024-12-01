@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Chave;
+use common\models\Denuncia;
 use common\models\Produto;
 use common\models\User;
 use common\models\Userdata;
@@ -14,13 +15,25 @@ use yii\web\ServerErrorHttpException;
 
 class UtilizadorController extends Controller
 {
-    public function actionProfile($username){
+    public function actionProfile($username)
+    {
         $user = User::find()->where(['username' => $username])->one();
         $isBlockedByCurrentUser = false;
         $isCurrentUserBlocked = false;
 
+        $denuncia = null;
+        $isFollowing = false;
 
-        if(!Yii::$app->user->isGuest){
+
+        if (!Yii::$app->user->isGuest) {
+
+            if (Denuncia::find()->where(['denunciante_id' => Yii::$app->user->identity->id, 'denunciado_id' => $user->id])->exists()) {
+                $denuncia = Denuncia::find()->where(['denunciante_id' => Yii::$app->user->identity->id, 'denunciado_id' => $user->id])->one();
+            } else {
+                $denuncia = new Denuncia();
+                $denuncia->denunciante_id = Yii::$app->user->identity->id;
+                $denuncia->denunciado_id = $user->id;
+            }
 
             $isCurrentUserBlocked = $user->profile
                 ->find()
@@ -34,29 +47,36 @@ class UtilizadorController extends Controller
                 ->andWhere(['b.id' => Yii::$app->user->identity->id])
                 ->exists();
 
-            if($isBlockedByCurrentUser){
-               throw new NotFoundHttpException();
-           }
+            if ($isBlockedByCurrentUser) {
+                throw new NotFoundHttpException();
+            }
+
+            $isFollowing = $user->profile
+                ->find()
+                ->joinWith(['seguidores s'])
+                ->andWhere(['s.id' => Yii::$app->user->identity->id])
+                ->exists();
         }
 
 
-        if(!$user){
+        if (!$user) {
             throw new NotFoundHttpException();
         }
 
         return $this->render('profile', [
             'user' => $user,
             'isBlocked' => $isCurrentUserBlocked,
+            'denuncia' => $denuncia,
+            'isFollowing' => $isFollowing,
         ]);
     }
-
 
 
     public static function getMutuals($userId)
     {
         $user = Userdata::findOne($userId);
 
-        if(!$user){
+        if (!$user) {
             return [];
         }
 
@@ -70,13 +90,13 @@ class UtilizadorController extends Controller
         return $mutuals;
     }
 
-    public static function isMutualFollow($userId1,$userId2)
+    public static function isMutualFollow($userId1, $userId2)
     {
-        $user2 =Userdata::find()
+        $user2 = Userdata::find()
             ->where(['id' => $userId1])
             ->andWhere(['exists' => Userdata::find()->where(['seguidor_id' => $userId1, 'seguido_id' => $userId2])])
             ->exists();
-        $user1 =  Userdata::find()
+        $user1 = Userdata::find()
             ->where(['id' => $userId2])
             ->andWhere(['exists' => Userdata::find()->where(['seguidor_id' => $userId2, 'seguido_id' => $userId1])])
             ->exists(); // Para devolvoer boolean
@@ -90,17 +110,21 @@ class UtilizadorController extends Controller
 
             if (Yii::$app->request->isPost) {
 
-                $target= Yii::$app->request->post('userId');
-                if(!$target){
+                $target = Yii::$app->request->post('userId');
+                if (!$target) {
                     throw new NotFoundHttpException();
                 }
                 $target = User::findOne($target);
 
-                if(!$target){
+                if (!$target) {
                     throw new NotFoundHttpException();
                 }
 
-                if(Yii::$app->user->isGuest){
+                if (Yii::$app->user->isGuest) {
+                    throw new NotFoundHttpException();
+                }
+
+                if ($target->id == Yii::$app->user->identity->id) {
                     throw new NotFoundHttpException();
                 }
 
@@ -110,10 +134,10 @@ class UtilizadorController extends Controller
                     ->andWhere(['b.id' => Yii::$app->user->identity->id])
                     ->exists();
 
-                if(!$blockExistente){
+                if (!$blockExistente) {
                     Yii::$app->user->identity->profile->link('utilizadorBloqueados', $target);
                     Yii::$app->session->setFlash('success', 'Utilizador bloqueado com sucesso');
-                }else{
+                } else {
                     Yii::$app->session->setFlash('error', 'Erro ao bloquear o utilizador');
                 }
 
@@ -121,7 +145,7 @@ class UtilizadorController extends Controller
 
             }
 
-        }catch (\Exception  $e) {
+        } catch (\Exception  $e) {
             var_dump($e->getMessage());
             exit();
             Yii::$app->session->setFlash('error', 'Erro ao bloquear o utilizador');
@@ -136,17 +160,21 @@ class UtilizadorController extends Controller
     {
         try {
 
-            $target= Yii::$app->request->post('userId');
-            if(!$target){
+            $target = Yii::$app->request->post('userId');
+            if (!$target) {
                 throw new NotFoundHttpException();
             }
             $target = User::findOne($target);
 
-            if(!$target){
+            if (!$target) {
                 throw new NotFoundHttpException();
             }
 
-            if(Yii::$app->user->isGuest){
+            if (Yii::$app->user->isGuest) {
+                throw new NotFoundHttpException();
+            }
+
+            if ($target->id == Yii::$app->user->identity->id) {
                 throw new NotFoundHttpException();
             }
 
@@ -156,24 +184,93 @@ class UtilizadorController extends Controller
                 ->andWhere(['b.id' => Yii::$app->user->identity->id])
                 ->exists();
 
-            if($blockExistente){
-                Yii::$app->user->identity->profile->unlink('utilizadorBloqueados', $target,true);
+            if ($blockExistente) {
+                Yii::$app->user->identity->profile->unlink('utilizadorBloqueados', $target, true);
                 Yii::$app->session->setFlash('success', 'Utilizador desbloqueado com sucesso');
-            }else{
+            } else {
                 Yii::$app->session->setFlash('error', 'Erro ao desbloquear o utilizador');
             }
 
             return $this->redirect(Url::to(['profile', 'username' => Yii::$app->user->identity->username]));
 
 
-        }catch (\Exception  $e) {
-            var_dump($e->getMessage());
-            exit();
+        } catch (\Exception  $e) {
             throw new ServerErrorHttpException($e->getMessage());
         }
 
-        return $this->goHome();
+    }
 
+    public function actionFollow()
+    {
+        try {
+            $target = Yii::$app->request->post('userId');
+            if (!$target) {
+                throw new NotFoundHttpException();
+            }
+            $target = User::findOne($target);
+            if (!$target) {
+                throw new NotFoundHttpException();
+            }
+            if (Yii::$app->user->isGuest) {
+                throw new NotFoundHttpException();
+            }
+            if ($target->id == Yii::$app->user->identity->id) {
+                throw new NotFoundHttpException();
+            }
+
+            $followExistente = $target->profile
+                ->find()
+                ->joinWith(['seguidores s'])
+                ->andWhere(['s.id' => Yii::$app->user->identity->id])
+                ->exists();
+            if (!$followExistente) {
+                Yii::$app->user->identity->profile->link('seguidos', $target);
+                Yii::$app->session->setFlash('success', 'Utilizador seguido com sucesso');
+                return $this->redirect(Url::to(['profile', 'username' => $target->username]));
+            } else {
+                Yii::$app->session->setFlash('error', 'Erro ao seguir o utilizador');
+                return $this->redirect(Url::to(['profile', 'username' => Yii::$app->user->identity->username]));
+            }
+        } catch (\Exception  $e) {
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+
+    public function actionUnfollow()
+    {
+        try {
+            $target = Yii::$app->request->post('userId');
+            if (!$target) {
+                throw new NotFoundHttpException();
+            }
+            $target = User::findOne($target);
+            if (!$target) {
+                throw new NotFoundHttpException();
+            }
+            if (Yii::$app->user->isGuest) {
+                throw new NotFoundHttpException();
+            }
+            if ($target->id == Yii::$app->user->identity->id){
+                throw new NotFoundHttpException();
+            }
+
+            $followExistente = $target->profile
+                ->find()
+                ->joinWith(['seguidores s'])
+                ->andWhere(['s.id' => Yii::$app->user->identity->id])
+                ->exists();
+            if ($followExistente) {
+                Yii::$app->user->identity->profile->unlink('seguidos', $target, true);
+                Yii::$app->session->setFlash('success', 'Utilizador deixado de seguir com sucesso');
+                return $this->redirect(Url::to(['profile', 'username' => $target->username]));
+            }else{
+                Yii::$app->session->setFlash('error', 'Erro ao deixar de seguir o utilizador');
+                return $this->redirect(Url::to(['profile', 'username' => Yii::$app->user->identity->username]));
+            }
+        }catch (\Exception  $e) {
+
+            throw new ServerErrorHttpException($e->getMessage());
+        }
     }
 
 }

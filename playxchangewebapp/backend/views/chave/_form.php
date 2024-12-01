@@ -49,6 +49,12 @@ use yii\widgets\MaskedInput;
 
     <?= $form->field($model, 'chave')->widget(MaskedInput::class, [
         'mask' => '*****-*****-*****',
+        'clientOptions' =>
+        [
+            'clearIncomplete' => true,
+            'oncomplete' => 'function(){ $(this).val($(this).val().replace(/_/g, "")); }'
+        ]
+
     ]) ?>
 
     <div class="form-group">

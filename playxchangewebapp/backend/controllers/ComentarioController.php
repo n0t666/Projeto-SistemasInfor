@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\User;
 use Yii;
 use common\models\Comentario;
 use yii\data\ActiveDataProvider;
@@ -33,14 +34,21 @@ class ComentarioController extends Controller
      * Lists all Comentario models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($userId)
     {
+        $user = User::findOne($userId);
+
+        if(!$user){
+            return $this->goHome();
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Comentario::find(),
+            'query' => Comentario::find()->where(['utilizador_id' => $userId]),
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'user' => $user,
         ]);
     }
 
@@ -58,26 +66,6 @@ class ComentarioController extends Controller
     }
 
     /**
-     * Updates an existing Comentario model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
      * Deletes an existing Comentario model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
@@ -86,8 +74,11 @@ class ComentarioController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        try {
+            $this->findModel($id)->delete();
+        }catch (\Exception $e){
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
         return $this->redirect(['index']);
     }
 

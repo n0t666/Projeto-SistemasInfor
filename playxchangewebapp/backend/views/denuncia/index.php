@@ -1,7 +1,9 @@
 <?php
 
+use common\models\Denuncia;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\DenunciaSearch */
@@ -52,7 +54,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return $model->getStatusLabel();
                                 }
                             ],
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesDenuncias'),
+                                    'update' => function ($model) {
+                                        return Yii::$app->user->can('editarDenuncias') && $model->estado == Denuncia::STATUS_PROCESSING;
+                                    },
+                                    'delete' => Yii::$app->user->can('apagarDenuncias'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [

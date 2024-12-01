@@ -13,10 +13,14 @@ use yii\bootstrap4\ActiveForm;
     <?php $form = ActiveForm::begin(['action' => $action]); ?>
 
 
-    <?= $form->field($model, 'dataAvaliacao')->textInput() ?>
+    <?= $form->field($model, 'denunciante_id')->hiddenInput()->label(false) ?>
+
+    <?= $form->field($model, 'denunciado_id')->hiddenInput()->label(false) ?>
+
+    <?= $form->field($model, 'motivo')->textarea() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Enviar denúncia', ['class' => 'btn btn-success w-100 my-2']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -1,5 +1,7 @@
 <?php
 
+use common\models\Denuncia;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 
@@ -12,18 +14,20 @@ use yii\bootstrap4\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'denunciante_id')->textInput() ?>
 
-    <?= $form->field($model, 'denunciado_id')->textInput() ?>
 
-    <?= $form->field($model, 'motivo')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'estado')->dropDownList(
+        [
+                Denuncia::STATUS_PROCESSING => 'Pendente',
+                Denuncia::STATUS_REFUSED => 'Recusada',
+                Denuncia::STATUS_BANNED => 'Banido'
+        ],
+        ['prompt' => 'Selecione o estado da denuncia...']
+    ) ?>
 
-    <?= $form->field($model, 'dataDenuncia')->textInput() ?>
-
-    <?= $form->field($model, 'estado')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

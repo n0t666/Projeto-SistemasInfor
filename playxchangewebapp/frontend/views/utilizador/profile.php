@@ -55,7 +55,25 @@ $this->title = $user->username;
                 </div>
                 <div class="col-lg-4 order-last">
                     <ul class="list-unstyled d-flex align-items-center justify-content-center justify-content-lg-end my-3 gap-3 me-lg-5">
-                        <?php if ($user->id): ?>
+                        <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->id != $user->id): ?>
+                            <li>
+                                <?php $form = ActiveForm::begin([
+                                    'action' => $isFollowing ? Url::to(['utilizador/unfollow']) : Url::to(['utilizador/follow']),
+                                    'method' => 'POST',
+                                    'id' => 'followForm_' . $user->id
+                                ]); ?>
+
+                                <?= Html::hiddenInput('userId', $user->id) ?>
+
+                                <?= Html::submitButton($isFollowing ? 'Deixar de seguir' : 'Seguir', [
+                                    'class' => 'btn btn-primary px-4 py-2 fs-5',
+                                    'style' => 'border-radius: 30px;'
+                                ]) ?>
+
+                                <?php ActiveForm::end(); ?>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ($user->id && !Yii::$app->user->isGuest && Yii::$app->user->identity->id != $user->id ): ?>
                             <li class="d-flex align-items-center">
                                 <div class="dropdown">
                                     <button class="btn btn-secondary p-2 fs-4 rounded-circle d-flex align-items-center justify-content-center"
@@ -83,11 +101,13 @@ $this->title = $user->username;
                                 </div>
                             </li>
                         <?php endif; ?>
+                        <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->id == $user->id): ?>
                         <li class="position-relative">
                             <a href="<?= Url::to(['user/edit', 'id' => $user->id]) ?>" class="btn btn-primary">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
                         </li>
+                        <?php endif; ?>
 
                     </ul>
                 </div>
@@ -166,7 +186,7 @@ $this->title = $user->username;
 
 <?php
 
-if ((!yii::$app->user->isGuest)) {
+if ((!yii::$app->user->isGuest && $denuncia->isNewRecord)) {
     Modal::begin([
         'title' => 'Fazer denúncia',
         'id' => 'modal-report',
@@ -175,7 +195,6 @@ if ((!yii::$app->user->isGuest)) {
     echo "<div id='modalContent'>";
     echo $this->render('/denuncia/_form', [
         'model' => $denuncia,
-        'userId' => $model->id,
         'action' => Url::to(['denuncia/create']),
     ]);
     echo "</div>";

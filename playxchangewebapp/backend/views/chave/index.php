@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="row mb-2">
                         <div class="col-md-12">
                             <?php if (Yii::$app->user->can('criarChaves')): ?>
-                            <?= Html::a('Criar Chave', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar Chave', ['create',], ['class' => 'btn btn-success']) ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -52,7 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return $model->isUsada ? 'Sim' : 'Não';
                                 }
                             ],
-
                             [
                                 'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
                                 'visibleButtons' => [

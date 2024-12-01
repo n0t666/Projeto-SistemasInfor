@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "denuncias".
@@ -93,5 +96,37 @@ class Denuncia extends \yii\db\ActiveRecord
             default:
                 return 'Desconhecido';
         }
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['dataDenuncia'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['dataDenuncia'],
+                ],
+                'value' => function ($event) {
+                    try {
+                        $this->dataDenuncia = new Expression('NOW()');
+                    } catch (\Exception $e) {
+                        Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
+                        $this->dataDenuncia = date('Y-m-d');
+                    }
+
+                    return $this->dataDenuncia;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['dataDenuncia'],
+                ],
+                'value' => function ($event) {
+                    return $this->dataDenuncia ? date('d-m-Y', strtotime($this->dataDenuncia)) : null;
+                },
+            ],
+        ];
     }
 }

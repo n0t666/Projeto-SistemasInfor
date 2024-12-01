@@ -106,8 +106,12 @@ class ChaveController extends Controller
 
             if ($model->load(Yii::$app->request->post())) {
                 $model->plataforma_id = $model->produto->plataforma_id;
-                $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                if($model->save()){
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }else{
+                    return $this->redirect(['create']);
+                }
+
             }
 
             return $this->render('create', [

@@ -43,6 +43,7 @@ class Chave extends \yii\db\ActiveRecord
             //[['dataGeracao', 'dataExpiracao'], 'safe'],
             [['chave'], 'string', 'max' => 255],
             [['chave'], 'unique'],
+            [['chave'], 'match', 'pattern' => '/^\w{5}-\w{5}-\w{5}$/', 'message' => 'O formato da chave deve ser *****-*****-*****.'],
             [['plataforma_id'], 'exist', 'skipOnError' => true, 'targetClass' => Plataforma::class, 'targetAttribute' => ['plataforma_id' => 'id']],
             [['produto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::class, 'targetAttribute' => ['produto_id' => 'id']],
         ];

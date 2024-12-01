@@ -107,6 +107,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <!--.row-->
             <?php endif; ?>
+            <div class="row mt-4">
+                <div class="col-md-12 text-left">
+                    <?= Html::a('<i class="fas fa-comments"></i> Ver Comentários do Utilizador', ['comentario/index', 'userId' => $model->id], [
+                        'class' => 'btn btn-primary btn-lg',
+                        'role' => 'button',
+                        'style' => 'border-radius: 25px;',
+                    ]) ?>
+                </div>
+            </div>
         </div>
         <!--.card-body-->
     </div>

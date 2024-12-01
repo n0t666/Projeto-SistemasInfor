@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Comentarios';
+$this->title = 'Comentarios do ' . $user->username;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
@@ -14,11 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-md-12">
-                            <?= Html::a('Create Comentario', ['create'], ['class' => 'btn btn-success']) ?>
-                        </div>
-                    </div>
 
 
 
@@ -27,18 +22,36 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            'id',
-                            'utilizador_id',
-                            'jogo_id',
+                            //'id',
+                            [
+                                'attribute'=>'utilizador_id',
+                                'content'=>function($model){
+                                    return $model->utilizador->user->username;
+                                }
+                            ],
+                            [
+                                'attribute'=>'jogo_id',
+                                'content'=>function($model){
+                                    return $model->jogo->nome;
+                                }
+                            ],
                             'comentario:ntext',
                             'dataComentario',
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' =>true,
+                                    'update' => false,
+                                    'delete' => true,
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
-                        ]
+                        ],
+
                     ]); ?>
 
 
