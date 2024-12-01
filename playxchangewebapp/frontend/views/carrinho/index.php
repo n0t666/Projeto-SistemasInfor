@@ -99,22 +99,29 @@ $this->registerJsFile(
                 </div>
                 <?php ActiveForm::end(); ?>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-4 mt-md-5  mt-xl-0">
                 <div class="cart__discount">
                     <h6>Desconto</h6>
                     <?php $form = ActiveForm::begin([
                         'action' => ['fatura/checkout'],
                         'id' => 'checkout-form',
                     ]); ?>
-                        <input type="text" name="codigo" placeholder="Código promocional">
-                        <button type="button">Aplicar</button>
+                    <input type="text" id="coupon-code"  placeholder="Código promocional">
+                    <input type="hidden" name="codigo" id="codigo" value="">
+                    <button type="button" id="apply-coupon">Aplicar</button>
                     <?php ActiveForm::end(); ?>
                 </div>
+                <div id="coupon-section" class="alert alert-success d-flex align-items-center" style="display: none !important;">
+                    <i class="fas fa-tag me-2"></i>
+                    <p id="coupon-text" class="mb-0 flex-grow-1"></p>
+                    <button type="button" id="remove-coupon" class="btn-close ms-2" aria-label="Close"></button>
+                </div>
+
                 <div class="cart__total">
                     <?php if ($model->total != null && $model->total > 0): ?>
                     <h6>Total</h6>
                     <ul>
-                        <li>Total <span><?= number_format($model->total, 2) ?></span></li>
+                        <li>Total <span><?= number_format($model->total, 2) ?>€</span></li>
                     </ul>
                     <?php endif;?>
                     <button type="submit" class="primary-btn text-decoration-none btn" form="checkout-form">Checkout</button>

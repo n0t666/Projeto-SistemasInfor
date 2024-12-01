@@ -50,6 +50,28 @@ $(function(){
         $('#modal-review').modal('show');
     });
 
+    document.getElementById('like-btn').addEventListener('click', function() {
+        const likesCountElement = document.getElementById('likes-count');
+        let likesCount = parseInt(likesCountElement.innerText);
+        const heartIcon = this.querySelector('i');
+
+        if (this.classList.contains('liked')) {
+            this.classList.remove('liked');
+            this.classList.add('unliked');
+            likesCount -= 1;
+            heartIcon.classList.remove('fas');
+            heartIcon.classList.add('far');
+        } else {
+            this.classList.remove('unliked');
+            this.classList.add('liked');
+            likesCount += 1;
+            heartIcon.classList.remove('far');
+            heartIcon.classList.add('fas');
+        }
+
+        likesCountElement.innerText = likesCount;
+    });
+
 
 
 

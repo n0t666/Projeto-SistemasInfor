@@ -5,6 +5,7 @@
 use backend\controllers\UtilsController;
 use practically\chartjs\widgets\Chart;
 use yii\bootstrap5\Html;
+use yii\helpers\Url;
 
 $this->title = 'Página inicial';
 ?>
@@ -20,29 +21,62 @@ $this->title = 'Página inicial';
         </div>
     </div>
 </div>
-<div class="container my-5">
+<div class="container my-5 popular">
     <div class="row g-4">
-        <?php foreach ($jogos as $jogo): ?>
+        <h2 class="section-title text-center text-white fw-bold mb-4">Lançados recentemente</h2>
+        <?php foreach ($jogosRecentes as $jogoRecente): ?>
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <a href="<?= Url::to(['jogo/view', 'id' => $jogoRecente->id]) ?>" target="_blank">
                 <div class="card game-card">
-                    <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa; ?>" class="game-poster img-fluid">
+                    <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $jogoRecente->imagemCapa; ?>" class="game-poster img-fluid">
                     <div class="center-links">
                         <div class="game-stats">
                         <span class="played">
                             <i class="fas fa-play"></i>
-                            <?= UtilsController::number_format_short($jogo->getNumJogados()) ?>
+                            <?= UtilsController::number_format_short($jogoRecente->getNumJogados()) ?>
                         </span>
                             <span class="wishlisted">
                             <i class="fas fa-heart"></i>
-                            <?= UtilsController::number_format_short($jogo->getNumFavoritos()) ?>
+                            <?= UtilsController::number_format_short($jogoRecente->getNumFavoritos()) ?>
                         </span>
                         </div>
                     </div>
                 </div>
+                </a>
             </div>
+
         <?php endforeach; ?>
     </div>
 </div>
+
+<div class="container my-5 popular">
+    <div class="row g-4">
+        <h2 class="section-title text-center text-white fw-bold mb-4">Mais populares</h2>
+        <?php foreach ($jogosPopulares as $jogoPopular): ?>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <a href="<?= Url::to(['jogo/view', 'id' => $jogoPopular->id]) ?>" target="_blank">
+                    <div class="card game-card">
+                        <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $jogoPopular->imagemCapa; ?>" class="game-poster img-fluid">
+                        <div class="center-links">
+                            <div class="game-stats">
+                        <span class="played">
+                            <i class="fas fa-play"></i>
+                            <?= UtilsController::number_format_short($jogoPopular->getNumJogados()) ?>
+                        </span>
+                                <span class="wishlisted">
+                            <i class="fas fa-heart"></i>
+                            <?= UtilsController::number_format_short($jogoPopular->getNumFavoritos()) ?>
+                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        <?php endforeach; ?>
+    </div>
+</div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () { // Após os elementos da página terem sido carregados, dar override no padding em que o conteúdo da página é gerado

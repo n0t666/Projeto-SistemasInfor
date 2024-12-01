@@ -12,9 +12,9 @@ use yii\bootstrap4\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'utilizador_id')->textInput() ?>
+    <?= $form->field($model, 'utilizador_id')->textInput()->label(false) ?>
 
-    <?= $form->field($model, 'jogo_id')->textInput() ?>
+    <?= $form->field($model, 'jogo_id')->textInput()->label(false) ?>
 
     <?= $form->field($model, 'numEstrelas')->textInput(['maxlength' => true]) ?>
 

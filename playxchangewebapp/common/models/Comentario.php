@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "comentarios".
@@ -86,6 +87,14 @@ class Comentario extends \yii\db\ActiveRecord
         return $this->hasOne(Jogo::class, ['id' => 'jogo_id']);
     }
 
+    public function beforeDelete() // Antes de apagar temos de garantir que todas as entidades relacioandas são devidamente apagadas senão irá dar erro
+    {
+
+        GostoComentario::deleteAll(['comentario_id' => $this->id]);
+
+        return parent::beforeDelete();
+    }
+
     public function behaviors()
     {
         return [
@@ -97,17 +106,22 @@ class Comentario extends \yii\db\ActiveRecord
                 ],
                 'value' => function ($event) {
                     try {
-                        if (empty($this->dataGeracao)) {
-                            $this->dataComentario = null;
-                        }else{
-                            $this->dataComentario = date('Y-m-d');
-                        }
+                        $this->dataComentario = new Expression('NOW()');
                     } catch (\Exception $e) {
                         Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
                         $this->dataComentario = date('Y-m-d');
                     }
 
                     return $this->dataComentario;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_AFTER_FIND => ['dataComentario'],
+                ],
+                'value' => function ($event) {
+                    return $this->dataComentario ? date('d-m-Y', strtotime($this->dataComentario)) : null;
                 },
             ],
         ];

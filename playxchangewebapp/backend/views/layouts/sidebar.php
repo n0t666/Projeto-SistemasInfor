@@ -69,6 +69,7 @@ if (!empty($this->fotoPerfil) && file_exists(Yii::$app->user->identity->profile-
                             ['label' => 'Listas', 'icon' => 'list', 'url' => ['/lista'], 'active' => Yii::$app->controller->id === 'lista'],
                             ['label' => 'Sugestões de Funcionalidades', 'icon' => 'lightbulb', 'url' => ['/sugestao-funcionalidade'], 'active' => Yii::$app->controller->id === 'sugestao-funcionalidade'],
                             ['label' => 'Denúncias', 'icon' => 'exclamation-triangle', 'url' => ['/denuncia'], 'active' => Yii::$app->controller->id === 'denuncia'],
+                            ['label' => 'FAQs', 'icon' => 'question', 'url' => ['/faq'], 'active' => Yii::$app->controller->id === 'faq'],
                             ],
                     ],
                     [

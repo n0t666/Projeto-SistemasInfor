@@ -2,6 +2,9 @@
 
 namespace frontend\controllers;
 
+use backend\controllers\UserController;
+use common\models\Avaliacao;
+use common\models\GostoComentario;
 use common\models\Jogo;
 use Yii;
 use common\models\Comentario;
@@ -28,7 +31,7 @@ class ComentarioController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create','update'],
+                        'actions' => ['create', 'update','delete','index'],
                         'allow' => true,
                         'roles' => ['cliente'],
                     ],
@@ -41,6 +44,30 @@ class ComentarioController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionIndex($jogoId, $filtro='')
+    {
+        $jogo = Jogo::findOne($jogoId);
+
+        if(!$jogo){
+            throw new NotFoundHttpException();
+        }
+
+        $reviews = new ActiveDataProvider([
+            'query' => self::filterQuery($jogo->id,$filtro),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+
+
+
+        return $this->render('index', [
+            'reviews' => $reviews,
+            'jogo' => $jogo,
+        ]);
+
     }
 
     /**
@@ -56,29 +83,40 @@ class ComentarioController extends Controller
         if (!$userId) {
             throw new NotAcceptableHttpException();
         }
-
-
-        if (Yii::$app->request->isPost) {
-            if ($model->load(Yii::$app->request->post())) {
-                $jogo = Yii::$app->request->post('Comentario')['jogo_id'];
-                if(Jogo::find()->where(['id' => $jogo])->exists()){
-                    if(Comentario::find()->where(['jogo_id' => $jogo,'utilizador_id' => $userId])->exists()){
-                        Yii::$app->session->setFlash('error', 'Já foi efetuada uma avaliação para este jogo');
+        try{
+            if (Yii::$app->request->isPost) {
+                if ($model->load(Yii::$app->request->post())) {
+                    $jogo = Yii::$app->request->post('Comentario')['jogo_id'];
+                    if (Jogo::find()->where(['id' => $jogo])->exists()) {
+                        if (Comentario::find()->where(['jogo_id' => $jogo, 'utilizador_id' => $userId])->exists()) {
+                            Yii::$app->session->setFlash('error', 'Já foi efetuada uma avaliação para este jogo');
+                            return $this->redirect(['jogo/view', 'id' => $model->jogo_id]);
+                        }
+                        if (!Avaliacao::find()->where(['utilizador_id' => $userId, 'jogo_id' => $jogo])->exists()) {
+                            Yii::$app->session->setFlash('error', 'É necessário de avaliar um jogo antes de comentar.');
+                            return $this->redirect(['jogo/view', 'id' => $model->jogo_id]);
+                        }
+                            $model->utilizador_id = $userId;
+                            if($model->save()){
+                                $gosto = new GostoComentario();
+                                $gosto->utilizador_id = $userId;
+                                $gosto->comentario_id = $model->id;
+                                $gosto->save();
+                                return $this->redirect(['jogo/view', 'id' => $model->jogo_id]);
+                            }
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Não foi possível encontrar o jogo especificado');
                         return $this->goBack();
-                    }else{
-                        $model->utilizador_id = $userId;
-                        $model->save();
                     }
-                }else{
-                    Yii::$app->session->setFlash('error', 'Não foi possível encontrar o jogo especificado');
-                    return $this->goBack();
                 }
-                return $this->redirect(['jogo/view', 'id' => $model->id]);
+            } else {
+                throw new ServerErrorHttpException();
             }
-        }else{
-            throw new ServerErrorHttpException();
+        } catch (\Exception $e) {
+            Yii::$app->session->setFlash('error', 'Ocorreu um erro ao guardar o comentário');
+            return $this->goBack();
         }
-
+        return $this->goBack();
     }
 
     /**
@@ -92,13 +130,15 @@ class ComentarioController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(yii::$app->user->id != $model->utilizador_id){
+            throw new NotAcceptableHttpException();
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['jogo/view', 'id' => $model->jogo_id]);
+        }
+
+        return $this->redirect(['jogo/index']);
     }
 
     /**
@@ -110,10 +150,64 @@ class ComentarioController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
 
-        return $this->redirect(['index']);
+        if ($model && $model->utilizador_id == Yii::$app->user->id) {
+            $jogo = $model->jogo_id;
+            $model->delete();
+            return $this->redirect(['jogo/view', 'id' => $jogo]);
+        }
+
+        return $this->redirect(['jogo/index']);
     }
+
+    public static function filterQuery($jogoId,$filtro)
+    {
+        $query = null;
+        $utilizadorId = Yii::$app->user->id;
+        $jogo = Jogo::findOne($jogoId);
+
+        if(!$jogo){
+            throw new NotFoundHttpException();
+        }
+
+        switch ($filtro) {
+            case 'recent':
+                $query = Comentario::find()->where(['jogo_id' => $jogoId])->orderBy(['dataComentario' => SORT_DESC]);
+                break;
+            case 'friends':
+                if($utilizadorId){
+                    $mutuals = UtilizadorController::getMutuals($utilizadorId);
+                    $query = Comentario::find()
+                        ->where(['jogo_id' => $jogoId])
+                        ->andWhere(['utilizador_id' => $mutuals])
+                        ->orderBy(['dataComentario' => SORT_DESC]);
+                }
+                break;
+            case 'popular':
+                $query = Comentario::find()
+                    ->joinWith('gostoscomentarios')
+                    ->where(['comentarios.jogo_id' => $jogoId])
+                    ->groupBy('comentarios.id')
+                    ->orderBy(['COUNT(gostoscomentarios.comentario_id)' => SORT_DESC]);
+                break;
+            default:
+                $query = Comentario::find()->where(['jogo_id' => $jogoId]);
+        }
+
+        return $query;
+    }
+
+    public static function isLikedByCurrentUser($id)
+    {
+        if (Yii::$app->user->isGuest) {
+            return false;
+        }
+        return GostoComentario::find()
+            ->where(['utilizador_id' => Yii::$app->user->id, 'comentario_id' => $id])
+            ->exists();
+    }
+
 
     /**
      * Finds the Comentario model based on its primary key value.

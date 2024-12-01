@@ -78,7 +78,6 @@ class FaturaController extends Controller
             $codigo = Yii::$app->request->post('codigo');
             $codigoModel = null;
 
-
             if ($codigo != null && $codigo != '') {
                 $codigoModel = CodigoPromocional::find()->where(['codigo' => $codigo, 'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
 

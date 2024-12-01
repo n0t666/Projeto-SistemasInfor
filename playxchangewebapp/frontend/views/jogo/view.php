@@ -1,14 +1,19 @@
 <?php
 
 use backend\assets\ChartJsAsset;
+use backend\controllers\UtilsController;
 use kartik\rating\StarRating;
+use onmotion\apexcharts\ApexchartsWidget;
 use practically\chartjs\widgets\Chart;
+use yii\bootstrap5\BootstrapAsset;
 use yii\bootstrap5\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\JqueryAsset;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Jogo */
@@ -17,6 +22,8 @@ $this->registerJsFile(
     '@web/js/jogoview.js',
     ['depends' => [JqueryAsset::class]]
 );
+
+$this->registerCssFile('@web/css/review.css', ['depends' => [BootstrapAsset::className()]]);
 
 
 $this->title = $model->nome;
@@ -93,7 +100,12 @@ $this->title = $model->nome;
 
         <div class="col-md-4">
             <h2 class="game-name mb-3"><?= $model->nome ?></h2>
-            <p class="release-date mb-3"><?= $model->dataLancamento ?></p>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="release-date mb-0"><?= $model->dataLancamento ?></p>
+                <a href="<?= $model->trailerLink ?>" target="_blank" class="btn btn-danger btn-sm ms-3 ml-auto">
+                    <i class="fab fa-youtube"></i> Trailer
+                </a>
+            </div>
             <p class="game-description mb-4"><?= $model->descricao ?></p>
 
             <div class="toggle-details mb-3">
@@ -167,106 +179,281 @@ $this->title = $model->nome;
                 </div>
             </div>
 
+            <?php if ($model->screenshots && !empty($model->screenshots)): ?>
+                <div class="screenshots mb-4">
+                    <?= \yii\bootstrap5\Carousel::widget([
+                        'items' => array_map(function ($screenshot) {
+                            return [
+                                'content' => Html::img(Yii::getAlias('@screenshotsJogoUrl') . '/' . $screenshot->filename, ['alt' => 'Screenshot', 'class' => 'd-block w-100 custom-img']),
+                                'caption' => '',
+                            ];
+                        }, $model->screenshots),
+                    ])
+                    ?>
+                </div>
+            <?php endif ?>
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="header-left">
+                        <h3>Avaliações</h3>
+                    </div>
+                    <div class="header-right">
+                        <span class="num-avaliacoes"><?= UtilsController::number_format_short($model->getAvaliacoes()->count()) ?> Avaliações</span>
+                    </div>
+                </div>
 
-            <div class="screenshots mb-4">
-                <?= \yii\bootstrap5\Carousel::widget([
-                    'items' => array_map(function ($screenshot) {
-                        return [
-                            'content' => Html::img(Yii::getAlias('@screenshotsJogoUrl') . '/' . $screenshot->filename, ['alt' => 'Screenshot', 'class' => 'd-block w-100 custom-img']),
-                            'caption' => '',
-                        ];
-                    }, $model->screenshots),
-                ])
-                ?>
+                <?= ApexchartsWidget::widget([
+                    'type' => 'bar',
+                    'height' => '300',
+                    'width' => '80%',
+                    'chartOptions' => [
+                        'chart' => [
+                            'toolbar' => [
+                                'show' => false,
+                            ],
+                            'background' => '#121212',
+                            'foreColor' => '#E0E0E0',
+                            'type' => 'bar',
+                            'height' => 300,
+                        ],
+                        'xaxis' => [
+                            'categories' => array_map(function ($val) {
+                                return (string)$val;
+                            }, $estrelas),
+                            'labels' => [
+                                'show' => false,
+                            ],
+                            'axisBorder' => [
+                                'show' => false,
+                            ],
+                            'axisTicks' => [
+                                'show' => false,
+                            ],
+                            'tickAmount' => count($estrelas),
+                        ],
+                        'yaxis' => [
+                            'labels' => [
+                                'show' => false,
+                            ],
+                            'axisBorder' => [
+                                'show' => false,
+                            ],
+                            'axisTicks' => [
+                                'show' => false,
+                            ],
+                        ],
+                        'plotOptions' => [
+                            'bar' => [
+                                'horizontal' => false,
+                                'endingShape' => 'rounded',
+                                'columnWidth' => '40%',
+                            ],
+                        ],
+                        'dataLabels' => [
+                            'enabled' => false,
+                        ],
+                        'stroke' => [
+                            'show' => true,
+                            'colors' => ['transparent'],
+                        ],
+                        'legend' => [
+                            'show' => false,
+                        ],
+                        'grid' => [
+                            'show' => false,
+                        ],
+                        'tooltip' => [
+                            'enabled' => true,
+                            'style' => [
+                                'fontSize' => '12px',
+                                'fontFamily' => 'Arial, sans-serif',
+                                'color' => '#E0E0E0',
+                            ],
+                            'fillSeriesColor' => false,
+                            'theme' => 'dark',
+                            'marker' => [
+                                'show' => false,
+                            ],
+                            'x' => [
+                                'show' => true,
+                                'formatter' => function ($value) {
+                                    return $value;
+                                },
+                            ],
+                            'y' => [
+                                'show' => true,
+                                'formatter' => function ($value) {
+                                    return $value;
+                                },
+                            ],
+                        ],
+                        'colors' => ['#A1A1A1'],
+                    ],
+                    'series' => [
+                        [
+                            'name' => 'Número de pessoas',
+                            'data' => $numeroPessoas,
+                        ],
+                    ],
+                ]) ?>
             </div>
         </div>
-
         <div class="col-md-4 interaction-holder">
-            <div class="container py-5 rounded-3">
-                <?php if (Yii::$app->user->can('adicionarFavoritos') || Yii::$app->user->can('adicionarJogados')): ?>
-                    <?php $form = ActiveForm::begin(['action' => ['utilizador-jogo/update']]); ?>
-                    <?= $form->field($model, 'id')->hiddenInput(['value' => $model->id])->label(false) ?>
-                    <div class="row mb-4">
-                        <div class="col-4 text-center">
-                            <button type="submit" title="Adicionar aos Favoritos"
-                                    class="btn btn-favorite <?= ($interaction && $interaction->isFavorito) ? 'ativo' : ''; ?>"
-                                    name="action" value="1">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <p class="mb-0">Favorito</p>
+            <?php if (!yii::$app->user->isGuest): ?>
+                <div class="container py-5 rounded-3">
+                    <?php if (Yii::$app->user->can('adicionarFavoritos') || Yii::$app->user->can('adicionarJogados')): ?>
+                        <?php $form = ActiveForm::begin(['action' => ['utilizador-jogo/update']]); ?>
+                        <?= $form->field($model, 'id')->hiddenInput(['value' => $model->id])->label(false) ?>
+                        <div class="row mb-4">
+                            <div class="col-4 text-center">
+                                <button type="submit" title="Adicionar aos Favoritos"
+                                        class="btn btn-favorite <?= ($interaction && $interaction->isFavorito) ? 'ativo' : ''; ?>"
+                                        name="action" value="1">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <p class="mb-0">Favorito</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <button type="submit" title="Adicionar aos Jogados"
+                                        class="btn btn-played <?= ($interaction && $interaction->isJogado) ? 'ativo' : ''; ?>"
+                                        name="action" value="2">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                                <p class="mb-0">Jogado</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <button type="submit" title="Adicionar aos Desejados"
+                                        class="btn btn-wishlist <?= ($interaction && $interaction->isDesejado) ? 'ativo' : ''; ?>"
+                                        name="action" value="3">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <p class="mb-0">Desejado</p>
+                            </div>
                         </div>
-                        <div class="col-4 text-center">
-                            <button type="submit" title="Adicionar aos Jogados"
-                                    class="btn btn-played <?= ($interaction && $interaction->isJogado) ? 'ativo' : ''; ?>"
-                                    name="action" value="2">
-                                <i class="fas fa-check-circle"></i>
-                            </button>
-                            <p class="mb-0">Jogado</p>
-                        </div>
-                        <div class="col-4 text-center">
-                            <button type="submit" title="Adicionar aos Desejados"
-                                    class="btn btn-wishlist <?= ($interaction && $interaction->isDesejado) ? 'ativo' : ''; ?>"
-                                    name="action" value="3">
-                                <i class="fas fa-star"></i>
-                            </button>
-                            <p class="mb-0">Desejado</p>
-                        </div>
-                    </div>
-                    <?php ActiveForm::end(); ?>
-                <?php endif; ?>
+                        <?php ActiveForm::end(); ?>
+                    <?php endif; ?>
 
-                <div class="row mb-4 text-center">
-                    <?php $form = ActiveForm::begin([
-                        'id' => 'avaliacao-form',
-                        'action' => ['avaliacao/avaliar'],
-                    ]); ?>
-                    <?php echo $form->field($avaliacao, 'jogo_id')->hiddenInput(); ?>
-                    <div class="col-12">
-                        <?= StarRating::widget(['model' => $avaliacao, 'attribute' => 'numEstrelas',
-                            'name' => 'rating_35',
-                            'value' => 3,
-                            'pluginOptions' => [
-                                'size' => 'lg',
-                                'showClear' => true,
-                                'showCaption' => false,
-                                'theme' => 'krajee-uni',
-                                'filledStar' => '★',
-                                'emptyStar' => '☆'
-                            ]
+                    <div class="row mb-4 text-center">
+                        <?php $form = ActiveForm::begin([
+                            'id' => 'avaliacao-form',
+                            'action' => ['avaliacao/avaliar'],
                         ]); ?>
+                        <?= $form->field($avaliacao, 'jogo_id')->hiddenInput(['value' => $model->id])->label(false); ?>
+                        <div class="col-12">
+                            <?= StarRating::widget(['model' => $avaliacao, 'attribute' => 'numEstrelas',
+                                'name' => 'rating_35',
+                                'value' => 3,
+                                'pluginOptions' => [
+                                    'size' => 'lg',
+                                    'showClear' => true,
+                                    'showCaption' => false,
+                                    'theme' => 'krajee-uni',
+                                    'filledStar' => '★',
+                                    'emptyStar' => '☆'
+                                ]
+                            ]); ?>
+                        </div>
+                        <div class="col-12 d-flex justify-content-center gap-3 py-2">
+                            <?= Html::submitButton('Guardar Avaliação', ['class' => 'btn btn-primary']) ?>
+                            <?= Html::button('Escrever Avaliação', ['class' => 'btn btn-secondary reviewButton']) ?>
+                        </div>
+
+                        <?php ActiveForm::end(); ?>
                     </div>
-                    <div class="col-12 text-center">
-                        <?= Html::submitButton('Guardar Avaliação', ['class' => 'btn btn-primary']) ?>
+                </div>
+            <?php endif ?>
+        </div>
+    </div>
+    <div class="container my-4">
+        <?php if ($reviewsPopular && $reviewsPopular->count > 0): ?>
+        <div class="row reviews-section">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="reviews-title">Populares</h1>
+                    <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['comentario/index','jogoId' => $model->id,'filtro' => 'popular']); ?>">Ver Mais</a>
+                </div>
+                <?= ListView::widget([
+                    'dataProvider' => $reviewsPopular,
+                    'itemView' => '/comentario/_comentario',
+                    'layout' => "{items}\n{pager}",
+                    'itemOptions' => [
+                        'class' => 'review-item',
+                    ],
+                ]) ?>
+
+            </div>
+        </div>
+        <?php endif ?>
+
+        <?php if ($reviewsRecentes && $reviewsRecentes->count > 0): ?>
+        <div class="row reviews-section mt-4">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="reviews-title">Recentes</h1>
+                    <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['comentario/index','jogoId' => $model->id,'filtro' => 'recent']); ?>">Ver Mais</a>
+                </div>
+                <?= ListView::widget([
+                    'dataProvider' => $reviewsRecentes,
+                    'itemView' => '/comentario/_comentario',
+                    'layout' => "{items}\n{pager}",
+                    'itemOptions' => [
+                        'class' => 'review-item',
+                    ],
+                ]) ?>
+            </div>
+        </div>
+        <?php endif ?>
+
+        <?php if ($reviewsFriends && count($reviewsFriends) > 0): ?>
+            <div class="row reviews-section mt-4">
+                <div class="col">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="reviews-title">Por Amigos</h1>
+                        <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['comentario/index','jogoId' => $model->id,'filtro' => 'friends']); ?>">Ver Mais</a>
                     </div>
-                    <div class="col-12 text-center py-2">
-                        <?= Html::button('Escrever Avaliação', ['class' => 'btn btn-primary reviewButton']) ?>
-                    </div>
-                    <?php ActiveForm::end(); ?>
+                    <?= ListView::widget([
+                        'dataProvider' => $reviewsFriends,
+                        'itemView' => '/comentario/_comentario',
+                        'layout' => "{items}\n{pager}",
+                        'itemOptions' => [
+                            'class' => 'review-item',
+                        ],
+                    ]) ?>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <h1>Reviews</h1>
+        <?php endif ?>
 
-        </div>
-    </div>
 
+    </div>
 </div>
 
 <?php
+if ((!yii::$app->user->isGuest)) {
+    Modal::begin([
+        'title' => 'Escrever avaliação',
+        'id' => 'modal-review',
+        'options' => ['class' => 'modal fade ']
+    ]);
+    echo "<div id='modalContent'>";
+    if ($review && $review->isNewRecord) {
+        echo $this->render('/comentario/_form', [
+            'model' => $review,
+            'jogoId' => $model->id,
+            'action' => Url::to(['comentario/create']),
+            'actionName' => 'Escrever Avaliação'
+        ]);
+    } elseif (!yii::$app->user->isGuest) {
+        echo $this->render('/comentario/_form', [
+            'model' => $review,
+            'jogoId' => $model->id,
+            'action' => Url::to(['comentario/update', 'id' => $review->id]),
+            'actionName' => 'Editar Avaliação'
+        ]);
+    }
 
-Modal::begin([
-    'title' => 'Escrever avaliação',
-    'id' => 'modal-review',
-    'options' => ['class' => 'modal fade ']
-]);
-echo "<div id='modalContent'>";
-echo $this->render('/comentario/_form', ['model' => $review,'jogoId' => $model->id]);
-echo "</div>";
-Modal::end();
-
+    echo "</div>";
+    Modal::end();
+}
 
 ?>
 

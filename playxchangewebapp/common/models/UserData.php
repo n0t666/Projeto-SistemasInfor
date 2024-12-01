@@ -286,7 +286,8 @@ class Userdata extends \yii\db\ActiveRecord
      */
     public function getUtilizadorBloqueados()
     {
-        return $this->hasMany(Userdata::class, ['id' => 'utilizadorBloqueado_id'])->viaTable('listabloqueios', ['utilizador_id' => 'id']);
+        return $this->hasMany(Userdata::class, ['id' => 'utilizadorBloqueado_id'])
+            ->viaTable('listabloqueios', ['utilizador_id' => 'id']);
     }
 
     /**
@@ -296,7 +297,8 @@ class Userdata extends \yii\db\ActiveRecord
      */
     public function getUtilizadorBloqueios()
     {
-        return $this->hasMany(Userdata::class, ['id' => 'utilizador_id'])->viaTable('listabloqueios', ['utilizadorBloqueado_id' => 'id']);
+        return $this->hasMany(Userdata::class, ['id' => 'utilizador_id'])
+            ->viaTable('listabloqueios', ['utilizadorBloqueado_id' => 'id']);
     }
 
     public function behaviors()

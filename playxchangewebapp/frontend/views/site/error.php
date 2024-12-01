@@ -15,7 +15,7 @@ $this->title = $name;
             <h1 class="display-1 fw-bold"><?= Html::encode($exception->statusCode) ?></h1>
             <p class="fs-3"> <span class="text-danger">Opps!</span> Erro na página</p>
             <p class="lead">
-                <?= Html::encode($exception->getMessage()) ?>
+                Ocorreu um problema ao processar o seu pedido
             </p>
             <?= Html::a('Voltar', ['site/index'], ['class' => 'btn btn-primary w-100 text-uppercase']) ?>
         </div>

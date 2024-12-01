@@ -1,0 +1,91 @@
+.reviews-title {
+    color: #E0E0E0;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+.review-card {
+    background-color: #1E1E1E;
+    border: 1px solid #2C2C2C;
+    padding: 10px;
+}
+
+.user-photo {
+    border: 2px solid var(--border-color);
+    object-fit: cover;
+}
+
+.user-name {
+    color: #E0E0E0;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: #B0B0B0;
+}
+
+.review-text {
+    color: #B0B0B0;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+
+
+.like-btn:hover {
+    color: #FF4A39;
+}
+
+.likes-count {
+    color: #E0E0E0;
+    font-size: 1rem;
+    margin-left: 3px;
+}
+
+/* Animation for liking */
+@keyframes like-animation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+.like-btn {
+    background-color: transparent;
+    border: none;
+    color: #FF6F61;
+    font-size: 1.5rem;
+    cursor: pointer;
+    outline: none;
+}
+
+
+.liked .fa-heart {
+    color: #FF4A39;
+    animation: like-animation 0.4s ease;
+}
+
+.unliked .fa-heart {
+    color: #FF6F61;
+    animation: like-animation 0.4s ease;
+}
+
+.review-content .rating-container {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.review-content.rating-container .star {
+    font-size: 1.2rem;
+    line-height: 1;
+    vertical-align: middle;
+
+}

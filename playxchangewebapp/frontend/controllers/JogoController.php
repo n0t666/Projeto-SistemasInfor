@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use backend\controllers\UserController;
 use common\models\Avaliacao;
 use common\models\Carrinho;
 use common\models\Comentario;
@@ -60,7 +61,45 @@ class JogoController extends Controller
         $jogo = $this->findModel($id);
         $produtos = $jogo->produtos;
         $itemCarrinho = new LinhaCarrinho();
-        $review = new Comentario();
+        $utilizadorId = Yii::$app->user->id;
+        $review = null;
+
+        if($utilizadorId){
+            $review = Comentario::find()->where(['jogo_id' => $jogo->id, 'utilizador_id' => $utilizadorId])->one();
+            if(!$review){
+                $review = new Comentario();
+                $review->jogo_id = $jogo->id;
+            }
+        }
+
+
+        $reviewsFriends = null;
+
+        $reviewsRecentes = new ActiveDataProvider([
+            'query' => ComentarioController::filterQuery($jogo->id,'recent'),
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
+
+        if($utilizadorId){
+            $mutuals = UtilizadorController::getMutuals($utilizadorId);
+            if(count($mutuals) > 0){
+                $reviewsFriends = new ActiveDataProvider([
+                    'query' => ComentarioController::filterQuery($jogo->id,'friends'),
+                    'pagination' => [
+                        'pageSize' => 5,
+                    ]
+                ]);
+            }
+        }
+
+        $reviewsPopular = new ActiveDataProvider([
+            'query' =>  ComentarioController::filterQuery($jogo->id,'popular'),
+            'pagination' => [
+                'pageSize' => 5,
+            ]
+        ]);
 
 
         $interaction = UtilizadorJogo::find()
@@ -78,7 +117,24 @@ class JogoController extends Controller
             $avaliacao->utilizador_id = Yii::$app->user->id;
         }
 
+        $avaliacaoInfo =  Avaliacao::find()
+            ->select(['numEstrelas', 'COUNT(*) as numPessoas'])
+            ->where(['jogo_id' => $jogo->id])
+            ->groupBy('numEstrelas') //Agrupar pelo número de estrela ex: 0.5, 1 etc...
+            ->orderBy('numEstrelas ASC')
+            ->asArray() // Facilitar para depois simplesmente igualar ao array, pois o gráfico espera um tipo de dados do tipo array
+            ->all();
 
+
+        /*
+         *  Preparar array para o grafico (eixo x e y)
+         */
+        $estrelas = []; //Eixo x será o número de estrelas feitas por todos os utilizadores
+        $numeroPessoas =[]; //Eixo y será o número de pessoas que deram esse mesmo números de estrelas
+        foreach ($avaliacaoInfo as $aval) {
+            $estrelas[] = (float)$aval['numEstrelas'];
+            $numeroPessoas[] = (int)$aval['numPessoas'];
+        }
 
         return $this->render('view', [
             'model' => $jogo,
@@ -87,6 +143,11 @@ class JogoController extends Controller
             'produtos' => $produtos,
             'itemCarrinho' => $itemCarrinho,
             'review' => $review,
+            'estrelas' => $estrelas,
+            'numeroPessoas' => $numeroPessoas,
+            'reviewsFriends' => $reviewsFriends,
+            'reviewsRecentes' => $reviewsRecentes,
+            'reviewsPopular' => $reviewsPopular,
         ]);
     }
 

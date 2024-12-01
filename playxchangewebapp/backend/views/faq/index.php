@@ -30,23 +30,21 @@ $this->params['breadcrumbs'][] = $this->title;
                         'columns' => [
                             ['class' => 'yii\grid\SerialColumn'],
 
-                            //'id',
                             'pergunta',
                             'descricao:ntext',
 
-                            ['class' => 'hail812\adminlte3\yii\grid\ActionColumn'],
+                            [
+                                'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
+                                'visibleButtons' => [
+                                    'view' => Yii::$app->user->can('verDetalhesFaq'),
+                                    'update' => Yii::$app->user->can('editarFaq'),
+                                    'delete' => Yii::$app->user->can('removerFaq'),
+                                ],
+                            ],
                         ],
                         'summaryOptions' => ['class' => 'summary mb-2'],
                         'pager' => [
                             'class' => 'yii\bootstrap4\LinkPager',
-                        ],
-                        [
-                            'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
-                            'visibleButtons' => [
-                                'view' => Yii::$app->user->can('verDetalhesFaq'),
-                                'update' => Yii::$app->user->can('editarFaq'),
-                                'delete' => Yii::$app->user->can('removerFaq'),
-                            ],
                         ],
                     ]); ?>
 

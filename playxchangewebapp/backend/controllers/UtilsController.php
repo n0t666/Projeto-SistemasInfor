@@ -29,8 +29,6 @@ class UtilsController extends Controller
      *  Função retirada de: https://gist.github.com/RadGH/84edff0cc81e6326029c
      *
      */
-
-
     public static function number_format_short($n, $precision = 1)
     {
         if ($n < 900) {

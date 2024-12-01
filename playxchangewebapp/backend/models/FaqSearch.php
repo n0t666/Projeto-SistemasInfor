@@ -11,6 +11,9 @@ use common\models\Faq;
  */
 class FaqSearch extends Faq
 {
+
+    public $globalSearch;
+
     /**
      * {@inheritdoc}
      */

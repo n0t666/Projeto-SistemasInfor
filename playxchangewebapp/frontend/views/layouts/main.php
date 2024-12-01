@@ -45,8 +45,21 @@ AppAsset::register($this);
             ],
         ]);
         $menuItems = [
-            ['label' => 'Jogos', 'url' => ['/jogo']],
-            ['label' => 'Listas', 'url' => ['/site/contact']],
+            [
+                'label' => 'Jogos',
+                'url' => ['/jogo'],
+                'linkOptions' => ['class' => Yii::$app->controller->id == 'jogo' ? 'active' : ''],
+            ],
+            [
+                'label' => 'FAQs',
+                'url' => ['/site/faq'],
+                'linkOptions' => ['class' => Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'faq' ? 'active' : ''],
+            ],
+            [
+                'label' => 'Acerca',
+                'url' => ['/site/about'],
+                'linkOptions' => ['class' => Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'about' ? 'active' : ''],
+            ],
         ];
 
         echo Nav::widget([
@@ -93,7 +106,7 @@ AppAsset::register($this);
 
             echo Html::beginTag('ul', ['class' => 'dropdown-menu dropdown-menu-dark', 'aria-labelledby' => 'userDropdown']);
             if (Yii::$app->user->can('visualizarPerfil')){
-                echo Html::tag('li', Html::a('Perfil', ['/site/profile'], ['class' => 'dropdown-item']));
+                echo Html::tag('li', Html::a('Perfil', ['/utilizador/profile','username' => $username], ['class' => 'dropdown-item']));
             }
 
             if(Yii::$app->user->can('visualizarEncomendas')){

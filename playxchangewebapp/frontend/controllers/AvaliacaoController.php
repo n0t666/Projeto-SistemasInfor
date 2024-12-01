@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Comentario;
 use common\models\Jogo;
 use Yii;
 use common\models\Avaliacao;
@@ -56,10 +57,13 @@ class AvaliacaoController extends Controller
                     throw new NotAcceptableHttpException();
                 }
 
+
+
                 $jogo = Jogo::findOne($jogoId);
                 if (!$jogo) {
                     throw new NotFoundHttpException('Jogo não encontrado.');
                 }
+
 
                 $avaliacao = Avaliacao::findOne([
                     'jogo_id' => $jogoId,
@@ -99,6 +103,10 @@ class AvaliacaoController extends Controller
                                 Yii::$app->session->setFlash('info', 'A avaliação já estava com o mesmo valor.');
                             }
                         } elseif ($numEstrelas == '') {
+                            if(Comentario::find()->where(['jogo_id' => $jogoId, 'utilizador_id' => $userId])->exists()){
+                                Yii::$app->session->setFlash('error', 'Não é possível remover estrelas em jogos que existam atividade.');
+                                return $this->redirect(['jogo/view', 'id' => $jogo->id]);
+                            }
                             if ($avaliacao->delete()) {
                                 Yii::$app->session->setFlash('success', 'Avaliação removida com sucesso!');
                             } else {
@@ -111,6 +119,8 @@ class AvaliacaoController extends Controller
                 }
 
             } catch (\Exception $e) {
+                var_dump($e->getMessage());
+                exit();
                 Yii::$app->session->setFlash('error', 'Ocorreu um erro ao processar a avaliação.');
                 return $this->goBack();
             }

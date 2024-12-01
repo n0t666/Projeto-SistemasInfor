@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Faq;
 use common\models\Jogo;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
@@ -85,14 +86,25 @@ class SiteController extends Controller
                 'COUNT(u.id)' => SORT_DESC,
             ])
             ->where(['u.isJogado' => 1])
-            ->limit(6);
+            ->limit(4);
 
+        $jogosRecentes = $query->all();
 
-        $jogos = $query->all();
+        $query = Jogo::find()
+            ->joinWith('utilizadoresjogos u')
+            ->groupBy('jogos.id')
+            ->orderBy([
+                'COUNT(CASE WHEN u.isJogado = 1 THEN 1 END)' => SORT_DESC,
+                'COUNT(CASE WHEN u.isFavorito = 1 THEN 1 END)' => SORT_DESC,
+            ])
+            ->limit(4);
+
+        $jogosPopulares = $query->all();
 
 
         return $this->render('index',[
-            'jogos' => $jogos,
+            'jogosRecentes' => $jogosRecentes,
+            'jogosPopulares' => $jogosPopulares,
         ]);
     }
 
@@ -276,6 +288,14 @@ class SiteController extends Controller
 
         return $this->render('resendVerificationEmail', [
             'model' => $model
+        ]);
+    }
+
+    public function actionFaq(){
+        $faqs = Faq::find()->all();
+
+        return $this->render('faq',[
+            'faqs' => $faqs,
         ]);
     }
 }

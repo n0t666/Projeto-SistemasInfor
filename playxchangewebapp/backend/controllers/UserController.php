@@ -6,6 +6,7 @@ use backend\models\JogoSearch;
 use backend\models\SignupForm;
 use backend\models\UserSearch;
 use common\models\Userdata;
+use PhpParser\Node\Stmt\Foreach_;
 use Yii;
 use common\models\User;
 use yii\data\ActiveDataProvider;
@@ -228,8 +229,8 @@ class UserController extends Controller
         }else{
             return $this->goHome();
         }
-
     }
+
 
     /**
      * Finds the User model based on its primary key value.
