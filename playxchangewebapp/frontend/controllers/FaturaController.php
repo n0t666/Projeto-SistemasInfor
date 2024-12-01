@@ -232,35 +232,74 @@ class FaturaController extends Controller
                     throw new \Exception('Erro ao criar a fatura.');
                 }
 
-                foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
-                    $produto = $linhaCarrinho->produtos;
-                    $chavesDisponiveis = $produto->getChaves()->where(['isUsada' => 0])->count();
-                    if ($chavesDisponiveis < $linhaCarrinho->quantidade) {
-                        Yii::$app->session->setFlash('error', 'Não há chaves suficientes para o produto: ' . $produto->jogo->nome);
-                        return $this->redirect(['/carrinho']);
-                    }
-                    $chavesReservar = $produto->getChaves()
-                        ->where(['isUsada' => 0])
-                        ->limit($linhaCarrinho->quantidade)
-                        ->all();
-                    $subtotal = $linhaCarrinho->quantidade * $produto->preco;
-                    $total += $subtotal;
-                    foreach ($chavesReservar as $chave) {
-                        $chave->isUsada = 1;
-                        if (!$chave->save()) {
-                            throw new \Exception('Erro ao finalizar o pedido.');
-                        }
-                        $linhaFatura = new LinhaFatura();
-                        $linhaFatura->fatura_id = $model->id;
-                        $linhaFatura->chave_id = $chave->id;
-                        $linhaFatura->produto_id = $produto->id;
-                        $linhaFatura->precoUnitario = $produto->preco;
+                if($model->envio != null){
+                    if(strtolower($model->envio->nome) == 'entrega online'){
+                        foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
+                            $produto = $linhaCarrinho->produtos;
+                            $chavesDisponiveis = $produto->getChaves()->where(['isUsada' => 0])->count();
+                            if ($chavesDisponiveis < $linhaCarrinho->quantidade) {
+                                Yii::$app->session->setFlash('error', 'Não há chaves suficientes para o produto: ' . $produto->jogo->nome);
+                                return $this->redirect(['/carrinho']);
+                            }
+                            $chavesReservar = $produto->getChaves()
+                                ->where(['isUsada' => 0])
+                                ->limit($linhaCarrinho->quantidade)
+                                ->all();
+                            $subtotal = $linhaCarrinho->quantidade * $produto->preco;
+                            $total += $subtotal;
+                            foreach ($chavesReservar as $chave) {
+                                $chave->isUsada = 1;
+                                if (!$chave->save()) {
+                                    throw new \Exception('Erro ao finalizar o pedido.');
+                                }
+                                $linhaFatura = new LinhaFatura();
+                                $linhaFatura->fatura_id = $model->id;
+                                $linhaFatura->chave_id = $chave->id;
+                                $linhaFatura->produto_id = $produto->id;
+                                $linhaFatura->precoUnitario = $produto->preco;
 
-                        if (!$linhaFatura->save()) {
-                            throw new \Exception('Erro ao guardar as linhas da fatura.');
+                                if (!$linhaFatura->save()) {
+                                    throw new \Exception('Erro ao guardar as linhas da fatura.');
+                                }
+                            }
                         }
+                    }elseif (strtolower($model->envio->nome) == 'entrega loja'){
+                        foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
+                            $produto = $linhaCarrinho->produtos;
+                            $produtosDisponiveis = $produto->quantidade;
+
+                            if ($produtosDisponiveis < $linhaCarrinho->quantidade) {
+                                Yii::$app->session->setFlash('error', 'Não há stock suficiente para o produto: ' . $produto->jogo->nome);
+                                return $this->redirect(['/carrinho']);
+                            }
+
+                            $produto->quantidade -= $linhaCarrinho->quantidade;
+                            if (!$produto->save()) {
+                                throw new \Exception('Erro ao atualizar o stock do produto.');
+                            }
+
+                            $subtotal = $linhaCarrinho->quantidade * $produto->preco;
+                            $total += $subtotal;
+
+                            $linhaFatura = new LinhaFatura();
+                            $linhaFatura->fatura_id = $model->id;
+                            $linhaFatura->produto_id = $produto->id;
+                            $linhaFatura->precoUnitario = $produto->preco;
+
+                            if (!$linhaFatura->save()) {
+                                throw new \Exception('Erro ao guardar as linhas da fatura.');
+                            }
+                        }
+                    }else{
+                        Yii::$app->session->setFlash('error', 'Ocorreu um erro inesperaado ao processar o pedido.');
+                        throw new \Exception('Erro ao processar o pedido.');
                     }
+                }else{
+                    Yii::$app->session->setFlash('error', 'Ocorreu um erro inesperaado ao processar o pedido.');
+                    throw new \Exception('Erro ao processar o pedido.');
                 }
+
+
 
                 if ($codigo != null && !$isCodigoUsed) {
                     $desconto = $codigo->desconto;

@@ -118,4 +118,25 @@ class Produto extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Plataforma::class, ['id' => 'plataforma_id']);
     }
+
+    /*
+     *  O afterSave é utilizado aqui para fazer update de todos os totais do carrinhos que tenham um determinado produto quando o preço do mesmo é alterado
+     *  Neste caso é especifico é feito uma verificação para garantir que o cáculo é apenas efetuado quando se trata de um update e não de um insert
+     *
+     *
+     */
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        if (!$insert && array_key_exists('preco', $changedAttributes)) { //Devolve um array com todos os campos novos
+            if ($changedAttributes['preco'] != $this->preco) { //Verificar se o old attribute é diferente de o novo a ser inserido
+
+                foreach ($this->carrinhos as $carrinho) { // intera sobre todos os carrinhos
+                    $carrinho->recalculateTotal();
+                }
+            }
+        }
+    }
 }
