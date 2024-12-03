@@ -72,10 +72,18 @@ return [
                     'extraPatterns' => [
                         'POST adicionar' => 'add-produto',
                         'DELETE limpar' => 'clear',
+                        'DELETE linha-apagar' => 'apagar-linha',
+                        'POST decrementar' => 'decrement-produto',
                     ],
                     'pluralize'=>true
+                ],
+                ['class' => 'yii\rest\UrlRule',
+                'controller' => 'api/jogo',
+                'extraPatterns' => [
 
                 ],
+                'pluralize'=>true
+            ],
             ],
         ],
     ],

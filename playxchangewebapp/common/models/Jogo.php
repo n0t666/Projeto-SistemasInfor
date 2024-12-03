@@ -198,6 +198,11 @@ class Jogo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Userdata::class, ['id' => 'utilizador_id'])->viaTable('utilizadoresjogos', ['jogo_id' => 'id']);
     }
+
+    public function getComentarios(){
+        return $this->hasMany(Comentario::class, ['jogo_id' => 'id']);
+    }
+
     public function getNumJogados()
     {
         return $this->getUtilizadoresjogos()->where(['isJogado' => 1])->count();

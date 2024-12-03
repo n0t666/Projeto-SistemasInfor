@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use backend\controllers\UserController;
+use backend\controllers\UserutilizadoresjogosController;
 use common\models\Avaliacao;
 use common\models\Carrinho;
 use common\models\Comentario;
