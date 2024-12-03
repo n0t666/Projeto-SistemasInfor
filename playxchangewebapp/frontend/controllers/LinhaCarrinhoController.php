@@ -190,8 +190,6 @@ class LinhaCarrinhoController extends Controller
 
             }catch (\Exception $e) {
                 $transaction->rollBack();
-                var_dump($e->getMessage());
-                die();
                 Yii::$app->session->setFlash('error', 'Erro ao remover o produto');
             }
         }else{

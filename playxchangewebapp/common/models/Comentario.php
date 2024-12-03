@@ -50,10 +50,10 @@ class Comentario extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'utilizador_id' => 'Utilizador ID',
-            'jogo_id' => 'Jogo ID',
-            'comentario' => 'Comentario',
-            'dataComentario' => 'Data Comentario',
+            'utilizador_id' => 'Utilizador',
+            'jogo_id' => 'Jogo',
+            'comentario' => 'Comentário',
+            'dataComentario' => 'Data do Comentário',
         ];
     }
 

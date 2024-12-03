@@ -263,7 +263,7 @@ class FaturaController extends Controller
                                 }
                             }
                         }
-                    }elseif (strtolower($model->envio->nome) == 'entrega loja'){
+                    }elseif (strtolower($model->envio->nome) == 'entrega em loja'){
                         foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
                             $produto = $linhaCarrinho->produtos;
                             $produtosDisponiveis = $produto->quantidade;
@@ -273,24 +273,32 @@ class FaturaController extends Controller
                                 return $this->redirect(['/carrinho']);
                             }
 
-                            $produto->quantidade -= $linhaCarrinho->quantidade;
-                            if (!$produto->save()) {
-                                throw new \Exception('Erro ao atualizar o stock do produto.');
-                            }
+                            for ($i = 0; $i < $linhaCarrinho->quantidade; $i++) {
+                                $produto->quantidade -= 1;
+                                if (!$produto->save()) {
+                                    throw new \Exception('Erro ao atualizar o stock do produto.');
+                                }
+                                $linhaFatura = new LinhaFatura();
+                                $linhaFatura->fatura_id = $model->id;
+                                $linhaFatura->produto_id = $produto->id;
+                                $linhaFatura->precoUnitario = $produto->preco;
+                                $linhaFatura->chave_id = null;
 
-                            $subtotal = $linhaCarrinho->quantidade * $produto->preco;
-                            $total += $subtotal;
+                                if (!$produto->save()) {
+                                    throw new \Exception('Erro ao atualizar o stock do produto.');
+                                }
 
-                            $linhaFatura = new LinhaFatura();
-                            $linhaFatura->fatura_id = $model->id;
-                            $linhaFatura->produto_id = $produto->id;
-                            $linhaFatura->precoUnitario = $produto->preco;
+                                if (!$linhaFatura->save()) {
+                                    Yii::$app->session->setFlash('error', 'Erro ao guardar as linhas da fatura para o produto: ' . $produto->jogo->nome);
+                                    return $this->redirect(['/carrinho']);
+                                }
 
-                            if (!$linhaFatura->save()) {
-                                throw new \Exception('Erro ao guardar as linhas da fatura.');
+                                $total += $produto->preco;
+
                             }
                         }
                     }else{
+                        die();
                         Yii::$app->session->setFlash('error', 'Ocorreu um erro inesperaado ao processar o pedido.');
                         throw new \Exception('Erro ao processar o pedido.');
                     }
@@ -365,7 +373,10 @@ class FaturaController extends Controller
 
             $linhasFatura[$produto]['quantidade'] += 1;
             $linhasFatura[$produto]['subtotal'] += $linha->precoUnitario;
-            $linhasFatura[$produto]['chaves'][] = $linha->chave;
+            if($linha->chave != null){
+                $linhasFatura[$produto]['chaves'][] = $linha->chave;
+            }
+
 
             $totalSemDesconto += $linha->precoUnitario;
         }
@@ -376,6 +387,7 @@ class FaturaController extends Controller
             $desconto = $fatura->codigo->desconto;
             $quantidadeDesconto = ($totalSemDesconto * $desconto) / 100;
         }
+
 
         return $this->render('view', [
             'fatura' => $fatura,

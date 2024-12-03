@@ -58,6 +58,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 }
                             ],
                             [
+                                'label'=>'Chaves',
+                                'content'=>function($model){
+                                    return $model->getChaves()->where(['isUsada' => 0])->count() . ' chaves' ;
+                                }
+                            ],
+                            [
                                 'class' => 'hail812\adminlte3\yii\grid\ActionColumn',
                                 'visibleButtons' => [
                                     'view' => Yii::$app->user->can('verDetalhesProdutos'),

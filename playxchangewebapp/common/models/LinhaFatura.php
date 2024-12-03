@@ -32,10 +32,9 @@ class LinhaFatura extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fatura_id', 'produto_id', 'chave_id', 'precoUnitario'], 'required'],
+            [['fatura_id', 'produto_id', 'precoUnitario'], 'required'],
             [['fatura_id', 'produto_id', 'chave_id'], 'integer'],
             [['precoUnitario'], 'number'],
-            [['fatura_id', 'produto_id', 'chave_id'], 'unique', 'targetAttribute' => ['fatura_id', 'produto_id', 'chave_id']],
             [['chave_id'], 'exist', 'skipOnError' => true, 'targetClass' => Chave::class, 'targetAttribute' => ['chave_id' => 'id']],
             [['fatura_id'], 'exist', 'skipOnError' => true, 'targetClass' => Fatura::class, 'targetAttribute' => ['fatura_id' => 'id']],
             [['produto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::class, 'targetAttribute' => ['produto_id' => 'id']],

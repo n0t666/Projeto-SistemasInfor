@@ -49,10 +49,33 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/metodo-pagamento', 'pluralize'=>false],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/metodo-envio', 'pluralize'=>false],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/codigo-promocional', 'pluralize'=>false],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/carrinho',],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/user',
+                    'extraPatterns' => [
+                        'POST login' => 'login',
+                    ]
+                ],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/metodo-pagamento',
+                    'pluralize'=>false
+                ],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/metodo-envio',
+                    'pluralize'=>false,
+                ],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/codigo-promocional',
+                    'pluralize'=>false
+                ],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/carrinho',
+                    'extraPatterns' => [
+                        'POST adicionar' => 'add-produto',
+                        'DELETE limpar' => 'clear',
+                    ],
+                    'pluralize'=>true
+
+                ],
             ],
         ],
     ],

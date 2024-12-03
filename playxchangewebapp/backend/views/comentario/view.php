@@ -23,13 +23,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             //'id',
                             [
                                 'attribute'=>'utilizador_id',
-                                'content'=>function($model){
+                                'value'=>function($model){
                                     return $model->utilizador->user->username;
                                 }
                             ],
                             [
                                 'attribute'=>'jogo_id',
-                                'content'=>function($model){
+                                'value'=>function($model){
                                     return $model->jogo->nome;
                                 }
                             ],
