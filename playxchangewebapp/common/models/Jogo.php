@@ -217,10 +217,6 @@ class Jogo extends \yii\db\ActiveRecord
         return $this->getUtilizadoresjogos()->where(['isFavorito' => 1])->count();
     }
 
-
-    
-
-
     public function behaviors()
     {
         return [

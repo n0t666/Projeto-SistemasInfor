@@ -302,8 +302,6 @@ class UtilizadorController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->profileImageFile = UploadedFile::getInstance($model, 'profileImageFile');
             $model->bannerImageFile = UploadedFile::getInstance($model, 'bannerImageFile');
-
-
             if ($model->edit()) {
                 Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso!');
                 return $this->redirect(['utilizador/update']);

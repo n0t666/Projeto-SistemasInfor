@@ -361,7 +361,6 @@ class Userdata extends \yii\db\ActiveRecord
                     }else{
                         return Yii::getAlias('@imagesUrl') . '/' . 'default_user.jpg';
                     }
-
                 },
             ],
         ];

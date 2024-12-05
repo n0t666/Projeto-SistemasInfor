@@ -63,6 +63,7 @@ $this->title = 'Página inicial';
             <div class="card-body p-0">
                 <?= GridView::widget([
                     'dataProvider' => $dataProviderProdutos,
+                    'summary' => '',
                     'columns' => [
                         [
                             'label' => 'Nome',
