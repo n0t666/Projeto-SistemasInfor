@@ -25,6 +25,7 @@ class CodigoPromocionalController extends ActiveController
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
+            'except' => [''],
         ];
         return $behaviors;
     }
@@ -45,7 +46,6 @@ class CodigoPromocionalController extends ActiveController
         if (!$user) {
             throw new UnauthorizedHttpException('Access token inválido.');
         }
-
 
        $codigos = CodigoPromocional::find()->all();
 
@@ -96,6 +96,7 @@ class CodigoPromocionalController extends ActiveController
             'usado' => $usado ? 1 : 0,
         ];
     }
+
 
 
 

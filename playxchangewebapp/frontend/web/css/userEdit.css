@@ -31,5 +31,10 @@ label:hover {
 
 #profile-img-preview{
     object-fit: cover;
-    width: 100px; height: 100px;
+    width: 100px;
+    height: 100px;
+    background-color: var(--primary-color);
+
+
 }
+

@@ -40,7 +40,7 @@ use yii\bootstrap5\ActiveForm;
 
                             <!-- Profile Image Section -->
                             <div class="position-relative mt-4">
-                                <img id="profile-img-preview" src="<?= Yii::$app->user->identity->profile->fotoPerfil?>" alt="Admin" class="rounded-circle p-1 bg-primary">
+                                <img id="profile-img-preview" src="<?= Yii::$app->user->identity->profile->fotoPerfil?>" alt="Admin" class="rounded-circle p-1">
                                 <?= $form->field($model, 'profileImageFile')->fileInput([
                                     'id' => 'profile-picture',
                                     'style' => 'display: none;',
@@ -91,8 +91,8 @@ use yii\bootstrap5\ActiveForm;
                                             'todayHighlight' => false,
                                             'todayBtn' => false,
                                             'autoclose' => true,
-                                            'format' => 'dd-mm-yyyy'
-                                        ]
+                                            'format' => 'dd-mm-yyyy',
+                                        ],
                                     ]
                                 )
                                 ?>

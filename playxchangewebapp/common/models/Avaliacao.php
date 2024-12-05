@@ -36,7 +36,7 @@ class Avaliacao extends \yii\db\ActiveRecord
         return [
             [['utilizador_id', 'jogo_id', 'numEstrelas'], 'required'],
             [['utilizador_id', 'jogo_id'], 'integer'],
-            [['numEstrelas'], 'number'],
+            [['numEstrelas'], 'number', 'min' => 0.5, 'max' => 5, 'tooSmall' => 'O mínimo de estrelas é 0.5.', 'tooBig' => 'O número de estrelas não pode ser maior que 5.'],
             [['dataAvaliacao'], 'safe'],
             [['utilizador_id', 'jogo_id'], 'unique', 'targetAttribute' => ['utilizador_id', 'jogo_id']],
             [['jogo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Jogo::class, 'targetAttribute' => ['jogo_id' => 'id']],
@@ -64,7 +64,7 @@ class Avaliacao extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'dataAvaliacao',
-                'updatedAtAttribute' => false,
+                'updatedAtAttribute' => 'dataAvaliacao',
                 'value' => new Expression('NOW()'),
             ],
         ];

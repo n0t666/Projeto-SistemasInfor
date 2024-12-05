@@ -20,7 +20,7 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
-            'parsers'=> [
+            'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
@@ -57,15 +57,15 @@ return [
                 ],
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/metodo-pagamento',
-                    'pluralize'=>false
+                    'pluralize' => false
                 ],
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/metodo-envio',
-                    'pluralize'=>false,
+                    'pluralize' => false,
                 ],
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/codigo-promocional',
-                    'pluralize'=>false
+                    'pluralize' => false
                 ],
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/carrinho',
@@ -75,15 +75,31 @@ return [
                         'DELETE linha-apagar' => 'apagar-linha',
                         'POST decrementar' => 'decrement-produto',
                     ],
-                    'pluralize'=>true
+                    'pluralize' => true
                 ],
                 ['class' => 'yii\rest\UrlRule',
-                'controller' => 'api/jogo',
-                'extraPatterns' => [
+                    'controller' => 'api/jogo',
+                    'extraPatterns' => [
 
+                    ],
+                    'pluralize' => true
                 ],
-                'pluralize'=>true
-            ],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/fatura',
+                    'extraPatterns' => [
+
+
+                    ],
+                    'pluralize' => true
+                ],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/avaliacao',
+                    'extraPatterns' => [
+
+
+                    ],
+                    'pluralize' => false
+                ],
             ],
         ],
     ],

@@ -83,9 +83,11 @@ class FaturaController extends Controller
      */
     public function actionView($id)
     {
+
         if(Yii::$app->user->can('verDetalhesEncomendas')){
+            $fatura = $this->findModel($id);
             return $this->render('view', [
-                'model' => $this->findModel($id),
+                'model' => $fatura,
             ]);
         }
     }
