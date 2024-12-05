@@ -5,13 +5,17 @@ namespace frontend\controllers;
 use common\models\Chave;
 use common\models\Denuncia;
 use common\models\Produto;
+use common\models\UploadForm;
 use common\models\User;
 use common\models\Userdata;
+use frontend\models\UpdateForm;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use yii\web\UploadedFile;
+use function PHPUnit\Framework\exactly;
 
 class UtilizadorController extends Controller
 {
@@ -217,16 +221,16 @@ class UtilizadorController extends Controller
             if ($target->id == Yii::$app->user->identity->id) {
                 throw new NotFoundHttpException();
             }
-
             $followExistente = $target->profile
                 ->find()
                 ->joinWith(['seguidores s'])
                 ->andWhere(['s.id' => Yii::$app->user->identity->id])
                 ->exists();
+
             if (!$followExistente) {
                 Yii::$app->user->identity->profile->link('seguidos', $target);
                 Yii::$app->session->setFlash('success', 'Utilizador seguido com sucesso');
-                return $this->redirect(Url::to(['profile', 'username' => $target->username]));
+                return $this->goBack(Yii::$app->request->referrer);
             } else {
                 Yii::$app->session->setFlash('error', 'Erro ao seguir o utilizador');
                 return $this->redirect(Url::to(['profile', 'username' => Yii::$app->user->identity->username]));
@@ -262,7 +266,7 @@ class UtilizadorController extends Controller
             if ($followExistente) {
                 Yii::$app->user->identity->profile->unlink('seguidos', $target, true);
                 Yii::$app->session->setFlash('success', 'Utilizador deixado de seguir com sucesso');
-                return $this->redirect(Url::to(['profile', 'username' => $target->username]));
+                return $this->goBack(Yii::$app->request->referrer);
             }else{
                 Yii::$app->session->setFlash('error', 'Erro ao deixar de seguir o utilizador');
                 return $this->redirect(Url::to(['profile', 'username' => Yii::$app->user->identity->username]));
@@ -271,6 +275,102 @@ class UtilizadorController extends Controller
 
             throw new ServerErrorHttpException($e->getMessage());
         }
+    }
+
+    public function actionUpdate()
+    {
+        if (Yii::$app->user->isGuest) {
+            throw new NotFoundHttpException();
+        }
+
+        $user = Yii::$app->user->identity;
+        $profile = $user->profile;
+
+        $model = new UpdateForm();
+
+        $model->id = $user->id;
+        $model->username = $user->username;
+        $model->email = $user->email;
+        $model->nif = $profile->nif;
+        $model->nome = $profile->nome;
+        $model->dataNascimento = $profile->dataNascimento;
+        $model->biografia = $profile->biografia;
+        $model->privacidadeSeguidores = $profile->privacidadeSeguidores;
+        $model->privacidadeFavoritos = $profile->privacidadeFavoritos;
+        $model->privacidadeJogos = $profile->privacidadeJogos;
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->profileImageFile = UploadedFile::getInstance($model, 'profileImageFile');
+            $model->bannerImageFile = UploadedFile::getInstance($model, 'bannerImageFile');
+
+
+            if ($model->edit()) {
+                Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso!');
+                return $this->redirect(['utilizador/update']);
+            }
+        }
+
+        return $this->render('edit', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionFollowers($username)
+    {
+        $user = User::find()->where(['username' => $username])->one();
+
+        if (!$user) {
+            throw new NotFoundHttpException();
+        }
+        $followers = $user->profile->getSeguidores()
+            ->where(['!=', 'id', Yii::$app->user->identity->id])
+            ->all();
+        $followingStatus = [];
+
+        if (!Yii::$app->user->isGuest) {
+            $loggedInUser = Yii::$app->user->identity->profile;
+
+            foreach ($followers as $follower) {
+                $followingStatus[$follower->id] = $loggedInUser->getSeguidos()->where(['id' => $follower->id])->exists();
+            }
+        }
+
+        return $this->render('followers', [
+            'followers' => $followers,
+            'user' => $user,
+            'followingStatus' => $followingStatus,
+
+        ]);
+
+
+    }
+
+    public function actionFollowing($username)
+    {
+        $user = User::find()->where(['username' => $username])->one();
+
+        if (!$user) {
+            throw new NotFoundHttpException();
+        }
+
+        $followings = $user->profile->getSeguidos()
+            ->where(['!=', 'id', Yii::$app->user->identity->id]) // Excluir o própio utilizador
+            ->all();
+        $followingStatus = [];
+
+        if (!Yii::$app->user->isGuest) {
+            $loggedInUser = Yii::$app->user->identity->profile;
+
+            foreach ($followings as $following) {
+                $followingStatus[$following->id] = $loggedInUser->getSeguidos()->where(['id' => $following->id])->exists();
+            }
+        }
+
+        return $this->render('following', [
+            'followings' => $followings,
+            'user' => $user,
+            'followingStatus' => $followingStatus,
+        ]);
     }
 
 }

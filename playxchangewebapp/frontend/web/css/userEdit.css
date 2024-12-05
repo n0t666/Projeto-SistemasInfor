@@ -1,0 +1,35 @@
+.remove-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+    color: #ff5c5c;
+    transform: scale(1.1);
+}
+
+.remove-btn:focus {
+    outline: none;
+}
+
+label {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+label:hover {
+    opacity: 0.8;
+}
+
+#profile-img-preview{
+    object-fit: cover;
+}
+
+#profile-img-preview{
+    object-fit: cover;
+    width: 100px; height: 100px;
+}

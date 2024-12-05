@@ -16,6 +16,14 @@ use yii\helpers\Url;
 AppAsset::register($this);
 \hail812\adminlte3\assets\FontAwesomeAsset::register($this);
 \frontend\assets\CustomAsset::register($this);
+
+$this->registerJsFile(
+    '@web/js/globalSearch.js',
+    ['depends' => [\yii\web\JqueryAsset::className()]]
+);
+
+
+
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -77,11 +85,7 @@ AppAsset::register($this);
         } else {
             $username = Yii::$app->user->identity->username;
 
-            if (!empty($this->fotoPerfil) && file_exists(Yii::$app->user->identity->profile->fotoPerfil)) {
-                $fotoPerfil = Yii::getAlias('@PerfilUrl') . '/' . Yii::$app->user->identity->profile->fotoPerfil;
-            } else {
-                $fotoPerfil = Yii::getAlias('@imagesUrl') . '/' . 'default_user.jpg';
-            }
+
 
             echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
 
@@ -95,7 +99,7 @@ AppAsset::register($this);
                 'aria-expanded' => 'false',
             ]);
 
-            echo Html::img($fotoPerfil, [
+            echo Html::img(Yii::$app->user->identity->profile->fotoPerfil, [
                 'alt' => 'Profile Picture',
                 'class' => 'rounded-circle me-2',
                 'style' => 'width: 40px; height: 40px; object-fit: cover;',

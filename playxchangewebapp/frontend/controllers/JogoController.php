@@ -42,16 +42,11 @@ class JogoController extends Controller
      */
     public function actionIndex()
     {
-        $jogos = Jogo::find()->all();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => Jogo::find(),
-            'pagination' => [
-                'pageSize' => 8,
-            ],
-        ]);
+        $searchModel = new JogoSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }

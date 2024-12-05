@@ -21,19 +21,20 @@ $this->title = $user->username;
 <div class="container">
     <div class="card overflow-hidden">
         <div class="card-body p-0">
-            <img src="<?= $user->profile->fotoCapa ?>" alt="" class="img-fluid">
+            <img src="<?= $user->profile->fotoCapa ?>" alt="" class="img-fluid w-100" style="object-fit: cover; height: 300px;">
             <div class="row align-items-center">
                 <div class="col-lg-4 order-lg-1 order-2">
                     <div class="d-flex align-items-center justify-content-around m-4">
+                        <?  ?>
                         <div class="text-center">
                             <i class="fa fa-user fs-6 d-block mb-2"></i>
                             <h4 class="mb-0 fw-semibold lh-1"><?= UtilsController::number_format_short(count($user->profile->seguidores)) ?></h4>
-                            <p class="mb-0 fs-4">Seguidores</p>
+                            <a href="<?= Url::to(['utilizador/followers', 'username' => $user->username]) ?>" class="mb-0 fs-4">Seguidores</a>
                         </div>
                         <div class="text-center">
                             <i class="fa fa-check fs-6 d-block mb-2"></i>
                             <h4 class="mb-0 fw-semibold lh-1"><?= UtilsController::number_format_short(count($user->profile->seguidos)) ?></h4>
-                            <p class="mb-0 fs-4">A seguir</p>
+                            <a href="<?= Url::to(['utilizador/following', 'username' => $user->username]) ?>" class="mb-0 fs-4">A seguir</a>
                         </div>
                     </div>
                 </div>
@@ -48,7 +49,7 @@ $this->title = $user->username;
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center">
+                        <div class="text-center mb-3">
                             <h5 class="fs-5 mb-0 fw-semibold"><?= Html::encode($user->username) ?></h5>
                         </div>
                     </div>
@@ -103,7 +104,7 @@ $this->title = $user->username;
                         <?php endif; ?>
                         <?php if (!Yii::$app->user->isGuest && Yii::$app->user->identity->id == $user->id): ?>
                         <li class="position-relative">
-                            <a href="<?= Url::to(['user/edit', 'id' => $user->id]) ?>" class="btn btn-primary">
+                            <a href="<?= Url::to(['utilizador/update']) ?>" class="btn btn-primary">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
                         </li>
@@ -112,72 +113,23 @@ $this->title = $user->username;
                     </ul>
                 </div>
             </div>
-            <ul class="nav nav-pills user-profile-tab justify-content-end mt-2 bg-light-info rounded-2" id="pills-tab"
-                role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link position-relative rounded-0 active d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
-                            id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button"
-                            role="tab" aria-controls="pills-profile" aria-selected="true">
-                        <i class="fa fa-user me-2 fs-6"></i>
-                        <span class="d-none d-md-block">Profile</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
-                            id="pills-followers-tab">
-                        <i class="fa fa-heart me-2 fs-6"></i>
-                        <span class="d-none d-md-block">Followers</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
-                            id="pills-friends-tab">
-                        <i class="fa fa-users me-2 fs-6"></i>
-                        <span class="d-none d-md-block">Friends</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
-                            id="pills-gallery-tab">
-                        <i class="fa fa-photo me-2 fs-6"></i>
-                        <span class="d-none d-md-block">Gallery</span>
-                    </button>
-                </li>
-            </ul>
         </div>
     </div>
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"
              tabindex="0">
+            <?php if($user->profile->biografia ):?>
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="card shadow-none border">
+                    <div class="card shadow-none">
                         <div class="card-body">
-                            <h4 class="fw-semibold mb-3">Introduction</h4>
-                            <p>Hello, I am Mathew Anderson. I love making websites and graphics. Lorem ipsum dolor sit
-                                amet, consectetur adipiscing elit.</p>
-                            <ul class="list-unstyled mb-0">
-                                <li class="d-flex align-items-center gap-3 mb-4">
-                                    <i class="fa fa-briefcase text-dark fs-6"></i>
-                                    <h6 class="fs-4 fw-semibold mb-0">Sir, P P Institute Of Science</h6>
-                                </li>
-                                <li class="d-flex align-items-center gap-3 mb-4">
-                                    <i class="fa fa-envelope text-dark fs-6"></i>
-                                    <h6 class="fs-4 fw-semibold mb-0">xyzjonathan@gmail.com</h6>
-                                </li>
-                                <li class="d-flex align-items-center gap-3 mb-4">
-                                    <i class="fa fa-desktop text-dark fs-6"></i>
-                                    <h6 class="fs-4 fw-semibold mb-0">www.xyz.com</h6>
-                                </li>
-                                <li class="d-flex align-items-center gap-3 mb-2">
-                                    <i class="fa fa-list text-dark fs-6"></i>
-                                    <h6 class="fs-4 fw-semibold mb-0">Newyork, USA - 100001</h6>
-                                </li>
-                            </ul>
+                            <h4 class="fw-semibold mb-3">Biografia</h4>
+                            <p><?= $user->profile->biografia ?>  </p>
                         </div>
                     </div>
                 </div>
             </div>
+            <?php endif;?>
         </div>
     </div>
 

@@ -33,6 +33,7 @@ class UploadForm extends Model
             $this->imageFile->name = Yii::$app->getSecurity()->generateRandomString() . '.' . $this->imageFile->extension;
             $filePath = $path . DIRECTORY_SEPARATOR . $this->imageFile->name ;
 
+
             if ($this->imageFile->saveAs($filePath)) {
                 //$this->imageFile = $filename . '.' . $this->imageFile->extension;
                 //$this->filename = $filename . '.' . $this->imageFile->extension;

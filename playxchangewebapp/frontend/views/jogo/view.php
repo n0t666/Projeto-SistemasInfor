@@ -28,6 +28,7 @@ $this->registerCssFile('@web/css/review.css', ['depends' => [BootstrapAsset::cla
 
 $this->title = $model->nome;
 
+
 ?>
 
 <div class="container my-5 view-game">
@@ -55,7 +56,7 @@ $this->title = $model->nome;
                             'required' => true,
                             'id' => 'plataforma-dropdown',
                             'options' => array_reduce($produtos, function ($result, $produto) { //Obter o preço para cada produto dependendo da plataforma (através do array_reduce transformar um array num único valor)
-                                $result[$produto->plataforma_id] = ['data-preco' => $produto->preco]; //Adicionar um atributo no html para aceder depois no java
+                                $result[$produto->id] = ['data-preco' => $produto->preco]; //Adicionar um atributo no html para aceder depois no javas
                                 return $result;
                             }, [])
                         ]

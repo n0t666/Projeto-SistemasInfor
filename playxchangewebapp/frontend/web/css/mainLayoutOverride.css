@@ -1402,11 +1402,10 @@ figure img {
 
 
 
-/* General Toast Container */
 .toast {
-    color: var(--text-color); /* Text color from the palette */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Soft shadow */
+    color: var(--text-color);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Toast Body */
@@ -1693,3 +1692,107 @@ input[type="radio"]:disabled::after {
 .popular .modern-shadow {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
+
+.sidebar {
+    background-color: #1E1E1E;
+    color: var(--text-color);
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+}
+
+.sidebar h5 {
+    font-size: 18px;
+    color: var(--disabled-text-color);
+    margin-bottom: 16px;
+}
+
+
+.jogo-search .form-select {
+    padding: 6px 12px !important;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    background-color: transparent;
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.jogo-search .form-select:focus {
+    background-color: #2C2C2C;
+    border-color: var(--focus-border-color) !important;
+    box-shadow: 0 0 0 1px var(--focus-border-color) !important;
+    outline: none !important;
+}
+
+.jogo-search .form-select:hover {}
+
+
+.jogo-search option {
+    background-color: #2C2C2C;
+    color: var(--text-color);
+}
+
+
+.jogo-search .form-select:hover {
+    border-color: var(--primary-color);
+}
+
+.game-grid .sidebar {
+    border-radius: 8px;
+    position: sticky;
+    border: 1px solid var(--border-color);
+}
+
+@media (min-width: 992px) {
+    .game-grid .sidebar {
+        position: sticky;
+        top: 20px;
+    }
+}
+
+@media (min-width: 992px) {
+    .game-grid .sidebar {
+        position: sticky;
+        top: 20px;
+    }
+}
+
+.game-grid .form-select {
+    border-radius: 0.5rem;
+    margin-bottom: 15px;
+}
+
+
+.game-grid .card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.game-grid .card-link:hover {
+    text-decoration: none;
+}
+
+
+@media (max-width: 992px) {
+    .game-grid .sidebar {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-grid .sidebar {
+        max-width: 100%;
+    }
+}
+
+.game-grid .sidebar .btn {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 14px;
+    padding: 8px;
+}
+

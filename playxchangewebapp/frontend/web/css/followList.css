@@ -1,0 +1,64 @@
+.section-header h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.section-header h2 span {
+    color: var(--primary-color);
+}
+
+.list-group {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.list-group-item {
+    background-color: var(--card-bg-left) !important;
+    color: var(--text-color) !important;
+    border: none !important;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.list-group-item:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.list-group-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
+.list-group-item button {
+    font-size: 0.875rem;
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border: 1px solid var(--btn-primary-bg);
+    border-radius: 5px;
+    padding: 6px 12px;
+    transition: background-color 0.3s ease;
+}
+
+.fwidth {
+    color: var(--text-color);
+}
+
+
+@media (max-width: 768px) {
+    .list-group-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .list-group-item button {
+        margin-top: 10px;
+    }
+}
