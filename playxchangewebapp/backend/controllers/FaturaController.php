@@ -86,8 +86,43 @@ class FaturaController extends Controller
 
         if(Yii::$app->user->can('verDetalhesEncomendas')){
             $fatura = $this->findModel($id);
+            $linhasFatura = [];
+            $totalSemDesconto = 0;
+
+            foreach ($fatura->linhasfaturas as $linha) {
+                $produto = $linha->produto_id;
+                if (!isset($linhasFatura[$produto])) {
+                    $linhasFatura[$produto] = [
+                        'produto' => $linha->produto,
+                        'precoUnitario' => $linha->precoUnitario,
+                        'quantidade' => 0,
+                        'subtotal' => 0,
+                        'chaves' => []
+                    ];
+                }
+
+                $linhasFatura[$produto]['quantidade'] += 1;
+                $linhasFatura[$produto]['subtotal'] += $linha->precoUnitario;
+
+                if ($linha->chave != null) {
+                    $linhasFatura[$produto]['chaves'][] = $linha->chave;
+                }
+
+                $totalSemDesconto += $linha->precoUnitario;
+                $quantidadeDesconto = 0;
+                if ($fatura->codigo) {
+                    $desconto = $fatura->codigo->desconto;
+                    $quantidadeDesconto = ($totalSemDesconto * $desconto) / 100;
+                }
+            }
+
+
+
             return $this->render('view', [
                 'model' => $fatura,
+                'linhasFatura' => $linhasFatura,
+                'totalSemDesconto' => $totalSemDesconto,
+                'quantidadeDesconto' => $quantidadeDesconto,
             ]);
         }
     }

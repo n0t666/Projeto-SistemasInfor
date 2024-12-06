@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute' => 'codigo_id',
                                 'value' => function($model) {
-                                    return $model->codigo->codigo ? $model->codigo->codigo : '';
+                                    return $model->codigo ? $model->codigo->codigo : 'Sem código';
                                 },
                             ],
                             'dataEncomenda',
@@ -67,19 +67,56 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                         ],
                     ]) ?>
+
+                    <h4 class="mt-5">Detalhes da Fatura</h4>
+                    <table class="table table-hover">
+                        <thead class="">
+                        <tr>
+                            <th>Produto</th>
+                            <th>Preço Unitário</th>
+                            <th>Quantidade</th>
+                            <th>Subtotal</th>
+                            <th>Chaves</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($linhasFatura as $linha): ?>
+                            <tr>
+                                <td>
+                                    <i class="fas fa-gamepad"></i>
+                                    <?= Html::encode($linha['produto']->jogo->nome) ?>
+                                </td>
+                                <td>
+                                    <i class="fas fa-euro-sign"></i>
+                                    <?= Yii::$app->formatter->asCurrency($linha['precoUnitario']) ?>
+                                </td>
+                                <td>
+                                    <i class="fas fa-sort-numeric-up"></i>
+                                    <?= Html::encode($linha['quantidade']) ?>
+                                </td>
+                                <td>
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <?= Yii::$app->formatter->asCurrency($linha['subtotal']) ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($linha['chaves'])): ?>
+                                        <ul class="list-unstyled">
+                                            <?php foreach ($linha['chaves'] as $chave): ?>
+                                                <li><i class="fas fa-key"></i> <?= Html::encode($chave->chave) ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php else: ?>
+                                        <i class="fas fa-times-circle text-danger"></i> Sem Chaves
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
                     <div class="row mt-4">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <?= Html::a('Atualizar', ['update', 'id' => $model->id], [
-                                'class' => 'btn btn-primary btn-sm btn-block',
-                            ]) ?>
-                        </div>
-                        <div class="col-md-6">
-                            <?= Html::a('Apagar', ['delete', 'id' => $model->id], [
-                                'class' => 'btn btn-danger btn-sm btn-block',
-                                'data' => [
-                                    'confirm' => 'Tem a certeza que deseja apagar?',
-                                    'method' => 'post',
-                                ],
+                                'class' => 'btn btn-primary  w-100',
                             ]) ?>
                         </div>
                     </div>

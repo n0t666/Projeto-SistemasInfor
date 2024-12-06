@@ -143,18 +143,26 @@ $this->registerJsFile(
             }
         }
         echo Html::endTag('li');
-        echo Html::button('<i class="fas fa-search"></i>', [
-            'class' => 'btn btn-outline-light d-none d-md-block ms-2',
-            'title' => 'Pesquisar',
-            'id' => 'search_1'
+            echo Html::button('<i class="fas fa-search"></i>', [
+                'class' => 'btn btn-outline-light d-none d-md-block ms-2',
+                'title' => 'Pesquisar',
+                'id' => 'search_1'
+            ]);
+
+            echo Html::beginTag('div', ['class' => 'd-md-none']);
+            echo Html::beginTag('form', [
+                'action' => '/search',
+                'method' => 'get',
+                'class' => 'd-flex mt-2',
         ]);
 
-        echo Html::beginTag('div', ['class' => 'd-md-none']);
-        echo Html::beginTag('form', [
-            'action' => '/search',
-            'method' => 'get',
-            'class' => 'd-flex mt-2',
-        ]);
+        echo Html::dropDownList('category', null, [
+            'all' => 'Todos',
+            'jogos' => 'Jogos',
+            'utilizadores' => 'Utilizadores'
+        ], ['class' => 'form-select me-2', 'aria-label' => 'Select Category']);
+
+
 
         echo Html::input('text', 'query', '', [
             'id' => 'search_input',
@@ -172,19 +180,32 @@ $this->registerJsFile(
         <div class="container" id="contentHolder">
             <div class="search_input_top" id="search_input_box">
                 <div class="container">
-                    <?= Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex justify-content-between search-inner  mt-3']);
-                    echo Html::textInput('query', null, [
+                    <?= Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex justify-content-between search-inner mt-3']); ?>
+
+                    <!-- Dropdown to select category (all, jogos, utilizadores) -->
+                    <?= Html::dropDownList('category', null, [
+                        'all' => 'Todos',
+                        'jogos' => 'Jogos',
+                        'utilizadores' => 'Utilizadores'
+                    ], [
+                        'class' => 'form-select me-2',
+                        'aria-label' => 'Select Category',
+                        'style' => 'max-width: 150px;' // Optional: Adjust the width of the dropdown
+                    ]); ?>
+
+                    <!-- Search Input -->
+                    <?= Html::textInput('query', null, [
                         'class' => 'form-control shadow-none',
                         'placeholder' => 'Pesquise aqui...',
                         'id' => 'search_input',
                         'aria-label' => 'Procurar',
-                    ]);
-                    echo Html::tag('span', '', [
-                        'class' => 'fas fa-times',
-                        'id' => 'close_search',
-                        'title' => 'Fechar'
-                    ]);
-                    echo Html::endForm(); ?>
+                    ]); ?>
+
+                    <button class="btn btn-outline-primary" type="submit" title="Pesquisar">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                    <?= Html::endForm(); ?>
                 </div>
             </div>
             <?= Breadcrumbs::widget([
