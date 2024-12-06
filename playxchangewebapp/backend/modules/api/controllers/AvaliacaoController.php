@@ -149,6 +149,32 @@ class AvaliacaoController extends ActiveController
     }
 
     public function actionDelete(){
+        $user = Yii::$app->user->identity;
+        $body = Yii::$app->getRequest()->getBodyParams();
+
+        if(!$user){
+            throw new UnauthorizedHttpException('Access token inválido.');
+        }
+
+        $jogoId = $body['jogo_id'] ?? null;
+
+        if(!$jogoId){
+            throw new NotFoundHttpException('Jogo inexistente');
+        }
+
+        $avaliacao = Avaliacao::findOne(['jogo_id' => $jogoId, 'utilizador_id' => $user->id]);
+
+        if(!$avaliacao){
+            throw new NotFoundHttpException('Não foi possível encontrar a avaliação solicitada');
+        }
+
+        if($avaliacao->delete()){
+            Yii::$app->response->statusCode = 200;
+            return 'Avaliação removida com sucesso';
+        }else{
+            return $avaliacao->errors;
+        }
+
 
     }
 

@@ -8,8 +8,8 @@ $this->registerCssFile('@web/css/userEdit.css', ['depends' => [\yii\bootstrap5\B
 $this->registerJsFile('@web/js/userEdit.js', ['depends' => [\yii\bootstrap5\BootstrapAsset::className()]]);
 
 $user = Yii::$app->user->identity;
-$this->registerJsVar('originalCoverImage', $user->profile->fotoCapa);
-$this->registerJsVar('originalProfileImage', $user->profile->fotoPerfil);
+$this->registerJsVar('originalCoverImage', $user->profile->getFotoCapa());
+$this->registerJsVar('originalProfileImage', $user->profile->getFotoPerfil());
 ?>
 
 <div class="container">

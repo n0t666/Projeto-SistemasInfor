@@ -23,7 +23,7 @@ use yii\bootstrap5\ActiveForm;
                         <div class="d-flex flex-column align-items-center text-center">
                             <!-- Cover Image Section -->
                             <div class="position-relative w-100" style="height: 150px;">
-                                <img id="cover-img-preview" src="<?= Yii::$app->user->identity->profile->fotoCapa?>" alt="Cover" class="img-fluid w-100 h-100">
+                                <img id="cover-img-preview" src="<?= Yii::$app->user->identity->profile->getFotoCapa()?>" alt="Cover" class="img-fluid w-100 h-100">
                                 <?= $form->field($model, 'bannerImageFile')->fileInput([
                                     'id' => 'cover-picture',
                                     'style' => 'display: none;',
@@ -40,7 +40,7 @@ use yii\bootstrap5\ActiveForm;
 
                             <!-- Profile Image Section -->
                             <div class="position-relative mt-4">
-                                <img id="profile-img-preview" src="<?= Yii::$app->user->identity->profile->fotoPerfil?>" alt="Admin" class="rounded-circle p-1">
+                                <img id="profile-img-preview" src="<?= Yii::$app->user->identity->profile->getFotoPerfil()?>" alt="Admin" class="rounded-circle p-1">
                                 <?= $form->field($model, 'profileImageFile')->fileInput([
                                     'id' => 'profile-picture',
                                     'style' => 'display: none;',

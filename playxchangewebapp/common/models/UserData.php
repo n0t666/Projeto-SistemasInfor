@@ -301,6 +301,26 @@ class Userdata extends \yii\db\ActiveRecord
             ->viaTable('listabloqueios', ['utilizadorBloqueado_id' => 'id']);
     }
 
+    public function getFotoPerfil()
+    {
+        $file = Yii::getAlias('@perfilPath') . '/' . $this->fotoPerfil;
+        if (!empty($this->fotoPerfil) && file_exists($file)) {
+            return Yii::getAlias('@perfilUrl') . '/' . $this->fotoPerfil;
+        }else{
+            return Yii::getAlias('@imagesUrl') . '/' . 'default_user.jpg';
+        }
+    }
+
+    public function getFotoCapa(){
+        $file = Yii::getAlias('@perfilPath') . '/' . $this->fotoCapa;
+        if (!empty($this->fotoCapa) && file_exists($file)) {
+            return Yii::getAlias('@perfilUrl') . '/' . $this->fotoCapa;
+        }else{
+            return Yii::getAlias('@imagesUrl') . '/' . 'default_background.png';
+
+        }
+    }
+
     public function behaviors()
     {
         return [
@@ -331,36 +351,6 @@ class Userdata extends \yii\db\ActiveRecord
                         $this->dataNascimento = date('Y-m-d');
                     }
                     return $this->dataNascimento;
-                },
-            ],
-            [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_AFTER_FIND => ['fotoCapa'],
-                ],
-                'value' => function ($event) {
-                    $file = Yii::getAlias('@perfilPath') . '/' . $this->fotoCapa;
-                    if (!empty($this->fotoCapa) && file_exists($file)) {
-                        return Yii::getAlias('@perfilUrl') . '/' . $this->fotoCapa;
-                    }else{
-                        return Yii::getAlias('@imagesUrl') . '/' . 'default_background.png';
-
-                    }
-
-                },
-            ],
-            [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_AFTER_FIND => ['fotoPerfil'],
-                ],
-                'value' => function ($event) {
-                    $file = Yii::getAlias('@perfilPath') . '/' . $this->fotoPerfil;
-                    if (!empty($this->fotoPerfil) && file_exists($file)) {
-                        return Yii::getAlias('@perfilUrl') . '/' . $this->fotoPerfil;
-                    }else{
-                        return Yii::getAlias('@imagesUrl') . '/' . 'default_user.jpg';
-                    }
                 },
             ],
         ];

@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container-fluid">
     <div class="user-banner mb-4" style="background-image: url('<?= $userData->fotoCapa ?>'); height: 250px; background-size: cover; background-position: center;">
         <div class="profile-picture d-flex justify-content-center position-absolute" style="bottom: -60px; left: 50%; transform: translateX(-50%);">
-            <img src="<?= $userData->fotoPerfil ?>" alt="User Profile Picture" class="img-fluid rounded-circle border border-light" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;">
+            <img src="<?= $userData->getFotoPerfil() ?>" alt="User Profile Picture" class="img-fluid rounded-circle border border-light" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;">
         </div>
     </div>
     <div class="card user-backend-card">

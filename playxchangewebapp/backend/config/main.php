@@ -51,8 +51,13 @@ return [
             'rules' => [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/user',
+                    'pluralize' => true,
                     'extraPatterns' => [
                         'POST login' => 'login',
+                        'GET desejados' => 'desejados',
+                        'GET jogados' => 'jogados',
+                        'GET favoritos' => 'favoritos',
+                        'POST interagir' => 'interagir',
                     ]
                 ],
                 ['class' => 'yii\rest\UrlRule',
@@ -99,6 +104,14 @@ return [
 
                     ],
                     'pluralize' => false
+                ],
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/comentario',
+                    'extraPatterns' => [
+
+
+                    ],
+                    'pluralize' => true
                 ],
             ],
         ],

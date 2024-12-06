@@ -99,7 +99,7 @@ $this->registerJsFile(
                 'aria-expanded' => 'false',
             ]);
 
-            echo Html::img(Yii::$app->user->identity->profile->fotoPerfil, [
+            echo Html::img(Yii::$app->user->identity->profile->getFotoPerfil(), [
                 'alt' => 'Profile Picture',
                 'class' => 'rounded-circle me-2',
                 'style' => 'width: 40px; height: 40px; object-fit: cover;',

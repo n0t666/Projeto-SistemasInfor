@@ -2,14 +2,19 @@
 
 namespace backend\modules\api\controllers;
 
+use common\models\Avaliacao;
+use common\models\Jogo;
 use common\models\LoginForm;
 use common\models\User;
+use common\models\UtilizadorJogo;
 use Yii;
+use yii\db\Exception;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\rest\ActiveController;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 
 class UserController extends ActiveController
@@ -124,5 +129,136 @@ class UserController extends ActiveController
             $user->profile->attributes,
         ];
     }
+
+    public function actionDesejados()
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            throw new UnauthorizedHttpException('Token inválido');
+        }
+
+        $desejados = UtilizadorJogo::find()->where(['utilizador_id' => $user->id,'isDesejado' => 1])->all();
+        $response = [];
+
+        foreach ($desejados as $desejado) {
+            $response[] = [
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $desejado->jogo->imagemCapa,
+                'jogo_id' => $desejado->jogo->id,
+            ];
+        }
+
+        $response['count'] = count($desejados);
+
+        return $response;
+    }
+
+    public function actionJogados(){
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            throw new UnauthorizedHttpException('Token inválido');
+        }
+
+        $jogados = UtilizadorJogo::find()->where(['utilizador_id' => $user->id,'isJogado' => 1])->all();
+        $response = [];
+
+        foreach ($jogados as $jogado) {
+            $response[] = [
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $jogado->jogo->imagemCapa,
+                'jogo_id' => $jogado->jogo->id,
+            ];
+        }
+
+        $response['count'] = count($jogados);
+
+        return $response;
+    }
+
+    public function actionFavoritos()
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            throw new UnauthorizedHttpException('Token inválido');
+        }
+
+        $favoritos = UtilizadorJogo::find()->where(['utilizador_id' => $user->id,'isFavorito' => 1])->all();
+        $response = [];
+
+        foreach ($favoritos as $favorito) {
+            $response[] = [
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $favorito->jogo->imagemCapa,
+                'jogo_id' => $favorito->jogo->id,
+            ];
+        }
+
+        $response['count'] = count($favoritos);
+
+        return $response;
+    }
+
+    /*
+     *
+     *  1 - Jogado , 2 - Desejado , 3 - Favorito
+     *
+     */
+
+    public function actionInteragir(){
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            throw new UnauthorizedHttpException('Token inválido');
+        }
+
+        $body = Yii::$app->request->getBodyParams();
+
+        $jogoId = $body['jogo_id'] ?? null;
+        $tipo = $body['tipo'] ?? null;
+
+        if(!$jogoId){
+            throw new NotFoundHttpException('Jogo inexistente');
+        }
+
+        if(!Jogo::find()->where(['id' => $jogoId])->exists()){
+            throw new NotFoundHttpException('Jogo inexistente');
+        }
+
+        if(!$tipo){
+            throw new NotFoundHttpException('Tipo de interação inexistente');
+        }
+
+
+        $userJogo = UtilizadorJogo::find()->where(['utilizador_id' => $user, 'jogo_id' => $jogoId])->one();
+
+        if (!$userJogo) {
+            $userJogo = new UtilizadorJogo();
+            $userJogo->utilizador_id = $user->id;
+            $userJogo->jogo_id = $jogoId;
+        }
+
+        switch ($tipo) {
+            case '1': // Jogado
+                $userJogo->isJogado = $userJogo->isJogado ? 0 : 1;
+                break;
+            case '2': // Desejado
+                $userJogo->isDesejado = $userJogo->isDesejado ? 0 : 1;
+                break;
+            case '3': // Favorito
+                $userJogo->isFavorito = $userJogo->isFavorito ? 0 : 1;
+                break;
+            default:
+                throw new \Exception('Tipo de interação inesperado');
+        }
+
+        if ($userJogo->save()) {
+            return 'Interação registrada com sucesso';
+        } else {
+            throw new \Exception('Falha ao Guardar o estado do jogo.');
+        }
+    }
+
+
+
 
 }

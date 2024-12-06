@@ -111,7 +111,14 @@ class JogoController extends ActiveController
         }
 
         $avaliacoes = $jogo->getAvaliacoes()->where(['jogo_id' => $id])->all();
-        $numEstrelas = array_filter($avaliacoes->numEstrelas);
+
+
+        $numEstrelas = array_map(function($avaliacao) {
+            return $avaliacao->numEstrelas;
+        }, $avaliacoes);
+
+
+        $numEstrelas = array_filter($numEstrelas);
         $avg = null;
         if(count($numEstrelas) > 0){
             $avg = array_sum($numEstrelas)/count($numEstrelas);

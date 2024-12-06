@@ -83,7 +83,7 @@ class UtilizadorJogoController extends Controller
                 if ($userJogo->save()) {
                     Yii::$app->session->setFlash('success', 'Estado do jogo atualizado com sucesso.');
                 } else {
-                    throw new \Exception('Falha ao salvar o estado do jogo.');
+                    throw new \Exception('Falha ao guardar o estado do jogo.');
                 }
 
             } catch (\Exception $e) {

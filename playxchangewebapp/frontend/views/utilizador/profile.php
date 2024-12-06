@@ -21,7 +21,7 @@ $this->title = $user->username;
 <div class="container">
     <div class="card overflow-hidden">
         <div class="card-body p-0">
-            <img src="<?= $user->profile->fotoCapa ?>" alt="" class="img-fluid w-100" style="object-fit: cover; height: 300px;">
+            <img src="<?= $user->profile->getFotoCapa() ?>" alt="" class="img-fluid w-100" style="object-fit: cover; height: 300px;">
             <div class="row align-items-center">
                 <div class="col-lg-4 order-lg-1 order-2">
                     <div class="d-flex align-items-center justify-content-around m-4">
@@ -45,7 +45,7 @@ $this->title = $user->username;
                                  style="width: 110px; height: 110px;">
                                 <div class="border border-0 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden"
                                      style="width: 100px; height: 100px;">
-                                    <img src="<?= $user->profile->fotoPerfil ?>" alt="" class="w-100 h-100 pfp">
+                                    <img src="<?= $user->profile->getFotoPerfil() ?>" alt="" class="w-100 h-100 pfp">
                                 </div>
                             </div>
                         </div>
