@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Faq;
 use common\models\Jogo;
+use common\models\User;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -297,5 +298,15 @@ class SiteController extends Controller
         return $this->render('faq',[
             'faqs' => $faqs,
         ]);
+    }
+
+    public function actionSearch($category,$query)
+    {
+
+        $resultados = [];
+
+
+
+
     }
 }

@@ -78,6 +78,7 @@ class CodigoPromocionalController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
+
         $codigo = CodigoPromocional::find()->where(['id' => $id])->one();
 
         if(!$codigo){

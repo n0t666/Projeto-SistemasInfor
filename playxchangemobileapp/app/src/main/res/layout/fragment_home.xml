@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:padding="16dp"
+    tools:context=".MainActivity">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/title_jogos_populares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jogos Populares"
+        android:textColor="@color/text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp" />
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/carousel_jogos_populares"
+        android:layout_width="match_parent"
+        android:layout_height="200sp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+        />
+
+    <Button
+        android:id="@+id/btn_ver_catalogo_completo"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver Catálogo Completo"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/accent"
+        android:drawableStart="@drawable/ic_arrow_right_alt_24"
+        android:drawablePadding="8dp"
+        android:textSize="15sp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/title_ultimos_lancamentos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Últimos Lançamentos"
+        android:textColor="@color/text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingTop="32dp"
+        android:paddingBottom="16dp" />
+</LinearLayout>
