@@ -70,7 +70,7 @@ class Userdata extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'nome'], 'required'],
-            [['user_id', 'privacidadeSeguidores', 'privacidadeFavoritos', 'privacidadeJogos'], 'integer'],
+            [['user_id', 'privacidadeSeguidores', 'privacidadePerfil', 'privacidadeJogos'], 'integer'],
             [['dataNascimento'], 'safe'],
             [['nome'], 'string', 'max' => 200],
             ['nif', 'string','min' => 9, 'max' => 9],
@@ -80,8 +80,8 @@ class Userdata extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
             ['privacidadeSeguidores', 'default', 'value' => self::STATUS_PUBLIC],
             ['privacidadeSeguidores', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
-            ['privacidadeFavoritos', 'default', 'value' => self::STATUS_PUBLIC],
-            ['privacidadeFavoritos', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
+            ['privacidadePerfil', 'default', 'value' => self::STATUS_PUBLIC],
+            ['privacidadePerfil', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC]],
             ['privacidadeJogos', 'default', 'value' => self::STATUS_PUBLIC],
             ['privacidadeJogos', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
             ];
@@ -102,7 +102,7 @@ class Userdata extends \yii\db\ActiveRecord
             'fotoCapa' => 'Foto Capa',
             'fotoPerfil' => 'Foto Perfil',
             'privacidadeSeguidores' => 'Privacidade Seguidores',
-            'privacidadeFavoritos' => 'Privacidade Favoritos',
+            'privacidadePerfil' => 'Privacidade Perfil',
             'privacidadeJogos' => 'Privacidade Jogos',
         ];
     }
@@ -369,9 +369,10 @@ class Userdata extends \yii\db\ActiveRecord
         }
     }
 
-    public function getPrivacidadeFavoritosLabel()
+
+    public function getPrivacidadePerfilLabel()
     {
-        switch ($this->privacidadeFavoritos) {
+        switch ($this->privacidadePerfil) {
             case self::STATUS_PUBLIC:
                 return 'Público';
             case self::STATUS_PRIVATE:

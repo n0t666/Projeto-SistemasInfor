@@ -61,4 +61,5 @@ class UtilizadorJogo extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Jogo::class, ['id' => 'jogo_id']);
     }
+
 }

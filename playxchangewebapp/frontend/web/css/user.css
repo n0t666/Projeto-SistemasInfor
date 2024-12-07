@@ -112,3 +112,53 @@
 a{
     text-decoration: none !important;
 }
+
+.custom-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
+}
+
+.custom-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+.icon-container {
+    color: #BB86FC;
+    transition: color 0.3s ease-in-out;
+}
+
+.custom-card:hover .icon-container {
+    color: #FF6F61;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+.custom-btn {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    border-radius: 50px;
+    padding: 8px 20px;
+}
+
+.custom-btn:hover {
+    background-color: #BB86FC;
+    color: #FFFFFF;
+}
+
+@media (max-width: 768px) {
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    .icon-container i {
+        font-size: 1.75rem;
+    }
+}
+
+

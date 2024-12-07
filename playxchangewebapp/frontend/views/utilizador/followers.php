@@ -16,7 +16,7 @@ $this->registerCssFile('@web/css/followList.css');
     <div class="row">
         <div class="col-md-12">
             <div class="section-header mb-4">
-                <h2>Seguidores <span>(<?= count($followers) ?>)</span></h2>
+                <h2>Seguidores <span>(<?= $followers != null ? count($followers) : 0 ?>)</span></h2>
             </div>
             <?php foreach ($followers as $follower): ?>
                 <div class="list-group bg">

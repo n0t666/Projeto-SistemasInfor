@@ -91,9 +91,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'value' => $userData->getPrivacidadeSeguidoresLabel(),
                                 ],
                                 [
-                                    'attribute' => 'privacidadeFavoritos',
-                                    'label' => 'Privacidade dos Favoritos',
-                                    'value' => $userData->getPrivacidadeFavoritosLabel(),
+                                    'attribute' => 'privacidadePerfil',
+                                    'label' => 'Privacidade do Perfil',
+                                    'value' => $userData->getPrivacidadePerfilLabel(),
                                 ],
                                 [
                                     'attribute' => 'privacidadeJogos',

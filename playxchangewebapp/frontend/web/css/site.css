@@ -85,6 +85,104 @@ a.desc:after {
     padding: .75rem 1rem;
 }
 
+/* Ensure the flex container is properly laid out */
+.searchResult-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #2C2C2C; /* Dark background */
+    padding: 16px;
+    border-radius: 0.5rem;
+    margin-bottom: 15px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Space between image and text */
+.searchResult-item .me-3 {
+    margin-right: 16px;
+}
+
+/* Ensure image has proper size and aspect ratio */
+.searchResult-img, .searchResult-profileImg {
+    object-fit: cover;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Image dimensions for games and profiles */
+.searchResult-img {
+    width: 70px;
+    height: 110px;
+}
+
+.searchResult-profileImg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+/* Make sure text takes full available space */
+.searchResult-item .flex-grow-1 {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Proper text styling and wrapping */
+.searchResult-description, .searchResult-biography, .searchResult-email {
+    color: #B0B0B0; /* Muted text */
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Allow description text to wrap in multiple lines */
+.searchResult-description, .searchResult-biography {
+    white-space: normal; /* Allow wrapping */
+}
+
+.searchResult-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.searchResult-link:hover {
+    color: #FF6F61;
+}
+
+.searchResult-readmore {
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.search-result .list-group {
+    position: relative;
+    background-color: #1E1E1E;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-cat .list-group-item.active{
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+}
+.search-cat .list-group-item{
+    background-color: var(--section-background);
+    color: var(--text-color);
+    border: none;
+}
+
+
+
+
+
 
 
 

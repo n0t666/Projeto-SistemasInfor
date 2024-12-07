@@ -1,6 +1,7 @@
 <?php
 
 use backend\controllers\UtilsController;
+use frontend\controllers\UtilizadorController;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\BootstrapAsset;
 use yii\bootstrap5\Html;
@@ -120,7 +121,7 @@ $this->title = $user->username;
              tabindex="0">
             <?php if($user->profile->biografia ):?>
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col">
                     <div class="card shadow-none">
                         <div class="card-body">
                             <h4 class="fw-semibold mb-3">Biografia</h4>
@@ -132,8 +133,47 @@ $this->title = $user->username;
             <?php endif;?>
         </div>
     </div>
-
-</div>
+    <div class="row text-center">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card custom-card shadow-none h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <div class="icon-container mb-3">
+                        <i class="fas fa-heart fa-2x"></i>
+                    </div>
+                    <a href="<?= Url::to(['utilizador/favoritos', 'username' => $user->username]) ?>" class="text-decoration-none">
+                        <h4 class="fw-semibold">Favoritos</h4>
+                    </a>
+                    <h5 class="stat-number"><?= UtilsController::number_format_short(UtilizadorController::getNumFavoritos($user->id)) ?></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card custom-card shadow-none h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <div class="icon-container mb-3">
+                        <i class="fas fa-gamepad fa-2x"></i>
+                    </div>
+                    <a href="<?= Url::to(['utilizador/jogados', 'username' => $user->username]) ?>" class="text-decoration-none">
+                        <h4 class="fw-semibold">Jogados</h4>
+                    </a>
+                    <h5 class="stat-number"><?= UtilsController::number_format_short(UtilizadorController::getNumJogados($user->id)) ?></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card custom-card shadow-none h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <div class="icon-container mb-3">
+                        <i class="fas fa-star fa-2x"></i>
+                    </div>
+                    <a href="<?= Url::to(['utilizador/desejados', 'username' => $user->username]) ?>" class="text-decoration-none">
+                        <h4 class="fw-semibold">Desejados</h4>
+                    </a>
+                    <h5 class="stat-number"><?= UtilsController::number_format_short(UtilizadorController::getNumDesejados($user->id)) ?></h5>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php

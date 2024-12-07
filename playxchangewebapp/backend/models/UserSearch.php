@@ -19,7 +19,7 @@ class UserSearch extends UserData
     public function rules()
     {
         return [
-            [['id', 'user_id', 'privacidadeSeguidores', 'privacidadeFavoritos', 'privacidadeJogos'], 'integer'],
+            [['id', 'user_id', 'privacidadeSeguidores', 'privacidadePerfil', 'privacidadeJogos'], 'integer'],
             [['nome', 'nif', 'dataNascimento', 'biografia', 'fotoCapa', 'fotoPerfil'], 'safe'],
             [['globalSearch'], 'string', 'max' => 255],
         ];

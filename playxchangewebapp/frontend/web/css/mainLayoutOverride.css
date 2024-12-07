@@ -434,6 +434,10 @@ input[type="text"].disabled, input[type="password"].disabled, input[type="email"
     color: #6c757d;
     pointer-events: none;
 }
+.form-control:focus + .form-label  {
+    background-color: transparent !important;
+}
+
 
 ::placeholder {
     color: #AAAAAA;
@@ -532,6 +536,15 @@ input[type="text"].disabled, input[type="password"].disabled, input[type="email"
 .card a:hover{
     color: #9C4DFF;
     text-decoration: underline;
+}
+
+.card .btn-danger {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+.card .btn-danger:hover {
+    color: #FFFFFF;
+    text-decoration: none;
 }
 
 .nav-item {

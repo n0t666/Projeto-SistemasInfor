@@ -26,7 +26,7 @@ class UpdateForm extends Model
     public $bannerImageFilename;
 
     public $privacidadeSeguidores;
-    public $privacidadeFavoritos;
+    public $privacidadePerfil;
     public $privacidadeJogos;
     public $biografia;
     public $dataNascimento;
@@ -58,11 +58,11 @@ class UpdateForm extends Model
             [['profileImageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg,jpeg'],
             [['bannerImageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg,jpeg'],
 
-            [['privacidadeSeguidores', 'privacidadeFavoritos', 'privacidadeJogos'], 'integer'],
+            [['privacidadeSeguidores', 'privacidadePerfil', 'privacidadeJogos'], 'integer'],
             ['privacidadeSeguidores', 'default', 'value' => Userdata::STATUS_PUBLIC],
             ['privacidadeSeguidores', 'in', 'range' => [Userdata::STATUS_PRIVATE, Userdata::STATUS_PUBLIC, Userdata::STATUS_MUTUAL]],
-            ['privacidadeFavoritos', 'default', 'value' => Userdata::STATUS_PUBLIC],
-            ['privacidadeFavoritos', 'in', 'range' => [Userdata::STATUS_PRIVATE, Userdata::STATUS_PUBLIC, Userdata::STATUS_MUTUAL]],
+            ['privacidadePerfil', 'default', 'value' => Userdata::STATUS_PUBLIC],
+            ['privacidadePerfil', 'in', 'range' => [Userdata::STATUS_PRIVATE, Userdata::STATUS_PUBLIC]],
             ['privacidadeJogos', 'default', 'value' => Userdata::STATUS_PUBLIC],
             ['privacidadeJogos', 'in', 'range' => [Userdata::STATUS_PRIVATE, Userdata::STATUS_PUBLIC, Userdata::STATUS_MUTUAL]],
 
@@ -110,7 +110,7 @@ class UpdateForm extends Model
                 $profile->nif = $this->nif;
                 $profile->nome = $this->nome;
                 $profile->privacidadeSeguidores = $this->privacidadeSeguidores;
-                $profile->privacidadeFavoritos = $this->privacidadeFavoritos;
+                $profile->privacidadePerfil = $this->privacidadePerfil;
                 $profile->privacidadeJogos = $this->privacidadeJogos;
                 $profile->biografia = $this->biografia;
                 $profile->dataNascimento = $this->dataNascimento;
@@ -129,9 +129,6 @@ class UpdateForm extends Model
                     }
                 }
 
-
-
-
                 if ($profile->save(false) ) {
                     $transaction->commit();
                     return true;
@@ -148,7 +145,6 @@ class UpdateForm extends Model
 
     public function upload($imageFile, $alias)
     {
-        var_dump('hatemyself');
         $path = Yii::getAlias($alias);
         $fileName = Yii::$app->getSecurity()->generateRandomString() . '.' . $imageFile->extension;
         $filePath = $path . DIRECTORY_SEPARATOR . $fileName;

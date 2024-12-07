@@ -9,6 +9,8 @@ use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -300,13 +302,60 @@ class SiteController extends Controller
         ]);
     }
 
+
+    // Não utilizei o modelo padrão de pesquisa porque os modelos não são relacionados entre e si e também para permitir a pesquisa em mais do que um modelo simultaneamnete
     public function actionSearch($category,$query)
     {
 
         $resultados = [];
+        $dataProvider = null;
+
+        if($query == ''){
+            Yii::$app->session->setFlash('error', 'Não é possível fazer pesquisas vazias.');
+            return $this->goBack();
+        }
+
+        if(strlen($query) > 200){
+            Yii::$app->session->setFlash('error', 'A pesquisa não pode exceder os 200 caracteres.');
+            return $this->goBack();
+        }
+
+        // Colocar os dados num ActiveDataProvider para facilitar a paginação
+        switch ($category) {
+            case 'games':
+                $dataProvider = new ActiveDataProvider([
+                    'query' => Jogo::find()->where(['like', 'nome', $query]),
+                    'pagination' => ['pageSize' => 10],
+                ]);
+                break;
+
+            case 'users':
+                $dataProvider = new ActiveDataProvider([
+                    'query' => User::find()->where(['like', 'username', $query])->andWhere(['status' => 10]),
+                    'pagination' => ['pageSize' => 10],
+                ]);
+                break;
+
+            case 'all':
+                $jogos = Jogo::find()->where(['like', 'nome', $query])->all();
+                $users = User::find()->where(['like', 'username', $query])->andWhere(['status' => 10])->all();
 
 
+                // Visto que são dois modelos distintos é preciso juntar em dois arrays para depois permitir Utilizar o arrayDataProvider visto que o activedataprovider só permite 1 modelo
+                // Os dados resultantes conterão tanto jogos quanto utilizadores que correspondem ao termo de pesquisa
+                $resultados = array_merge($jogos, $users);
 
+                $dataProvider = new ArrayDataProvider([
+                    'allModels' => $resultados,
+                    'pagination' => ['pageSize' => 5],
+                ]);
+                break;
+        }
 
-    }
+        return $this->render('search_result', [
+            'dataProvider' => $dataProvider,
+            'category' => $category,
+            'searchQuery' => $query,
+        ]);
+        }
 }

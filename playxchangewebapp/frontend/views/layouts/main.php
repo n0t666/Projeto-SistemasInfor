@@ -181,19 +181,16 @@ $this->registerJsFile(
             <div class="search_input_top" id="search_input_box">
                 <div class="container">
                     <?= Html::beginForm(['/site/search'], 'get', ['class' => 'd-flex justify-content-between search-inner mt-3']); ?>
-
-                    <!-- Dropdown to select category (all, jogos, utilizadores) -->
                     <?= Html::dropDownList('category', null, [
                         'all' => 'Todos',
-                        'jogos' => 'Jogos',
-                        'utilizadores' => 'Utilizadores'
+                        'games' => 'Jogos',
+                        'users' => 'Utilizadores'
                     ], [
                         'class' => 'form-select me-2',
                         'aria-label' => 'Select Category',
-                        'style' => 'max-width: 150px;' // Optional: Adjust the width of the dropdown
+                        'style' => 'max-width: 150px;'
                     ]); ?>
 
-                    <!-- Search Input -->
                     <?= Html::textInput('query', null, [
                         'class' => 'form-control shadow-none',
                         'placeholder' => 'Pesquise aqui...',

@@ -19,7 +19,9 @@ use yii\bootstrap5\ActiveForm;
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data'],'id' => 'update-form']); ?>
+                        <?php $form = ActiveForm::begin([
+                            'options' => ['enctype' => 'multipart/form-data', 'id' => 'update-form'],
+                        ]); ?>
                         <div class="d-flex flex-column align-items-center text-center">
                             <!-- Cover Image Section -->
                             <div class="position-relative w-100" style="height: 150px;">
@@ -55,6 +57,19 @@ use yii\bootstrap5\ActiveForm;
                             </div>
                         </div>
                         <hr class="my-2">
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Desativar Conta</h5>
+                        <p class="card-text">A desativação da sua conta é permanente e não pode ser revertida.</p>
+                        <?= Html::a('Desativar', ['delete'], [
+                            'class' => 'btn btn-danger',
+                            'data' => [
+                                'confirm' => 'Tem a certeza que deseja desativa a conta?',
+                                'method' => 'post',
+                            ],
+                        ]) ?>
                     </div>
                 </div>
             </div>
@@ -105,10 +120,9 @@ use yii\bootstrap5\ActiveForm;
                             UserData::STATUS_MUTUAL => 'Mútuo',
                         ]) ?>
 
-                        <?= $form->field($model, 'privacidadeFavoritos')->dropDownList([
+                        <?= $form->field($model, 'privacidadePerfil')->dropDownList([
                             UserData::STATUS_PRIVATE => 'Privado',
                             UserData::STATUS_PUBLIC => 'Público',
-                            UserData::STATUS_MUTUAL => 'Mútuo',
                         ]) ?>
 
                         <?= $form->field($model, 'privacidadeJogos')->dropDownList([
@@ -127,5 +141,6 @@ use yii\bootstrap5\ActiveForm;
             </div>
             <?php ActiveForm::end(); ?>
         </div>
+
     </div>
 </div>
