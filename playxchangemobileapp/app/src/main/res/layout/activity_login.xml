@@ -17,14 +17,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/config_icon"
+        android:id="@+id/ivConfig"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:contentDescription="@string/txt_engine_description"
+        android:onClick="onClickConfig"
         android:src="@drawable/ic_baseline_settings_24"
-        app:layout_constraintTop_toBottomOf="@id/imgEllipseTop"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgEllipseTop"
         app:tint="@color/muted_text" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -37,7 +38,7 @@
         android:hint="@string/txt_username_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/config_icon">
+        app:layout_constraintTop_toBottomOf="@id/ivConfig">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/txtUsername"

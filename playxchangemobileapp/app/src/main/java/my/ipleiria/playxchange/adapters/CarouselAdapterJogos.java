@@ -1,7 +1,6 @@
 package my.ipleiria.playxchange.adapters;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,42 +14,43 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import my.ipleiria.playxchange.R;
+import my.ipleiria.playxchange.models.Jogo;
+import my.ipleiria.playxchange.utils.Constants;
 
-public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHolder> {
+public class CarouselAdapterJogos extends RecyclerView.Adapter<CarouselAdapterJogos.ViewHolder> {
     Context context;
 
-    ArrayList<String> arrayList;
+    ArrayList<Jogo> jogos;
     OnItemClickListener onItemClickListener;
 
-    public CarouselAdapter(Context context,ArrayList<String> arrayList){
+    public CarouselAdapterJogos(Context context, ArrayList<Jogo> jogos){
         this.context = context;
-        this.arrayList = arrayList;
-
+        this.jogos = jogos;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CarouselAdapterJogos.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.carousel_item,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(context).load(arrayList.get(position)).into(holder.imageView);
+        Jogo jogo = jogos.get(position);
+        Glide.with(context).load(jogo.getCapas()).into(holder.imageView);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onClick(holder.imageView,arrayList.get(position));
+                onItemClickListener.onClick(holder.imageView, jogo);
             }
         });
-
-
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return jogos.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -67,8 +67,8 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
         this.onItemClickListener = onItemClickListener;
     }
 
-    public interface OnItemClickListener{
-        void onClick(ImageView imageView,String url);
+    public interface OnItemClickListener {
+        void onClick(ImageView imageView, Jogo jogo);
     }
 
 }

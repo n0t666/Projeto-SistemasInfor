@@ -1,63 +1,106 @@
 package my.ipleiria.playxchange.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Response;
 
 import java.util.ArrayList;
 
+import my.ipleiria.playxchange.GameDetailsActivity;
 import my.ipleiria.playxchange.R;
-import my.ipleiria.playxchange.adapters.CarouselAdapter;
+import my.ipleiria.playxchange.adapters.CarouselAdapterJogos;
+import my.ipleiria.playxchange.models.Jogo;
+import my.ipleiria.playxchange.models.SingletonLoja;
 
-public class HomeFragment extends Fragment
-{
+public class HomeFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private CarouselAdapter carouselAdapter;
-    private ArrayList<String> imageUrls;
+    private RecyclerView rvPopular, rvRecent;
+
+    private CarouselAdapterJogos popularCarouselAdapter,recentCarouselAdapter;
+
+    private ArrayList<Jogo> popularJogos = new ArrayList<>();
+    private ArrayList<Jogo> recentJogos = new ArrayList<>();
 
 
     public HomeFragment() {
-        // Required empty public constructor
+
     }
-
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view =  inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        recyclerView = view.findViewById(R.id.carousel_jogos_populares);
+        rvPopular = view.findViewById(R.id.rvPopular);
+        rvRecent = view.findViewById(R.id.rvRecent);
 
+        popularCarouselAdapter = new CarouselAdapterJogos(getContext(), popularJogos);
+        recentCarouselAdapter = new CarouselAdapterJogos(getContext(), recentJogos);
 
-        imageUrls = new ArrayList<>();
-
-        imageUrls.add("http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/jogos/capas/eMLxwZBk_Dn_RS45U_SFuBK4OH6FrJaQ.jpg");
-        imageUrls.add("https://upload.wikimedia.org/wikipedia/en/thumb/b/b1/Portrait_placeholder.png/320px-Portrait_placeholder.png");
-        imageUrls.add("https://upload.wikimedia.org/wikipedia/en/thumb/b/b1/Portrait_placeholder.png/320px-Portrait_placeholder.png");
-
-        carouselAdapter = new CarouselAdapter(getContext(), imageUrls);
-        carouselAdapter.setOnItemClickListener(new CarouselAdapter.OnItemClickListener() {
+        popularCarouselAdapter.setOnItemClickListener(new CarouselAdapterJogos.OnItemClickListener() {
             @Override
-            public void onClick(ImageView imageView, String url) {
-                // Handle item click, e.g., open the image in full screen or navigate
-                // For example:
-                // Toast.makeText(getContext(), "Image clicked: " + url, Toast.LENGTH_SHORT).show();
+            public void onClick(ImageView imageView, Jogo jogo) {
+                openGameDetails(jogo);
             }
         });
-        recyclerView.setAdapter(carouselAdapter);
+
+        recentCarouselAdapter.setOnItemClickListener(new CarouselAdapterJogos.OnItemClickListener() {
+            @Override
+            public void onClick(ImageView imageView, Jogo jogo) {
+                openGameDetails(jogo);
+            }
+        });
+
+        rvPopular.setAdapter(popularCarouselAdapter);
+        rvRecent.setAdapter(recentCarouselAdapter);
+
+        getJogos();
+
 
         return view;
     }
+
+    private void getJogos() {
+        SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(), "populares", new Response.Listener<ArrayList<Jogo>>() {
+            @Override
+            public void onResponse(ArrayList<Jogo> jogos) {
+                popularJogos.clear();
+                popularJogos.addAll(jogos);
+                popularCarouselAdapter.notifyDataSetChanged();
+            }
+        });
+
+
+
+        SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(), "recentes", new Response.Listener<ArrayList<Jogo>>() {
+            @Override
+            public void onResponse(ArrayList<Jogo> jogos) {
+                recentJogos.clear();
+                recentJogos.addAll(jogos);
+                recentCarouselAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void openGameDetails(Jogo jogo) {
+        Intent intent = new Intent(getContext(), GameDetailsActivity.class);
+        intent.putExtra("ID_JOGO", jogo.getId());
+        startActivity(intent);
+    }
+
+
 }

@@ -25,6 +25,8 @@
 
     Yii::setAlias('@imagesUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/images/');
 
+    Yii::setAlias('@mobileIp' , 'http://10.0.2.2');
+
 
 
 

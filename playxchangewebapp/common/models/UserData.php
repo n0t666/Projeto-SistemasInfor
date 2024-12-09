@@ -224,7 +224,7 @@ class Userdata extends \yii\db\ActiveRecord
      */
     public function getInteracoes()
     {
-        return $this->hasMany(Jogo::class, ['id' => 'jogo_id'])->viaTable('utilizadoresjogos', ['utilizador_id' => 'id']);
+        return $this->hasMany(UtilizadorJogo::class, ['utilizador_id' => 'id']);
     }
 
 

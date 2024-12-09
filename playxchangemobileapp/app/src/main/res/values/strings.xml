@@ -10,4 +10,27 @@
     <string name="txt_username_login">Username</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="txt_error_con">Não existe nenhuma conexão á internet</string>
+    <string name="txt_error_authentication">Dados inválidos</string>
+    <string name="txt_error_request">Não foi possíve processar o pedido</string>
+    <string name="txt_name_jogo">Nome do Jogo</string>
+    <string name="txt_release">01/01/2024</string>
+    <string name="txt_trailer">Trailer</string>
+    <string name="txt_preco">Preço:</string>
+    <string name="txt_minus">-</string>
+    <string name="txt_plus">+</string>
+    <string name="txt_add_carrinho">Adicionar ao Carrinho</string>
+    <string name="txt_played">Jogados</string>
+    <string name="txt_avg">Média</string>
+    <string name="txt_wish">Desejados</string>
+    <string name="txt_reviews">Reviews</string>
+    <string name="txt_placeholder_descript">texto</string>
+    <string name="txt_description_title">Descrição</string>
+    <string name="txt_editora">Editora</string>
+    <string name="txt_distribuidora">Distribuidora</string>
+    <string name="txt_tags">Tags</string>
+    <string name="txt_tag_placeholder">Tag 1</string>
+    <string name="txt_choose_plataforma">Escolha uma plataforma</string>
+    <string name="txt_quantity_val">0</string>
+    <string name="txt_screenshots">Screenshots</string>
 </resources>

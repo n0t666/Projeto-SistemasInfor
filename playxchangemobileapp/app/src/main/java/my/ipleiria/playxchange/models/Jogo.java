@@ -3,37 +3,55 @@ package my.ipleiria.playxchange.models;
 import java.util.List;
 
 public class Jogo {
-    private int id,produtoId,quantidade,numDesejados,numJogados,numReviews;
-    private String nome,dataLancamento,descricao,trailerLink,franquia,imagemCapa,distribuidora,editora,plataforma;
-    private double preco,mediaAvaliacoes;
+    private int id;
+    private String nome;
+    private String descricao;
+    private String dataLancamento;
+    private String capas;
+    private String distribuidora;
+    private String editora;
+    private String trailer;
+    private String franquia;
+    private int desejados;
+    private int jogados;
+    private double media;
+    private int reviews;
+    private Avaliacao avaliacao;
+    private Atividade atividade;
+    private List<Produto> produtos;
+    private List<Tag> tags;
+    private List<Genero> generos;
+    private List<String> screenshots;
 
 
-    public Jogo(String imagemCapa, int id, int quantidade, int numDesejados, int numJogados, int numReviews, String nome, String dataLancamento, String descricao, String trailerLink, String franquia, String distribuidora, String editora, String plataforma, double preco, double mediaAvaliacoes,int produtoId) {
-        this.imagemCapa = imagemCapa;
+    public Jogo(int id, String nome, String descricao, String dataLancamento, String capas, String distribuidora, String editora, String trailer, String franquia, int desejados, int jogados, double media, int reviews, Avaliacao avaliacao, Atividade atividade, List<Produto> produtos, List<Tag> tags, List<Genero> generos, List<String> screenshots) {
         this.id = id;
-        this.quantidade = quantidade;
-        this.numDesejados = numDesejados;
-        this.numJogados = numJogados;
-        this.numReviews = numReviews;
         this.nome = nome;
-        this.dataLancamento = dataLancamento;
         this.descricao = descricao;
-        this.trailerLink = trailerLink;
-        this.franquia = franquia;
+        this.dataLancamento = dataLancamento;
+        this.capas = capas;
         this.distribuidora = distribuidora;
         this.editora = editora;
-        this.plataforma = plataforma;
-        this.preco = preco;
-        this.mediaAvaliacoes = mediaAvaliacoes;
-        this.produtoId = produtoId;
+        this.trailer = trailer;
+        this.franquia = franquia;
+        this.desejados = desejados;
+        this.jogados = jogados;
+        this.media = media;
+        this.reviews = reviews;
+        this.avaliacao = avaliacao;
+        this.atividade = atividade;
+        this.produtos = produtos;
+        this.tags = tags;
+        this.generos = generos;
+        this.screenshots = screenshots;
     }
 
-    public int getNumDesejados() {
-        return numDesejados;
+    public Atividade getAtividade() {
+        return atividade;
     }
 
-    public void setNumDesejados(int numDesejados) {
-        this.numDesejados = numDesejados;
+    public void setAtividade(Atividade atividade) {
+        this.atividade = atividade;
     }
 
     public int getId() {
@@ -44,44 +62,12 @@ public class Jogo {
         this.id = id;
     }
 
-    public int getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public int getNumJogados() {
-        return numJogados;
-    }
-
-    public void setNumJogados(int numJogados) {
-        this.numJogados = numJogados;
-    }
-
-    public int getNumReviews() {
-        return numReviews;
-    }
-
-    public void setNumReviews(int numReviews) {
-        this.numReviews = numReviews;
-    }
-
     public String getNome() {
         return nome;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getDataLancamento() {
-        return dataLancamento;
-    }
-
-    public void setDataLancamento(String dataLancamento) {
-        this.dataLancamento = dataLancamento;
     }
 
     public String getDescricao() {
@@ -92,28 +78,20 @@ public class Jogo {
         this.descricao = descricao;
     }
 
-    public String getTrailerLink() {
-        return trailerLink;
+    public String getDataLancamento() {
+        return dataLancamento;
     }
 
-    public void setTrailerLink(String trailerLink) {
-        this.trailerLink = trailerLink;
+    public void setDataLancamento(String dataLancamento) {
+        this.dataLancamento = dataLancamento;
     }
 
-    public String getFranquia() {
-        return franquia;
+    public String getCapas() {
+        return capas;
     }
 
-    public void setFranquia(String franquia) {
-        this.franquia = franquia;
-    }
-
-    public String getImagemCapa() {
-        return imagemCapa;
-    }
-
-    public void setImagemCapa(String imagemCapa) {
-        this.imagemCapa = imagemCapa;
+    public void setCapas(String capas) {
+        this.capas = capas;
     }
 
     public String getDistribuidora() {
@@ -132,36 +110,268 @@ public class Jogo {
         this.editora = editora;
     }
 
-    public String getPlataforma() {
-        return plataforma;
+    public String getTrailer() {
+        return trailer;
     }
 
-    public void setPlataforma(String plataforma) {
-        this.plataforma = plataforma;
+    public void setTrailer(String trailer) {
+        this.trailer = trailer;
     }
 
-    public double getPreco() {
-        return preco;
+    public String getFranquia() {
+        return franquia;
     }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
+    public void setFranquia(String franquia) {
+        this.franquia = franquia;
     }
 
-    public double getMediaAvaliacoes() {
-        return mediaAvaliacoes;
+    public int getDesejados() {
+        return desejados;
     }
 
-    public void setMediaAvaliacoes(double mediaAvaliacoes) {
-        this.mediaAvaliacoes = mediaAvaliacoes;
+    public void setDesejados(int desejados) {
+        this.desejados = desejados;
     }
 
-    public int getProdutoId(){
-         return produtoId;
+    public int getJogados() {
+        return jogados;
     }
 
-    public void setProdutoId(int produtoId){
-        this.produtoId = produtoId;
+    public void setJogados(int jogados) {
+        this.jogados = jogados;
+    }
+
+    public double getMedia() {
+        return media;
+    }
+
+    public void setMedia(double media) {
+        this.media = media;
+    }
+
+    public int getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(int reviews) {
+        this.reviews = reviews;
+    }
+
+    public Avaliacao getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(Avaliacao avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<Genero> getGeneros() {
+        return generos;
+    }
+
+    public void setGeneros(List<Genero> generos) {
+        this.generos = generos;
+    }
+
+    public List<String> getScreenshots() {
+        return screenshots;
+    }
+
+    public void setScreenshots(List<String> screenshots) {
+        this.screenshots = screenshots;
+    }
+
+    public static class Atividade {
+        private int id;
+        private int utilizadorId;
+        private int jogoId;
+        private boolean isJogado;
+        private boolean isDesejado;
+        private boolean isFavorito;
+
+        public Atividade(int id, int utilizadorId, int jogoId, boolean isJogado, boolean isDesejado, boolean isFavorito) {
+            this.id = id;
+            this.utilizadorId = utilizadorId;
+            this.jogoId = jogoId;
+            this.isJogado = isJogado;
+            this.isDesejado = isDesejado;
+            this.isFavorito = isFavorito;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getUtilizadorId() {
+            return utilizadorId;
+        }
+
+        public void setUtilizadorId(int utilizadorId) {
+            this.utilizadorId = utilizadorId;
+        }
+
+        public int getJogoId() {
+            return jogoId;
+        }
+
+        public void setJogoId(int jogoId) {
+            this.jogoId = jogoId;
+        }
+
+        public boolean isJogado() {
+            return isJogado;
+        }
+
+        public void setJogado(boolean jogado) {
+            isJogado = jogado;
+        }
+
+        public boolean isDesejado() {
+            return isDesejado;
+        }
+
+        public void setDesejado(boolean desejado) {
+            isDesejado = desejado;
+        }
+
+        public boolean isFavorito() {
+            return isFavorito;
+        }
+
+        public void setFavorito(boolean favorito) {
+            isFavorito = favorito;
+        }
+    }
+
+    public static class Produto {
+        private int id;
+        private String plataformaNome;
+        private int plataformaId;
+        private double preco;
+        private int quantidade;
+
+        public Produto(int id, String plataformaNome, int plataformaId, double preco, int quantidade) {
+            this.id = id;
+            this.plataformaNome = plataformaNome;
+            this.plataformaId = plataformaId;
+            this.preco = preco;
+            this.quantidade = quantidade;
+        }
+
+        // Getters and Setters
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getPlataformaNome() {
+            return plataformaNome;
+        }
+
+        public void setPlataformaNome(String plataformaNome) {
+            this.plataformaNome = plataformaNome;
+        }
+
+        public int getPlataformaId() {
+            return plataformaId;
+        }
+
+        public void setPlataformaId(int plataformaId) {
+            this.plataformaId = plataformaId;
+        }
+
+        public double getPreco() {
+            return preco;
+        }
+
+        public void setPreco(double preco) {
+            this.preco = preco;
+        }
+
+        public int getQuantidade() {
+            return quantidade;
+        }
+
+        public void setQuantidade(int quantidade) {
+            this.quantidade = quantidade;
+        }
+    }
+
+    public static class Tag {
+        private int id;
+        private String nome;
+
+        public Tag(int id, String nome) {
+            this.id = id;
+            this.nome = nome;
+        }
+
+        // Getters and Setters
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+    }
+
+    public static class Genero {
+        private int id;
+        private String nome;
+
+        public Genero(int id, String nome) {
+            this.id = id;
+            this.nome = nome;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
     }
 
 }

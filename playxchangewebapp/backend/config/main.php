@@ -85,7 +85,11 @@ return [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/jogo',
                     'extraPatterns' => [
-
+                        'GET group/{type}' => 'group',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{type}' => '<type:\w+>',
                     ],
                     'pluralize' => true
                 ],

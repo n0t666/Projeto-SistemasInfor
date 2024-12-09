@@ -58,7 +58,9 @@ class UserController extends ActiveController
 
                 if ($auth->checkAccess($user->id, 'cliente')) {
                     return [
-                       $user->profile->attributes,
+                        'id' => $user->id,
+                        'username' => $user->username,
+                        'token' => $user->auth_key
                     ];
                 }else{
                     throw new ForbiddenHttpException('Não possui permissões suficientes para fazer o login');

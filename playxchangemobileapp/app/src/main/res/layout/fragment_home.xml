@@ -20,7 +20,7 @@
         android:paddingBottom="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/carousel_jogos_populares"
+        android:id="@+id/rvPopular"
         android:layout_width="match_parent"
         android:layout_height="200sp"
         android:orientation="horizontal"
@@ -52,4 +52,14 @@
         android:textStyle="bold"
         android:paddingTop="32dp"
         android:paddingBottom="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecent"
+        android:layout_width="match_parent"
+        android:layout_height="200sp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+        />
 </LinearLayout>

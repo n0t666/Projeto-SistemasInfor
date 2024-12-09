@@ -207,15 +207,10 @@ class ScreenshotController extends Controller
             $model = $this->findModel($id);
             $jogo = $model->jogo_id;
             $filePath = Yii::getAlias('@screenshotsJogoPath') . '/' . $model->filename;
-
-            if(UtilsController::deleteFile($filePath)){
                 $model->delete();
                 Yii::$app->session->setFlash('success', 'Screenshot removida com sucesso!.');
                 return $this->redirect(['index', 'jogoId' => $jogo]);
-            }else{
-                Yii::$app->session->setFlash('error', 'Erro ao apagar, não foi possivel remover o arquivo.');
-                return $this->redirect(['index', 'jogoId' => $jogo]);
-            }
+
         }else{
             return $this->goHome();
         }

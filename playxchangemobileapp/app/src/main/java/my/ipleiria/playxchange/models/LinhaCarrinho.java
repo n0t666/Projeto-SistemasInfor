@@ -1,17 +1,18 @@
 package my.ipleiria.playxchange.models;
 
 public class LinhaCarrinho {
-    private int id,idProduto,nome,quantidade;
-    private String imagem;
-    private double preco;
+    private int id,idProduto,quantidade;
+    private String imagem,plataforma,nome;
+    private double preco,total;
 
-    public LinhaCarrinho(int id, int idProduto, int nome, int quantidade, double preco,String imagem) {
-        this.id = id;
+    public LinhaCarrinho(int idProduto, String nome, int quantidade, double preco,String imagem, double total, String plataforma) {
         this.idProduto = idProduto;
         this.nome = nome;
         this.quantidade = quantidade;
         this.preco = preco;
         this.imagem = imagem;
+        this.total = total;
+        this.plataforma = plataforma;
     }
 
     public int getQuantidade() {
@@ -38,11 +39,11 @@ public class LinhaCarrinho {
         this.idProduto = idProduto;
     }
 
-    public int getNome() {
+    public String getNome() {
         return nome;
     }
 
-    public void setNome(int nome) {
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
@@ -59,5 +60,21 @@ public class LinhaCarrinho {
     }
     public void setImagem(){
         this.imagem = imagem;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public String getPlataforma() {
+        return plataforma;
+    }
+
+    public void setPlataforma(String plataforma) {
+        this.plataforma = plataforma;
     }
 }

@@ -11,4 +11,15 @@
     <color name="border">#2C2C2C</color>
     <color name="navbar">#1A1A1A</color>
     <color name="mtrl_textinput_default_box_stroke_color">@color/border</color>
+
+
+    <color name="highlight">#BB86FC</color>
+    <color name="error">#FF3B30</color>
+    <color name="success">#28A745</color>
+    <color name="info">#17A2B8</color>
+    <color name="warning">#FFC107</color>
+    <color name="button_bg">#007BFF</color>
+    <color name="button_bg_hover">#0056b3</color>
+    <color name="shadow">#000000</color>
+    <color name="overlay">#121212CC</color>
 </resources>

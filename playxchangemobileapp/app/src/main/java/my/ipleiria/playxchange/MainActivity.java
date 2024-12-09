@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import my.ipleiria.playxchange.fragments.CarrinhoFragment;
 import my.ipleiria.playxchange.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -38,10 +39,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.bottomNavView);
         navigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         fragmentManager = getSupportFragmentManager();
-        carregarFragmentoInicial();
+        loadStartingFragment();
     }
 
-    private boolean carregarFragmentoInicial()
+    private boolean loadStartingFragment()
     {
         Menu menu = navigationView.getMenu();
         MenuItem item = menu.getItem(0);
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.cart) {
             setTitle(item.getTitle());
+            fragment = new CarrinhoFragment();
         } else if (item.getItemId() == R.id.orders) {
             setTitle(item.getTitle());
         } else if (item.getItemId() == R.id.user) {
