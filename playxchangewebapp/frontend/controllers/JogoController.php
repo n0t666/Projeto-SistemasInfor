@@ -60,7 +60,8 @@ class JogoController extends Controller
         $review = null;
 
         if($utilizadorId){
-            $review = Comentario::find()->where(['jogo_id' => $jogo->id, 'utilizador_id' => $utilizadorId])->one();
+            //$review = Comentario::find()->where(['jogo_id' => $jogo->id, 'utilizador_id' => $utilizadorId])->one();
+            $review = Yii::$app->user->identity->profile->getComentarios()->where(['jogo_id' => $jogo->id])->one();
             if(!$review){
                 $review = new Comentario();
                 $review->jogo_id = $jogo->id;
@@ -97,14 +98,22 @@ class JogoController extends Controller
         ]);
 
 
+        /*
         $interaction = UtilizadorJogo::find()
             ->where(['jogo_id' => $jogo->id, 'utilizador_id' => Yii::$app->user->id])
             ->one();
+        */
 
+        $interaction = $jogo->getUtilizadoresjogos()->where(['utilizador_id' => $utilizadorId])->one();
+
+
+        /*
         $avaliacao = Avaliacao::find()
             ->where(['jogo_id' => $jogo->id, 'utilizador_id' => Yii::$app->user->id])
             ->one();
+        */
 
+        $avaliacao = $jogo->getAvaliacoes()->where(['utilizador_id' => Yii::$app->user->id])->one();
 
         if(!$avaliacao){
             $avaliacao = new Avaliacao();

@@ -29,7 +29,6 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 
-import my.ipleiria.playxchange.adapters.CarouselAdapterJogos;
 import my.ipleiria.playxchange.adapters.CarouselAdapterScreenshots;
 import my.ipleiria.playxchange.models.Jogo;
 import my.ipleiria.playxchange.models.PlataformaItem;
@@ -182,11 +181,10 @@ public class GameDetailsActivity extends AppCompatActivity {
 
     private void saveCart(int produtoId, int quantidade){
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-        SingletonLoja.getInstance(getApplicationContext()).addProdutoCarrinho(getApplicationContext(), produtoId, quantidade, sharedPreferences.getString(Constants.TOKEN,""), new Response.Listener<String>() {
+        SingletonLoja.getInstance(getApplicationContext()).addProdutoCarrinhoAPI(getApplicationContext(), produtoId, quantidade, sharedPreferences.getString(Constants.TOKEN,""), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(getApplicationContext(), "Produto adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-
             }
         });
     }
@@ -206,7 +204,6 @@ public class GameDetailsActivity extends AppCompatActivity {
             if(!lJogo.getScreenshots().isEmpty()){
                 carouselAdapterScreenshots = new CarouselAdapterScreenshots(getApplicationContext(), lJogo.getScreenshots());
                 rvScreenshots.setAdapter(carouselAdapterScreenshots);
-                carouselAdapterScreenshots.notifyDataSetChanged();
             }
         }
     }

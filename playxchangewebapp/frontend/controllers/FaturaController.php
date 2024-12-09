@@ -203,7 +203,7 @@ class FaturaController extends Controller
                         Yii::$app->session->setFlash('error', 'Não é possível utilizar o código promocional inserido.');
                         return $this->redirect(['/carrinho']);
                     }
-                    $isCodigoUsed = $isCodigoUsed = $user->getCodigos()
+                    $isCodigoUsed = $user->getCodigos()
                         ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id'])
                         ->andWhere(['codigosPromocionais.id' => $codigo->id])
                         ->exists();
@@ -298,7 +298,6 @@ class FaturaController extends Controller
                             }
                         }
                     }else{
-                        die();
                         Yii::$app->session->setFlash('error', 'Ocorreu um erro inesperaado ao processar o pedido.');
                         throw new \Exception('Erro ao processar o pedido.');
                     }
@@ -306,8 +305,6 @@ class FaturaController extends Controller
                     Yii::$app->session->setFlash('error', 'Ocorreu um erro inesperaado ao processar o pedido.');
                     throw new \Exception('Erro ao processar o pedido.');
                 }
-
-
 
                 if ($codigo != null && !$isCodigoUsed) {
                     $desconto = $codigo->desconto;
@@ -324,6 +321,7 @@ class FaturaController extends Controller
                 }
 
                 $transaction->commit();
+                $carrinho->linhascarrinhos();
                 LinhaCarrinho::deleteAll(['carrinhos_id' => $carrinho->id]);
                 $carrinho->total = 0;
                 $carrinho->count = 0;

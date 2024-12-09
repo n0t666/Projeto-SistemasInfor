@@ -64,11 +64,9 @@ class AvaliacaoController extends Controller
                     throw new NotFoundHttpException('Jogo não encontrado.');
                 }
 
+                $avaliacao = $jogo->getAvaliacoes()->where(['utilizador_id' => $userId])->one();
 
-                $avaliacao = Avaliacao::findOne([
-                    'jogo_id' => $jogoId,
-                    'utilizador_id' => $userId
-                ]);
+
 
                 if (Yii::$app->request->isPost) {
                     $numEstrelas = Yii::$app->request->post('Avaliacao')['numEstrelas'];
@@ -103,7 +101,7 @@ class AvaliacaoController extends Controller
                                 Yii::$app->session->setFlash('info', 'A avaliação já estava com o mesmo valor.');
                             }
                         } elseif ($numEstrelas == '') {
-                            if(Comentario::find()->where(['jogo_id' => $jogoId, 'utilizador_id' => $userId])->exists()){
+                            if($jogo->getComentarios()->where(['utilizador_id' => $userId])->exists()){
                                 Yii::$app->session->setFlash('error', 'Não é possível remover estrelas em jogos que existam atividade.');
                                 return $this->redirect(['jogo/view', 'id' => $jogo->id]);
                             }
@@ -119,8 +117,6 @@ class AvaliacaoController extends Controller
                 }
 
             } catch (\Exception $e) {
-                var_dump($e->getMessage());
-                exit();
                 Yii::$app->session->setFlash('error', 'Ocorreu um erro ao processar a avaliação.');
                 return $this->goBack();
             }

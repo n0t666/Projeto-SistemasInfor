@@ -48,15 +48,21 @@ public class CarrinhoFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(Constants.TOKEN, null);
 
-        SingletonLoja.getInstance(getContext()).getCarrinho(getContext(),token, new Response.Listener<Carrinho>() {
+        SingletonLoja.getInstance(getContext()).getCarrinhoAPI(getContext(),token, new Response.Listener<Carrinho>() {
             @Override
             public void onResponse(Carrinho response) {
+                if (response == null || response.getLinhas() == null) {
+                    Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 carrinho = response;
-                lvLinhas.setAdapter(new CarrinhoAdapter(getContext(),carrinho.getLinhas()));
+                if(carrinho.getLinhas() == null || carrinho.getLinhas().isEmpty()){
+                    Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
+                }else{
+                    lvLinhas.setAdapter(new CarrinhoAdapter(getContext(),carrinho.getLinhas()));
+                }
             }
         });
-
-
 
 
 

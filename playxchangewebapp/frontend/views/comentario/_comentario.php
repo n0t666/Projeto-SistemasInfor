@@ -28,7 +28,7 @@ if (ComentarioController::isLikedByCurrentUser($model->id)) {
 
 <div class="review-card mb-4 p-3 rounded shadow">
     <div class="d-flex align-items-start">
-        <img src="<?= $model->utilizador->fotoPerfil ?>" alt="User Photo" class="rounded-circle user-photo me-3"
+        <img src="<?= $model->utilizador->getFotoPerfil() ?>" alt="User Photo" class="rounded-circle user-photo me-3"
              width="50" height="50">
         <div class="review-content">
             <div class="d-flex justify-content-between align-items-center">
@@ -39,7 +39,7 @@ if (ComentarioController::isLikedByCurrentUser($model->id)) {
                     if ($avaliacao) {
                         echo StarRating::widget([
                             'name' => 'current rating',
-                            'value' => $avaliacao->numEstrelas,
+                            'value' => (float)$avaliacao->numEstrelas,
                             'pluginOptions' => [
                                 'size' => 'xs',
                                 'showClear' => false,

@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -153,12 +154,11 @@ public class SingletonLoja {
     //endregion
 
     //region - Cart related API
-
-    public void addProdutoCarrinho(final Context context, final int id, final int quantidade, String token, Response.Listener<String> listener) {
+    public void addProdutoCarrinhoAPI(final Context context, final int id, final int quantidade, String token, Response.Listener<String> listener) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
-            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "carrinhos/adicionar?access-token=" + token, new Response.Listener<String>() {
+            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "carrinhos/linhas/adicionar?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     listener.onResponse(response);
@@ -183,7 +183,7 @@ public class SingletonLoja {
         }
     }
 
-    public void getCarrinho(final Context context,String token, Response.Listener<Carrinho> listener){
+    public void getCarrinhoAPI(final Context context, String token, Response.Listener<Carrinho> listener){
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
@@ -200,6 +200,66 @@ public class SingletonLoja {
                     Log.e("ERROR", error.toString());
                 }
             });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void deleteProdutoCarrinhoAPI(final Context context, final int id, String token, Response.Listener<String> listener) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.DELETE, Constants.IP_ADDRESS + "carrinhos/linhas/" + Integer.toString(id) +  "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    listener.onResponse(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void changeQuantityProdutoCarrinhoAPI(final Context context, final int id, final String token ,final int quantidade, String tipo, Response.Listener<String> listener) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.PUT, Constants.IP_ADDRESS + "carrinhos/linhas/" + Integer.toString(id) + "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    listener.onResponse(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("quantidade", String.valueOf(quantidade));
+                    params.put("tipo", tipo);
+                    return params;
+
+                }
+            };
             volleyQueue.add(req);
         }
     }

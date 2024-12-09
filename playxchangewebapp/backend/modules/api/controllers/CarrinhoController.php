@@ -18,7 +18,8 @@ class CarrinhoController extends ActiveController
 {
     public $modelClass = 'common\models\Carrinho';
 
-    public function actions(){
+    public function actions()
+    {
         $actions = parent::actions();
         unset($actions['create'], $actions['update'], $actions['delete'], $actions['index'], $actions['view']);
         return $actions;
@@ -42,7 +43,8 @@ class CarrinhoController extends ActiveController
         throw new \yii\web\ForbiddenHttpException('No authentication');
     }
 
-    public function actionIndex(){
+    public function actionIndex()
+    {
         $user = Yii::$app->user->identity;
 
         if (!$user) {
@@ -51,18 +53,18 @@ class CarrinhoController extends ActiveController
 
         $carrinho = Carrinho::find()->where(['utilizador_id' => $user->id])->one();
 
-        if(!$carrinho){
+        if (!$carrinho) {
             $carrinho = new Carrinho();
             $carrinho->utilizador_id = $user->id;
-            if(!$carrinho->save()){
+            if (!$carrinho->save()) {
                 throw new BadRequestHttpException('Falha ao criar o carrinho');
             }
         }
         $itensCarrinho = null;
 
-        if($carrinho->linhascarrinhos){
+        if ($carrinho->linhascarrinhos) {
             $itensCarrinho = [];
-            foreach($carrinho->linhascarrinhos as $linha){
+            foreach ($carrinho->linhascarrinhos as $linha) {
                 $produto = $linha->produtos;
                 $itensCarrinho[] = [
                     'produto_id' => $linha->produtos_id,
@@ -71,22 +73,20 @@ class CarrinhoController extends ActiveController
                     'plataforma_nome' => $produto->plataforma->nome,
                     'quantidade' => $linha->quantidade,
                     'preco' => $produto->preco,
-                    'total' =>  $linha->quantidade * $produto->preco,
+                    'total' => $linha->quantidade * $produto->preco,
                     'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $produto->jogo->imagemCapa,
                 ];
-
-
-
             }
         }
-        return[
+        return [
             'carrinho' => $carrinho->attributes,
             'itensCarrinho' => $itensCarrinho,
 
         ];
     }
 
-    public function actionCreate(){
+    public function actionCreate()
+    {
         $body = Yii::$app->request->getBodyParams();
 
         $user = Yii::$app->user->identity;
@@ -97,14 +97,15 @@ class CarrinhoController extends ActiveController
 
         $carrinho = new Carrinho();
         $carrinho->utilizador_id = $user->id;
-        if(!$carrinho->save()){
+        if (!$carrinho->save()) {
             throw new BadRequestHttpException('Falha ao criar o carrinho');
         }
 
         return $carrinho->attributes;
     }
 
-    public function actionAddProduto(){
+    public function actionAddProduto()
+    {
         $body = Yii::$app->request->getBodyParams();
         $user = Yii::$app->user->identity;
 
@@ -119,7 +120,7 @@ class CarrinhoController extends ActiveController
         }
 
 
-        if(!isset($body['produto_id']) || !isset($body['quantidade']) ){
+        if (!isset($body['produto_id']) || !isset($body['quantidade'])) {
             throw new BadRequestHttpException('Dados incompletos');
         }
 
@@ -127,12 +128,12 @@ class CarrinhoController extends ActiveController
             ->where(['carrinhos_id' => $carrinho->id, 'produtos_id' => $body['produto_id']])
             ->one();
 
-        if($linhaCarrinho){
+        if ($linhaCarrinho) {
             $linhaCarrinho->quantidade += $body['quantidade'];
             if (!$linhaCarrinho->save()) {
                 throw new BadRequestHttpException('Falha ao atualizar o item no carrinho');
             }
-        }else{
+        } else {
             $linhaCarrinho = new LinhaCarrinho();
             $linhaCarrinho->carrinhos_id = $carrinho->id;
             $linhaCarrinho->produtos_id = $body['produto_id'];
@@ -145,12 +146,14 @@ class CarrinhoController extends ActiveController
 
         $carrinho->recalculateTotal();
 
-        return[
+        return [
             'carrinho' => $carrinho->attributes,
         ];
     }
 
-    public function actionDecrementProduto(){
+
+    public function alterarQuantidade($idproduto)
+    {
         $user = Yii::$app->user->identity;
         $body = Yii::$app->request->getBodyParams();
 
@@ -158,46 +161,64 @@ class CarrinhoController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $carrinho = Carrinho::find()->where(['utilizador_id' => $user->id])->one();
+
+        $carrinho = $user->profile->carrinho;
 
         if (!$carrinho) {
             throw new NotFoundHttpException('Carrinho não encontrado.');
         }
 
-        if(!$carrinho->linhascarrinhos){
+        if (!$carrinho->linhascarrinhos) {
             throw new NotFoundHttpException('O seu carrinho está vazio');
         }
 
-        if(!isset($body['produto_id']) || !isset($body['quantidade']) ){
+        if (!isset($body['produto_id']) || !isset($body['quantidade']) || !isset($body['tipo'])) {
             throw new BadRequestHttpException('Dados incompletos');
         }
 
-        $produto_id = $body['produto_id'];
+        $produto_id = $idproduto;
         $quantidade = $body['quantidade'];
+        $tipo = $body['tipo'];
 
-        if($quantidade != null && $quantidade < 0){
+        if ($quantidade != null && $quantidade < 0) {
             throw new BadRequestHttpException('Não são aceitadas quantidades abaixo de 0');
         }
 
-        $linhaCarrinho = LinhaCarrinho::find()->where(['carrinhos_id' => $carrinho->id,'produtos_id' => $produto_id])->one();
+        //$linhaCarrinho = LinhaCarrinho::find()->where(['carrinhos_id' => $carrinho->id,'produtos_id' => $produto_id])->one();
+        $linhaCarrinho = $carrinho->getLinhasCarrinhos()->where(['produtos_id', $produto_id])->one();
 
+        if (!$linhaCarrinho) {
+            throw new NotFoundHttpException('Não foi possível encontrar a linha especificada');
+        }
 
-        if($linhaCarrinho){
-            if($linhaCarrinho->quantidade >  $quantidade){
-                $linhaCarrinho->quantidade -=  $quantidade;
-            }elseif ($linhaCarrinho->quantidade ==  $quantidade){
-                $linhaCarrinho->delete();
-            }else{
-                throw new BadRequestHttpException('O valor da quantidade não é válido.');
-            }
-            if (!$linhaCarrinho->save()) {
-                throw new ErrorException('Ocoreu um erro ao fazer a atualização da linha do carrinho');
-            }
+        switch ($tipo) {
+            case '+':
+                $linhaCarrinho->quantidade += $quantidade;
+                break;
+            case '-':
+                if ($linhaCarrinho->quantidade > $quantidade) {
+                    $linhaCarrinho->quantidade -= $quantidade;
+                } elseif ($linhaCarrinho->quantidade == $quantidade) {
+                    $linhaCarrinho->delete();
+                    return 'Linha do carrinho removida com sucesso';
+                } else {
+                    throw new BadRequestHttpException('O valor da quantidade não é válido.');
+                }
+                break;
+            default:
+                throw new NotFoundHttpException('Não foi possível encontrar ação da linha especificada');
         }
 
         if (!$linhaCarrinho->save()) {
-            throw new ErrorException('Ocoreu um erro ao fazer a atualização da linha do carrinho');
+            throw new \Exception('Ocorreu um problema ao guardar a alteração do carrinho');
         }
+
+        $carrinho->recalculateTotal();
+
+        return [
+            'message' => 'Linha do carrinho alteradas com sucesso',
+        ];
+
     }
 
     public function actionClear()
@@ -214,55 +235,58 @@ class CarrinhoController extends ActiveController
             throw new NotFoundHttpException('Carrinho não encontrado.');
         }
 
-        if(!$carrinho->linhascarrinhos){
+        if (!$carrinho->linhascarrinhos) {
             throw new NotFoundHttpException('O seu carrinho está vazio');
         }
 
-        $linhas =  LinhaCarrinho::deleteAll(['carrinhos_id' => $carrinho->id]);
+        $linhas = LinhaCarrinho::deleteAll(['carrinhos_id' => $carrinho->id]);
 
         $carrinho->total = null;
         $carrinho->count = 0;
         $carrinho->save();
     }
 
-    public function actionApagarLinha(){
+    public function actionApagarLinha($idproduto)
+    {
         $user = Yii::$app->user->identity;
-        $body  = Yii::$app->request->getBodyParams();
 
 
         if (!$user) {
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $carrinho = Carrinho::find()->where(['utilizador_id' => $user->id])->one();
-
+        //$carrinho = Carrinho::find()->where(['utilizador_id' => $user->id])->one();
+        $carrinho = $user->profile->carrinho;
         if (!$carrinho) {
             throw new NotFoundHttpException('Carrinho não encontrado.');
         }
 
-        if(!$carrinho->linhascarrinhos){
+        if (!$carrinho->linhascarrinhos) {
             throw new NotFoundHttpException('O seu carrinho está vazio');
         }
 
-        $produto_id = $body['produtos_id'];
+        if (!$idproduto) {
+            throw new BadRequestHttpException('Dados incompletos');
+        }
 
-        $linha = LinhaCarrinho::find()->where(['carrinhos_id' => $carrinho->id,'produtos_id' => $produto_id])->one();
 
-        if(!$linha){
+        //$linha = LinhaCarrinho::find()->where(['carrinhos_id' => $carrinho->id,'produtos_id' => $produto_id])->one();
+        $linha = $carrinho->getLinhascarrinhos()->where(['produtos_id' => $idproduto])->one();
+        if (!$linha) {
             throw new NotFoundHttpException('Não foi possivel encontrar a linha especificada');
         }
 
         $linha->delete();
 
         $carrinho->recalculateTotal();
+
+        $itensCarrinho = null;
+
+        return [
+            'message' => 'Linha carrinho apagado com sucesso.',
+        ];
+
     }
-
-
-
-
-
-
-
 
 
 }

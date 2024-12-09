@@ -10,10 +10,10 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/title_jogos_populares"
+        android:id="@+id/tvPopular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Jogos Populares"
+        android:text="@string/txt_populares"
         android:textColor="@color/text"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -30,11 +30,11 @@
         />
 
     <Button
-        android:id="@+id/btn_ver_catalogo_completo"
+        android:id="@+id/btnCatalgo"
         style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ver Catálogo Completo"
+        android:text="@string/txt_ver_catalogo"
         android:textColor="@color/white"
         android:backgroundTint="@color/accent"
         android:drawableStart="@drawable/ic_arrow_right_alt_24"
@@ -43,10 +43,10 @@
         android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/title_ultimos_lancamentos"
+        android:id="@+id/tvLast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Últimos Lançamentos"
+        android:text="@string/txt_last_releases"
         android:textColor="@color/text"
         android:textSize="24sp"
         android:textStyle="bold"

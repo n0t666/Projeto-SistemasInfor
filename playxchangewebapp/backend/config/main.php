@@ -75,10 +75,14 @@ return [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/carrinho',
                     'extraPatterns' => [
-                        'POST adicionar' => 'add-produto',
+                        'POST linhas/adicionar' => 'add-produto',
                         'DELETE limpar' => 'clear',
-                        'DELETE linha-apagar' => 'apagar-linha',
-                        'POST decrementar' => 'decrement-produto',
+                        'DELETE linhas/{idproduto}' => 'apagar-linha',
+                        'PUT linhas/{idproduto}' => 'alterar-quantidade',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{idproduto}' => '<idproduto:\\d+>',
                     ],
                     'pluralize' => true
                 ],

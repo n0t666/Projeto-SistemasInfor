@@ -9,16 +9,17 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import my.ipleiria.playxchange.R;
-import my.ipleiria.playxchange.models.Carrinho;
 import my.ipleiria.playxchange.models.LinhaCarrinho;
+import my.ipleiria.playxchange.models.SingletonLoja;
 import my.ipleiria.playxchange.utils.Constants;
 
 public class CarrinhoAdapter extends BaseAdapter {
@@ -91,21 +92,58 @@ public class CarrinhoAdapter extends BaseAdapter {
             tvQuantidade.setText(String.valueOf(linha.getQuantidade()));
             tvPlataforma.setText(linha.getPlataforma());
 
+            SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+            String token = sharedPreferences.getString(Constants.TOKEN, null);
+
             Glide.with(context)
                     .load(linha.getImagem())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivCapa);
 
-            ivDelete.setOnClickListener(v -> {
+            ivDelete.setOnClickListener(new View.OnClickListener() {
+                int produtoId = linha.getIdProduto();
+                @Override
+                public void onClick(View v) {
+                    if(token != null){
+                        SingletonLoja.getInstance(context).deleteProdutoCarrinhoAPI(context,produtoId,token, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                linhas.remove(linha);
+                                notifyDataSetChanged();
+                                Toast.makeText(context, "Produto removido do carrinho", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
+                    }
+                }
             });
 
             btnDec.setOnClickListener(v -> {
+                if(token!=null){
+                    if(linha.getQuantidade() > 1){
+                        SingletonLoja.getInstance(context).changeQuantityProdutoCarrinhoAPI(context, linha.getIdProduto(), token, 1,"-" ,new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                linha.setQuantidade(linha.getQuantidade()-1);
+                                notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }
 
 
             });
 
             btnInc.setOnClickListener(v -> {
+                if(token!=null){
+                    SingletonLoja.getInstance(context).changeQuantityProdutoCarrinhoAPI(context, linha.getIdProduto(), token, 1,"+" ,new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            linha.setQuantidade(linha.getQuantidade()+1);
+                            notifyDataSetChanged();
+                        }
+                    });
+                }
 
 
             });

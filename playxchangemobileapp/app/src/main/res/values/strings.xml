@@ -33,4 +33,7 @@
     <string name="txt_choose_plataforma">Escolha uma plataforma</string>
     <string name="txt_quantity_val">0</string>
     <string name="txt_screenshots">Screenshots</string>
+    <string name="txt_populares">Jogos Populares</string>
+    <string name="txt_ver_catalogo">Ver Catálogo Completo</string>
+    <string name="txt_last_releases">Últimos Lançamentos</string>
 </resources>

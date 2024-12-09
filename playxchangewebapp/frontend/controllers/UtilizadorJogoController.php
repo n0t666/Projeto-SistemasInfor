@@ -56,7 +56,7 @@ class UtilizadorJogoController extends Controller
                 }
 
                 $user = Yii::$app->user->identity->id;
-                $userJogo = UtilizadorJogo::find()->where(['utilizador_id' => $user, 'jogo_id' => $idJogo])->one();
+                $userJogo = $jogo->getUtilizadoresjogos()->where(['utilizador_id' => $user])->one();
 
                 if (!$userJogo) { // Caso o utilizador não tenha feito qualquer tipo de interação com o jogo, criar uma nova
                     $userJogo = new UtilizadorJogo();

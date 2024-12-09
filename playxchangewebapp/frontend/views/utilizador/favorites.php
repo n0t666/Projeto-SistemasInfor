@@ -30,7 +30,7 @@ $this->title = 'Favoritos por ' . $user->username;
                 'dataProvider' => $dataProvider,
                 'itemView' => function ($model, $key, $index, $widget) {
                     $jogo = $model->jogo;
-                    $viewUrl = \yii\helpers\Url::to(['jogo/view', 'id' => $model->id]);
+                    $viewUrl = \yii\helpers\Url::to(['jogo/view', 'id' => $jogo->id]);
 
                     return '<a href="' . $viewUrl . '" class="card-link">' . $this->render('/jogo/_jogo', [
                             'jogo' => $jogo,

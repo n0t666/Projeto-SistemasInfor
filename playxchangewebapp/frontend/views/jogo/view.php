@@ -343,7 +343,6 @@ $this->title = $model->nome;
                         <div class="col-12">
                             <?= StarRating::widget(['model' => $avaliacao, 'attribute' => 'numEstrelas',
                                 'name' => 'rating_35',
-                                'value' => 3,
                                 'pluginOptions' => [
                                     'size' => 'lg',
                                     'showClear' => true,

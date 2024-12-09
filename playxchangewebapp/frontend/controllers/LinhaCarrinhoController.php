@@ -49,7 +49,8 @@ class LinhaCarrinhoController extends Controller
         if (Yii::$app->user->can('adicionarItensCarrinho')) {
             $model = new LinhaCarrinho();
             $userId = Yii::$app->user->id;
-            $carrinho = Carrinho::find()->where(['utilizador_id' => $userId])->one();
+            $carrinho = Yii::$app->user->identity->profile->carrinho;
+            //$carrinho = Carrinho::find()->where(['utilizador_id' => $userId])->one();
             if (!$userId) {
                 throw new NotAcceptableHttpException();
             }
@@ -66,7 +67,8 @@ class LinhaCarrinhoController extends Controller
                 if ($model->load(Yii::$app->request->post())) {
                     $model->carrinhos_id = $carrinho->id;
                     $model->produtos_id = Yii::$app->request->post('LinhaCarrinho')['produtos_id'];
-                    $itemExistente = LinhaCarrinho::find()->where(['produtos_id' => $model->produtos_id, 'carrinhos_id' => $model->carrinhos_id])->one();
+                    $itemExistente = $carrinho->getLinhascarrinhos()->where(['produtos_id' => $model->produtos_id])->one();
+                    //$itemExistente = LinhaCarrinho::find()->where(['produtos_id' => $model->produtos_id, 'carrinhos_id' => $model->carrinhos_id])->one();
 
 
                     if ($itemExistente) {
@@ -124,7 +126,8 @@ class LinhaCarrinhoController extends Controller
             try {
                 if($quantidades){
                     foreach ($quantidades as $produtoId => $quantidade) {
-                        $linhaCarrinho = LinhaCarrinho::findOne(['produtos_id' => $produtoId, 'carrinhos_id' => $carrinho->id]);
+                        //$linhaCarrinho = LinhaCarrinho::findOne(['produtos_id' => $produtoId, 'carrinhos_id' => $carrinho->id]);
+                        $linhaCarrinho = $carrinho->getLinhascarrinhos()->where(['produtos_id' => $produtoId])->one();
                         if ($linhaCarrinho !== null) {
                             $linhaCarrinho->quantidade = $quantidade;
                             if (!$linhaCarrinho->save()) {
@@ -174,8 +177,8 @@ class LinhaCarrinhoController extends Controller
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
-                $linhaCarrinho = LinhaCarrinho::findOne(['carrinhos_id' => $carrinho->id, 'produtos_id' => $produtoId]);
-
+                //$linhaCarrinho = LinhaCarrinho::findOne(['carrinhos_id' => $carrinho->id, 'produtos_id' => $produtoId]);
+                $linhaCarrinho = $carrinho->getLinhascarrinhos()->where(['produtos_id' => $produtoId])->one();
                 if ($linhaCarrinho !== null) {
                     $carrinho->total -= ($linhaCarrinho->quantidade * $linhaCarrinho->produtos->preco);
                     $carrinho->count -= $linhaCarrinho->quantidade;
