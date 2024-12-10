@@ -298,6 +298,7 @@ class FaturaController extends Controller
                             }
                         }
                     }else{
+
                         Yii::$app->session->setFlash('error', 'Ocorreu um erro inesperaado ao processar o pedido.');
                         throw new \Exception('Erro ao processar o pedido.');
                     }
@@ -321,7 +322,6 @@ class FaturaController extends Controller
                 }
 
                 $transaction->commit();
-                $carrinho->linhascarrinhos();
                 LinhaCarrinho::deleteAll(['carrinhos_id' => $carrinho->id]);
                 $carrinho->total = 0;
                 $carrinho->count = 0;
@@ -333,6 +333,8 @@ class FaturaController extends Controller
                 if(isset($transaction)){
                     $transaction->rollBack();
                 }
+                var_dump($e);
+                die();
                 Yii::$app->session->setFlash('error', 'Erro ao processar a fatura.');
                 return $this->redirect(['/carrinho']);
             }

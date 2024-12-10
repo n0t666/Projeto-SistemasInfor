@@ -20,11 +20,7 @@ $(document).ready(function () {
             var input = $(this).siblings('.quantity-input');
             if (input) {
                 var quantidade = parseInt(input.val());
-                console.log(quantidade);
-                console.log(input);
-                if (quantidade < 5) {
-                    input.val(quantidade + 1);
-                }
+                input.val(quantidade + 1);
             }
         });
 
@@ -32,7 +28,7 @@ $(document).ready(function () {
 
     $('.quantity-input').each(function () {
         $(this).on('change', function () {
-            if (this.value === '' || this.value === '0' || this.value > 5) {
+            if (this.value === '' || this.value === '0' || this.value < 0) {
                 this.value = 1;
             }
         });

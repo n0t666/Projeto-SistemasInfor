@@ -88,7 +88,6 @@ class SiteController extends Controller
                 'dataLancamento' => SORT_DESC,
                 'COUNT(u.id)' => SORT_DESC,
             ])
-            ->where(['u.isJogado' => 1])
             ->limit(4);
 
         $jogosRecentes = $query->all();

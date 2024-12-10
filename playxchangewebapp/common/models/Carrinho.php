@@ -104,7 +104,7 @@ class Carrinho extends \yii\db\ActiveRecord
         $total = 0;
         $totalProdutos = 0;
         foreach ($this->linhascarrinhos as $linhaCarrinho) {
-            $total += $linhaCarrinho->produtos->preco * $linhaCarrinho->quantidade;
+            $total += ($linhaCarrinho->produtos->preco) * ($linhaCarrinho->quantidade);
             $totalProdutos += $linhaCarrinho->quantidade;
         }
         $this->total = $total;

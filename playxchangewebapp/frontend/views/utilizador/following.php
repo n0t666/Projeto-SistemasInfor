@@ -22,8 +22,10 @@ $this->registerCssFile('@web/css/followList.css');
                 <div class="list-group bg">
                     <div class="list-group-item d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
-                            <img src="<?= $following->fotoPerfil  ?>" class="rounded-circle me-3" alt="User Image">
-                            <span class="fw-bold"><?= $following->user->username ?></span>
+                            <a href="<?= Url::to(['utilizador/profile', 'username' => $following->user->username]) ?>" class="d-flex align-items-center text-decoration-none fw">
+                                <img src="<?= $following->getFotoPerfil()  ?>" class="rounded-circle me-3" alt="User Image" style="width: 40px; height: 40px;">
+                                <span class="fw-bold"><?= Html::encode($following->user->username) ?></span>
+                            </a>
                         </div>
 
                         <?php if (!Yii::$app->user->isGuest): ?>
@@ -40,7 +42,7 @@ $this->registerCssFile('@web/css/followList.css');
                             <?= Html::hiddenInput('userId', $following->id) ?>
 
                             <?= Html::submitButton($buttonText, [
-                                'class' => 'btn btn-outline-primary px-4 py-2',
+                                'class' => 'btn btn-outline-primary px-3 py-1 rounded-pill',
                             ]) ?>
 
                             <?php ActiveForm::end(); ?>

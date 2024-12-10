@@ -59,7 +59,6 @@ $this->registerJsFile(
                                                 'class' => 'quantity-input',
                                                 'required' => true,
                                                 'min' => 1,
-                                                'max' => 5,
                                             ]) ?>
                                             <span class="fa fa-angle-right inc qtybtn"></span>
                                         </div>

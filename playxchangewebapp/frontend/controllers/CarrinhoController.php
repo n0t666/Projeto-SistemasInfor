@@ -48,14 +48,6 @@ class CarrinhoController extends Controller
                 $user = Yii::$app->user->identity->profile;
                 $model = $user->carrinho;
 
-                if (!$model) {
-                    $model = new Carrinho();
-                    $model->utilizador_id = $user->id;
-
-                    if (!$model->save()) {
-                        throw new \Exception('Erro ao criar um novo carrinho.');
-                    }
-                }
 
                 return $this->render('index', [
                     'model' => $model,

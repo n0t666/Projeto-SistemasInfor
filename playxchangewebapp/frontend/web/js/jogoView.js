@@ -22,13 +22,11 @@ $(function(){
 
     $('#increment').on('click', function () {
         var quantidade = parseInt($('#linhacarrinho-quantidade').val());
-        if(quantidade < 5){
-            $('#linhacarrinho-quantidade').val(quantidade + 1);
-        }
+        $('#linhacarrinho-quantidade').val(quantidade + 1);
     });
 
     $('#linhacarrinho-quantidade').change(function() { // Caso o cliente tente apagar a informação colocar sempre o número 1
-        if (this.value === '' || this.value === '0' || this.value > 5) {
+        if (this.value === '' || this.value === '0' || this.value < 0) {
             this.value = 1;
         }
     });

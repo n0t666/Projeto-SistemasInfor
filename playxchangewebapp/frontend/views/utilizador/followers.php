@@ -23,7 +23,7 @@ $this->registerCssFile('@web/css/followList.css');
                     <div class="list-group-item d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <a href="<?= Url::to(['utilizador/profile', 'username' => $follower->user->username]) ?>" class="d-flex align-items-center text-decoration-none fw">
-                                <img src="<?= $follower->fotoPerfil  ?>" class="rounded-circle me-3" alt="User Image" style="width: 40px; height: 40px;">
+                                <img src="<?= $follower->getFotoPerfil()  ?>" class="rounded-circle me-3" alt="User Image" style="width: 40px; height: 40px;">
                                 <span class="fw-bold"><?= $follower->user->username ?></span>
                             </a>
                         </div>

@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\models\Carrinho;
 use common\models\Userdata;
 use Yii;
 use yii\base\Model;
@@ -77,8 +78,14 @@ class SignupForm extends Model
                 $userdata->user_id = $user->id;
                 $userdata->nif = $this->nif;
                 $userdata->nome = $this->nome;
-                if($userdata->save(false)){
+                $carrinho = new Carrinho();
+                $carrinho->utilizador_id = $user->id;
+
+                if($userdata->save(false) && $carrinho->save(false)){
                     $transaction->commit();
+                    $carrinho = new Carrinho();
+                    $carrinho->utilizador_id = $user->id;
+                    $carrinho->save();
                     return $this->sendEmail($user);
                 }else{
                     $transaction->rollBack();

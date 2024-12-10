@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\models\Carrinho;
 use common\models\Userdata;
 use Yii;
 use yii\base\Model;
@@ -90,8 +91,15 @@ class SignupForm extends Model
                 $userdata->user_id = $user->id;
                 $userdata->nif = $this->nif;
                 $userdata->nome = $this->nome;
+
                 if($userdata->save(false)){
                     $transaction->commit();
+                    // Necessário de fazer fora do commit pq senão validação irá falhar por não ter o user existe (visto que só no final do commit é que de facto o user passa a existir)
+                    if($role->name == 'cliente'){
+                        $carrinho = new Carrinho();
+                        $carrinho->utilizador_id = $user->id;
+                        $carrinho->save();
+                    }
                     return $this->sendEmail($user);
                 }else{
                     $transaction->rollBack();
