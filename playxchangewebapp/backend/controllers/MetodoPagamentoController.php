@@ -8,6 +8,7 @@ use common\models\UploadForm;
 use Yii;
 use common\models\MetodoPagamento;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -172,8 +173,11 @@ class MetodoPagamentoController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('removerMetodosPagamento')) {
-            $this->findModel($id)->delete();
-
+            try {
+                $this->findModel($id)->delete();
+            }catch (\Exception $e){
+              throw new \Exception('Não é possível apagar este método de pagamento pois está a ser utilizado em outras encomendas.');
+            }
             return $this->redirect(['index']);
         }else{
             return $this->goHome();

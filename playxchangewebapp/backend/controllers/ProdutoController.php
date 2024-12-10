@@ -57,15 +57,22 @@ class ProdutoController extends Controller
      * Lists all Produto models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($jogoId)
     {
         if(Yii::$app->user->can('verTudo')){
+            $jogo = Jogo::findOne($jogoId);
+            if($jogo == null){
+                throw new NotFoundHttpException('O jogo não existe.');
+            }
+
+
             $searchModel = new ProdutoSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$jogoId);
 
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'jogo' => $jogo,
             ]);
         }else{
             return $this->goHome();
@@ -96,11 +103,18 @@ class ProdutoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($jogoId)
     {
         if(Yii::$app->user->can('adicionarProdutos')){
             $model = new Produto();
-            $jogos = Jogo::find()->all();
+            $jogo = Jogo::findOne($jogoId);
+
+            if($jogo == null){
+                throw new NotFoundHttpException('O jogo não existe.');
+            }
+
+            $model->jogo_id = $jogo->id;
+
             $plataformas = Plataforma::find()->all();
 
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -109,7 +123,6 @@ class ProdutoController extends Controller
 
             return $this->render('create', [
                 'model' => $model,
-                'jogos' => $jogos,
                 'plataformas' => $plataformas,
             ]);
         }else{

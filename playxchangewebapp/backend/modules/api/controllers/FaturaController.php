@@ -59,7 +59,7 @@ class FaturaController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $faturas = Fatura::find()->where(['utilizador_id' => $user->id])->all();
+        $faturas = $user->profile->faturas;
         $response = null;
 
 

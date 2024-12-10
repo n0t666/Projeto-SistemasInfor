@@ -79,7 +79,6 @@ if (!empty($this->fotoPerfil) && file_exists(Yii::$app->user->identity->profile-
                             ['label' => 'Códigos Promocionais', 'icon' => 'tags', 'url' => ['/codigo-promocional'], 'active' => Yii::$app->controller->id === 'codigo-promocional'],
                             ['label' => 'Encomendas', 'icon' => 'shopping-basket', 'url' => ['/fatura'], 'active' => Yii::$app->controller->id === 'fatura'],
                             ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/chave'], 'active' => Yii::$app->controller->id === 'chave'],
-                            ['label' => 'Produtos', 'icon' => 'cubes', 'url' => ['/produto'], 'active' => Yii::$app->controller->id === 'produto'],
                             ['label' => 'Métodos de Pagamento', 'icon' => 'credit-card', 'url' => ['/metodo-pagamento'], 'active' => Yii::$app->controller->id === 'metodo-pagamento'],
                             ['label' => 'Métodos de Envio', 'icon' => 'truck', 'url' => ['/metodo-envio'], 'active' => Yii::$app->controller->id === 'metodo-envio'],
                         ],

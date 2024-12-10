@@ -8,8 +8,9 @@ use yii\grid\GridView;
 /* @var Jogo[] $jogos */
 /* @var Plataforma[] $plataformas */
 
-$this->title = 'Produtos';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Produtos para o Jogo: ' . $jogo->nome;
+$this->params['breadcrumbs'][] = ['label' => $jogo->nome , 'url' => ['jogo/view', 'id' => $jogo->id]];
+$this->params['breadcrumbs'][] = 'Produtos';
 ?>
 <div class="container-fluid">
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -20,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="row mb-2">
                         <div class="col-md-12">
                             <?php if (Yii::$app->user->can('adicionarProdutos')): ?>
-                            <?= Html::a('Criar Produto', ['create'], ['class' => 'btn btn-success']) ?>
+                            <?= Html::a('Criar Produto', ['create', 'jogoId' => $jogo->id], ['class' => 'btn btn-success']) ?>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -33,12 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'yii\grid\SerialColumn'],
 
                             //'id',
+                            /*
                             [
                                 'attribute'=>'jogo_id',
                                 'content'=>function($model){
                                     return $model->jogo->nome;
                                 }
                             ],
+                            */
                             [
                                 'attribute'=>'plataforma_id',
                                 'content'=>function($model){

@@ -1,4 +1,6 @@
 <?php
+
+use yii\bootstrap5\Toast;
 use yii\helpers\Html;
 ?>
 <div class="card">
@@ -44,3 +46,33 @@ use yii\helpers\Html;
     </div>
     <!-- /.login-card-body -->
 </div>
+
+<?php
+echo Html::beginTag('div', ['id' => 'messages-holder', 'class' => 'position-fixed top-0 end-0 p-3', 'style' => 'z-index: 1050;']);
+if (Yii::$app->session->hasFlash('success')) {
+    echo Toast::widget([
+        'title' => 'Sucesso',
+        'body' => Yii::$app->session->getFlash('success'),
+        'options' => [
+            'class' => 'toast fade show bg-success text-white',
+            'data-autohide' => 'true',
+            'data-delay' => 100,
+            'id' => 'success-toast',
+        ]
+    ]);
+}
+
+if (Yii::$app->session->hasFlash('error')) {
+    echo Toast::widget([
+        'title' => 'Erro',
+        'body' => Yii::$app->session->getFlash('error'),
+        'options' => [
+            'class' => 'toast fade show bg-danger text-white',
+            'data-autohide' => 'true',
+            'data-delay' => 100,
+            'id' => 'error-toast',
+        ]
+    ]);
+}
+echo Html::endTag('div');
+?>

@@ -60,10 +60,25 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'format' => 'raw',
                                 'content' => function ($model) {
                                     if (Yii::$app->user->can('verTudo')) {
-                                        return Html::a('Ver Screenshots', ['screenshot/index', 'jogoId' => $model->id], ['class' => 'btn btn-info']);
+                                        return Html::a('<i class="fas fa-image"></i>', ['screenshot/index', 'jogoId' => $model->id], [
+                                            'class' => 'btn btn-info btn-sm',
+                                            'encode' => false,
+                                        ]);
                                     }
                                     return '';
-                                }
+                                },
+                            ],
+                            [
+                                'format' => 'raw',
+                                'content' => function ($model) {
+                                    if (Yii::$app->user->can('verTudo')) {
+                                        return Html::a('<i class="fas fa-box"></i>', ['produto/index', 'jogoId' => $model->id], [
+                                            'class' => 'btn btn-success btn-sm',
+                                            'encode' => false,
+                                        ]);
+                                    }
+                                    return '';
+                                },
                             ],
                             [
                                 'class' => 'hail812\adminlte3\yii\grid\ActionColumn',

@@ -7,6 +7,7 @@ use backend\models\GeneroSearch;
 use Yii;
 use common\models\Genero;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -145,12 +146,20 @@ class GeneroController extends Controller
      */
     public function actionDelete($id)
     {
-        if(Yii::$app->user->can('removerGeneros')) {
-            $this->findModel($id)->delete();
+        try {
+            if (Yii::$app->user->can('removerGeneros')) {
+                $this->findModel($id)->delete();
 
-            return $this->redirect(['index']);
-        }else{
-            return $this->goHome();
+                return $this->redirect(['index']);
+            } else {
+                return $this->goHome();
+            }
+        } catch (StaleObjectException $e) {
+            throw new  NotFoundHttpException('Não foi possível eliminar o registo.');
+        } catch (NotFoundHttpException $e) {
+            throw new NotFoundHttpException('Não foi possível eliminar o registo.');
+        } catch (\Throwable $e) {
+            throw new NotFoundHttpException('Não foi possível eliminar o registo.');
         }
 
     }

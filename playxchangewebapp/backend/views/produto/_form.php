@@ -20,10 +20,8 @@ use yii\bootstrap4\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'jogo_id')->dropDownList(
-        ArrayHelper::map($jogos, 'id', 'nome'),
-        ['prompt' => 'Selecione o jogo', 'class' => 'form-control select2']
-    ) ?>
+    <?= $form->field($model, 'jogo_id')->hiddenInput(['value' => $model->jogo_id])->label(false) ?>
+
 
     <?= $form->field($model, 'plataforma_id')->dropDownList(
         ArrayHelper::map($plataformas, 'id', 'nome'),

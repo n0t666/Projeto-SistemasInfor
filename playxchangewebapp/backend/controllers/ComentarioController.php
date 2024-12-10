@@ -6,6 +6,7 @@ use common\models\User;
 use Yii;
 use common\models\Comentario;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,10 +22,24 @@ class ComentarioController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index','view','delete'],
+                        'allow' => true,
+                        'roles' => ['admin','moderador'],
+                    ],
+                ],
+                'denyCallback' => function () {
+                    \Yii::$app->session->setFlash('error', 'Não possui permissões suficientes para executar esta ação!');
+                    $this->goHome();
+                }
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['POST'],
+                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -43,7 +58,7 @@ class ComentarioController extends Controller
         }
 
         $dataProvider = new ActiveDataProvider([
-            'query' => Comentario::find()->where(['utilizador_id' => $userId]),
+            'query' => $user->profile->getComentarios(),
         ]);
 
         return $this->render('index', [
@@ -74,12 +89,16 @@ class ComentarioController extends Controller
      */
     public function actionDelete($id)
     {
-        try {
-            $this->findModel($id)->delete();
-        }catch (\Exception $e){
-            throw new NotFoundHttpException('The requested page does not exist.');
+        if (Yii::$app->user->can('apagarComentario')) {
+            try {
+                $this->findModel($id)->delete();
+            } catch (\Exception $e) {
+                throw new NotFoundHttpException('The requested page does not exist.');
+            }
+            return $this->redirect(['index']);
+        }else{
+            return $this->goHome();
         }
-        return $this->redirect(['index']);
     }
 
     /**

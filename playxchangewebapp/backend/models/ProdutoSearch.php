@@ -41,13 +41,16 @@ class ProdutoSearch extends produto
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$jogoId = null)
     {
         $query = produto::find();
 
         $query->joinWith(['jogo', 'plataforma']);
 
-        // add conditions that should always apply here
+
+        if ($jogoId !== null) {
+            $query->andWhere(['produtos.jogo_id' => $jogoId]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,6 +58,10 @@ class ProdutoSearch extends produto
                 'pageSize' => 10,
             ],
         ]);
+
+
+
+
 
         $this->load($params);
 
@@ -69,7 +76,6 @@ class ProdutoSearch extends produto
         if (!empty($this->globalSearch)) {
             $query->andFilterWhere(['or', // Caso o termo de pesquisa dê match com o nome, descricao,distribuido, editora ou franquia
                 ['like', 'produtos.id', $this->globalSearch],
-                ['like', 'jogos.nome', $this->globalSearch],
                 ['like', 'plataformas.nome', $this->globalSearch],
             ]);
         }

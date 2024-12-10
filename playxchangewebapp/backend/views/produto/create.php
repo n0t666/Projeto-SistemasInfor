@@ -10,7 +10,7 @@ use yii\helpers\Html;
 /* @var Jogo[] $jogos */
 /* @var Plataforma[] $plataformas */
 
-$this->title = 'Criar Produto';
+$this->title = 'Criar Produto para o Jogo: ' . $model->jogo->nome;
 $this->params['breadcrumbs'][] = ['label' => 'Produtos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-md-12">
                     <?=$this->render('_form', [
                         'model' => $model,
-                        'jogos' => $jogos,
                         'plataformas' => $plataformas,
                     ]) ?>
                 </div>

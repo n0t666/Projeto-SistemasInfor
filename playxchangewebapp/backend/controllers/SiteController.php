@@ -120,6 +120,7 @@ class SiteController extends Controller
                 return $this->goBack();
             } else {
                 Yii::$app->user->logout();
+                Yii::$app->session->setFlash('error', 'Não tem permissões para aceder ao backend.');
                 return $this->redirect(['login']);
             }
 

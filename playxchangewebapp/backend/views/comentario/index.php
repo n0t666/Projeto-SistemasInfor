@@ -15,8 +15,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card">
                 <div class="card-body">
 
-
-
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'columns' => [

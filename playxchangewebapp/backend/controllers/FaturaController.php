@@ -124,25 +124,11 @@ class FaturaController extends Controller
                 'totalSemDesconto' => $totalSemDesconto,
                 'quantidadeDesconto' => $quantidadeDesconto,
             ]);
+        }else{
+            return $this->goHome();
         }
     }
 
-    /**
-     * Creates a new Fatura model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-    public function actionCreate()
-    {
-    }
-    */
-
-    /**
-     * Updates an existing Fatura model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         if(Yii::$app->user->can('alterarEstadoEncomenda')){
@@ -160,30 +146,7 @@ class FaturaController extends Controller
         }
     }
 
-    /**
-     * Deletes an existing Fatura model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        if(Yii::$app->user->can('cancelarEncomenda')) {
-            $this->findModel($id)->delete();
-            return $this->redirect(['index']);
-        }else{
-            return $this->goHome();
-        }
-    }
 
-    /**
-     * Finds the Fatura model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Fatura the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Fatura::findOne($id)) !== null) {

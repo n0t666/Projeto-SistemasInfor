@@ -52,12 +52,12 @@ class ComentarioController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $comentarios = Comentario::find()->where(["utilizador_id" => $user->id])->all();
+        $comentarios = $user->comentarios;
 
         $response = [];
 
         foreach ($comentarios as $comentario) {
-            $numEstrelas = Avaliacao::find()->where(['utilizador_id' => $user->id,'jogo_id' => $comentario->jogo->id])->one();
+            $numEstrelas = $user->profile->getAvaliacaos->where(['jogo_id' => $comentario->jogo->id])->one();
             $response[] = [
                 'id' => $comentario->id,
                 'id_jogo' => $comentario->jogo_id,
@@ -80,7 +80,7 @@ class ComentarioController extends ActiveController
         }
 
 
-        $model = Comentario::find()->where(["utilizador_id" => $user->id, "id" => $id])->one();
+        $model = $user->profile->getComentarios()->where(['id' => $id])->one();
 
         if(!$model){
             throw new NotFoundHttpException('Comentario inexistente');
@@ -114,11 +114,11 @@ class ComentarioController extends ActiveController
             throw new NotFoundHttpException('Jogo inexistente');
         }
 
-        if (!Avaliacao::find()->where(['utilizador_id' => $utilizadorId, 'jogo_id' => $jogoId])->exists()) {
+        if (!$user->profile->getAvaliacaos()->where(['jogo_id' => $jogoId])->exists()) {
             throw new exception('É necessário de avaliar um jogo antes de comentar.');
         }
 
-        if(Comentario::find()->where(['utilizador_id' => $user->id,'jogo_id' => $jogoId])->exists()){
+        if($user->profile->getComentarios()->where(['jogo_id' => $jogoId])->exists()){
             throw new Exception('Não pode criar mais do que um comentário para um determinado jogo');
         }
 
@@ -157,7 +157,7 @@ class ComentarioController extends ActiveController
             throw new UnauthorizedHttpException('Apenas pode editar comentários da sua própia conta');
         }
 
-        $model = Comentario::find()->where(["utilizador_id" => $user->id, "id" => $comentarioId])->one();
+        $model = $user->profile->getComentarios()->where(['id' => $comentarioId])->one();
 
         if(!$model){
             throw new NotFoundHttpException('Comentario inexistente');
@@ -185,7 +185,7 @@ class ComentarioController extends ActiveController
             throw new InvalidArgumentException('É necessário do id para apagar um comentario');
         }
 
-        $model = Comentario::find()->where(["utilizador_id" => $user->id, "id" => $comentarioId])->one();
+        $model = $user->profile->getComentarios()->where(['id' => $comentarioId])->one();
 
         if(!$model){
             throw new NotFoundHttpException('Comentario inexistente');

@@ -250,6 +250,8 @@ public class SingletonLoja {
                     }
                     Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
                     Log.e("ERROR", error.toString());
+
+                    Log.e("ERROR", responseBody);
                 }
             }){
                 protected Map<String, String> getParams(){

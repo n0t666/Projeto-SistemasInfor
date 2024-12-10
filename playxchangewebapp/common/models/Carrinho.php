@@ -110,7 +110,9 @@ class Carrinho extends \yii\db\ActiveRecord
         $this->total = $total;
         $this->count = $totalProdutos;
 
-        $this->save(false);
+        if (!$this->save(false)) {
+            throw new \Exception('Erro ao salvar o carrinho após recalcular o total');
+        }
     }
 
 }

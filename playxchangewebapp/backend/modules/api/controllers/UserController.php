@@ -140,7 +140,7 @@ class UserController extends ActiveController
             throw new UnauthorizedHttpException('Token inválido');
         }
 
-        $desejados = UtilizadorJogo::find()->where(['utilizador_id' => $user->id,'isDesejado' => 1])->all();
+        $desejados = $user->profile->getInteracoes()->where(['isDesejado' => 1])->all();
         $response = [];
 
         foreach ($desejados as $desejado) {
@@ -162,7 +162,7 @@ class UserController extends ActiveController
             throw new UnauthorizedHttpException('Token inválido');
         }
 
-        $jogados = UtilizadorJogo::find()->where(['utilizador_id' => $user->id,'isJogado' => 1])->all();
+        $jogados = $user->profile->getInteracoes()->where(['isJogado' => 1])->all();
         $response = [];
 
         foreach ($jogados as $jogado) {
@@ -185,7 +185,7 @@ class UserController extends ActiveController
             throw new UnauthorizedHttpException('Token inválido');
         }
 
-        $favoritos = UtilizadorJogo::find()->where(['utilizador_id' => $user->id,'isFavorito' => 1])->all();
+        $favoritos = $user->profile->getInteracoes()->where(['isFavorito' => 1])->all();
         $response = [];
 
         foreach ($favoritos as $favorito) {
@@ -231,7 +231,7 @@ class UserController extends ActiveController
         }
 
 
-        $userJogo = UtilizadorJogo::find()->where(['utilizador_id' => $user, 'jogo_id' => $jogoId])->one();
+        $userJogo = $user->profile->getInteracoes()->where(['jogo_id' => $jogoId])->one();
 
         if (!$userJogo) {
             $userJogo = new UtilizadorJogo();

@@ -113,7 +113,7 @@ class CarrinhoController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $carrinho = Carrinho::find()->where(['utilizador_id' => $user->id])->one();
+        $carrinho = $user->profile->carrinho;
 
         if (!$carrinho) {
             throw new NotFoundHttpException('Carrinho não encontrado.');
@@ -124,9 +124,7 @@ class CarrinhoController extends ActiveController
             throw new BadRequestHttpException('Dados incompletos');
         }
 
-        $linhaCarrinho = LinhaCarrinho::find()
-            ->where(['carrinhos_id' => $carrinho->id, 'produtos_id' => $body['produto_id']])
-            ->one();
+        $linhaCarrinho = $carrinho->getLinhasCarrinhos()->where(['produtos_id' => $body['produto_id']])->one();
 
         if ($linhaCarrinho) {
             $linhaCarrinho->quantidade += $body['quantidade'];
@@ -152,7 +150,7 @@ class CarrinhoController extends ActiveController
     }
 
 
-    public function alterarQuantidade($idproduto)
+    public function actionAlterarQuantidade($idproduto)
     {
         $user = Yii::$app->user->identity;
         $body = Yii::$app->request->getBodyParams();
@@ -172,7 +170,7 @@ class CarrinhoController extends ActiveController
             throw new NotFoundHttpException('O seu carrinho está vazio');
         }
 
-        if (!isset($body['produto_id']) || !isset($body['quantidade']) || !isset($body['tipo'])) {
+        if (!isset($body['quantidade']) || !isset($body['tipo'])) {
             throw new BadRequestHttpException('Dados incompletos');
         }
 
@@ -185,7 +183,7 @@ class CarrinhoController extends ActiveController
         }
 
         //$linhaCarrinho = LinhaCarrinho::find()->where(['carrinhos_id' => $carrinho->id,'produtos_id' => $produto_id])->one();
-        $linhaCarrinho = $carrinho->getLinhasCarrinhos()->where(['produtos_id', $produto_id])->one();
+        $linhaCarrinho = $carrinho->getLinhasCarrinhos()->where(['produtos_id' => $produto_id])->one();
 
         if (!$linhaCarrinho) {
             throw new NotFoundHttpException('Não foi possível encontrar a linha especificada');
@@ -209,11 +207,13 @@ class CarrinhoController extends ActiveController
                 throw new NotFoundHttpException('Não foi possível encontrar ação da linha especificada');
         }
 
+
         if (!$linhaCarrinho->save()) {
             throw new \Exception('Ocorreu um problema ao guardar a alteração do carrinho');
         }
 
         $carrinho->recalculateTotal();
+
 
         return [
             'message' => 'Linha do carrinho alteradas com sucesso',
@@ -229,7 +229,7 @@ class CarrinhoController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $carrinho = Carrinho::find()->where(['utilizador_id' => $user->id])->one();
+        $carrinho = $user->profile->carrinho;
 
         if (!$carrinho) {
             throw new NotFoundHttpException('Carrinho não encontrado.');

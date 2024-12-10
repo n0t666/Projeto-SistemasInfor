@@ -6,10 +6,12 @@ use backend\models\FranquiaSearch;
 use Yii;
 use common\models\Franquia;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ServerErrorHttpException;
 
 /**
  * FranquiaController implements the CRUD actions for Franquia model.
@@ -144,12 +146,22 @@ class FranquiaController extends Controller
      */
     public function actionDelete($id)
     {
-        if(Yii::$app->user->can('removerFranquias')){
-            $this->findModel($id)->delete();
+        try {
+            if (Yii::$app->user->can('removerFranquias')) {
+                $this->findModel($id)->delete();
 
-            return $this->redirect(['index']);
-        }else{
-            return $this->goHome();
+                return $this->redirect(['index']);
+            } else {
+                return $this->goHome();
+            }
+        } catch (StaleObjectException $e) {
+            throw new ServerErrorHttpException('Não foi possível apagar a franquia.');
+
+        } catch (NotFoundHttpException $e) {
+            throw new NotFoundHttpException('Não foi possível encontrar a franquia solicitada.');
+        } catch (\Throwable $e) {
+            throw new ServerErrorHttpException('Ocorreu um erro ao apagar a franquia.');
+
         }
     }
 

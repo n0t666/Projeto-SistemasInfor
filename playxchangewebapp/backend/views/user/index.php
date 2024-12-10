@@ -50,6 +50,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return $model->user->getStatusLabel();
                                 }
                             ],
+                            [
+                                'format' => 'raw',
+                                'content' => function ($model) {
+                                        return Html::a('<i class="fas fa-comments"></i>', ['comentario/index', 'userId' => $model->id], [
+                                            'class' => 'btn btn-success btn-sm',
+                                            'encode' => false,
+                                        ]);
+                                },
+                            ],
                             //'created_at',
                             //'updated_at',
                             //'verification_token',

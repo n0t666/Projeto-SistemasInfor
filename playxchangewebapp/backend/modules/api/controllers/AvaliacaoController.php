@@ -50,7 +50,7 @@ class AvaliacaoController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $avaliacao = Avaliacao::find()->where(['jogo_id' => $jogoId])->one();
+       $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
 
         if($avaliacao){
             throw new NotFoundHttpException('Não existe nenhuma avaliação para o jogo especificado.');
@@ -81,10 +81,7 @@ class AvaliacaoController extends ActiveController
             throw new NotFoundHttpException('Jogo inexistente');
         }
 
-        $avaliacao = Avaliacao::findOne([
-            'jogo_id' => $jogoId,
-            'utilizador_id' => $user->id
-        ]);
+       $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
 
         if($avaliacao){
             throw new Exception('Não é possível fazer mais do que uma avaliação para cada jogo');
@@ -127,10 +124,7 @@ class AvaliacaoController extends ActiveController
             throw new NotFoundHttpException('Jogo inexistente');
         }
 
-        $avaliacao = Avaliacao::findOne([
-            'jogo_id' => $jogoId,
-            'utilizador_id' => $user->id
-        ]);
+        $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
 
         if(!$avaliacao){
             throw new Exception('Não é possível encontrar a avaliação solicitada');
@@ -162,7 +156,7 @@ class AvaliacaoController extends ActiveController
             throw new NotFoundHttpException('Jogo inexistente');
         }
 
-        $avaliacao = Avaliacao::findOne(['jogo_id' => $jogoId, 'utilizador_id' => $user->id]);
+        $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
 
         if(!$avaliacao){
             throw new NotFoundHttpException('Não foi possível encontrar a avaliação solicitada');
