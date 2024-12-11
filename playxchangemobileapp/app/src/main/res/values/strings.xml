@@ -12,7 +12,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_error_con">Não existe nenhuma conexão á internet</string>
     <string name="txt_error_authentication">Dados inválidos</string>
-    <string name="txt_error_request">Não foi possíve processar o pedido</string>
+    <string name="txt_error_request">Não foi possível processar o pedido</string>
     <string name="txt_name_jogo">Nome do Jogo</string>
     <string name="txt_release">01/01/2024</string>
     <string name="txt_trailer">Trailer</string>
@@ -36,4 +36,7 @@
     <string name="txt_populares">Jogos Populares</string>
     <string name="txt_ver_catalogo">Ver Catálogo Completo</string>
     <string name="txt_last_releases">Últimos Lançamentos</string>
+    <string name="txt_interagir">Interagir</string>
+    <string name="txt_make_comment">Fazer Comentário Jogo</string>
+    <string name="txt_clean_aval">Limpar avaliação</string>
 </resources>

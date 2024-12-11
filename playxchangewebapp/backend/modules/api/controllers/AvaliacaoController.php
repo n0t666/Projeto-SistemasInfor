@@ -43,23 +43,25 @@ class AvaliacaoController extends ActiveController
         throw new \yii\web\ForbiddenHttpException('No authentication');
     }
 
-    public function actionView($jogoId){
+    public function actionViewByJogo($jogoid){
         $user = Yii::$app->user->identity;
 
         if(!$user){
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-       $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
 
-        if($avaliacao){
+
+       $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoid])->one();
+
+        if(!$avaliacao){
             throw new NotFoundHttpException('Não existe nenhuma avaliação para o jogo especificado.');
         }
 
         return $avaliacao->attributes;
     }
 
-    public function actionCreate(){
+    public function actionCreateByJogo(){
         $user = Yii::$app->user->identity;
         $body = Yii::$app->getRequest()->getBodyParams();
 
@@ -97,13 +99,20 @@ class AvaliacaoController extends ActiveController
         $avaliacao->numEstrelas = $numEstrelas;
 
         if($avaliacao->save()){
-            return $avaliacao;
+            return ['message' => 'Avaliação criada com sucesso'];
         }else{
             return $avaliacao->errors;
         }
     }
 
-    public function actionUpdate(){
+    public function actionUpdateByJogo($jogoid){
+
+        $jogo = Jogo::findOne($jogoid);
+
+        if(!$jogo){
+            throw new NotFoundHttpException('Jogo inexistente');
+        }
+
         $user = Yii::$app->user->identity;
         $body = Yii::$app->getRequest()->getBodyParams();
 
@@ -111,20 +120,15 @@ class AvaliacaoController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $jogoId = $body['jogo_id'] ?? null;
         $numEstrelas = $body['num_estrelas'] ?? null;
 
-        if(!$jogoId || !$numEstrelas){
+        if(!$numEstrelas){
             throw new BadRequestHttpException('É necessário o número de estrelas e o jogo que deseja fazer a avaliação');
         }
 
-        $jogo = Jogo::findOne($jogoId);
 
-        if(!$jogo){
-            throw new NotFoundHttpException('Jogo inexistente');
-        }
 
-        $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
+        $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogo->id])->one();
 
         if(!$avaliacao){
             throw new Exception('Não é possível encontrar a avaliação solicitada');
@@ -142,21 +146,24 @@ class AvaliacaoController extends ActiveController
         }
     }
 
-    public function actionDelete(){
+    public function actionDeleteByJogo($jogoid){
         $user = Yii::$app->user->identity;
-        $body = Yii::$app->getRequest()->getBodyParams();
 
         if(!$user){
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $jogoId = $body['jogo_id'] ?? null;
+        $jogo = Jogo::findOne($jogoid);
 
-        if(!$jogoId){
+        if(!$jogo){
             throw new NotFoundHttpException('Jogo inexistente');
         }
 
-        $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
+        if($jogo->getComentarios()->where(['utilizador_id' => $user->id])->exists()){
+            throw new \Exception('Não é possível remover estrelas em jogos que existam atividade.');
+        }
+
+        $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoid])->one();
 
         if(!$avaliacao){
             throw new NotFoundHttpException('Não foi possível encontrar a avaliação solicitada');

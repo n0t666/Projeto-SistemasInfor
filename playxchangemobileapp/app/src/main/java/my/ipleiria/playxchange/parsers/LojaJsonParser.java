@@ -174,11 +174,11 @@ public class LojaJsonParser {
     public static Jogo.Atividade parserJsonAtividade(JSONObject jsonAtividade) {
         try {
             int id = jsonAtividade.getInt("id");
-            int utilizadorId = jsonAtividade.getInt("utilizadorId");
-            int jogoId = jsonAtividade.getInt("jogoId");
-            boolean isJogado = jsonAtividade.getBoolean("isJogado");
-            boolean isDesejado = jsonAtividade.getBoolean("isDesejado");
-            boolean isFavorito = jsonAtividade.getBoolean("isFavorito");
+            int utilizadorId = jsonAtividade.getInt("utilizador_id");
+            int jogoId = jsonAtividade.getInt("jogo_id");
+            int isJogado = jsonAtividade.getInt("isJogado");
+            int isDesejado = jsonAtividade.getInt("isDesejado");
+            int isFavorito = jsonAtividade.getInt("isFavorito");
 
             return new Jogo.Atividade(id, utilizadorId, jogoId, isJogado, isDesejado, isFavorito);
         } catch (JSONException e) {
@@ -223,12 +223,11 @@ public class LojaJsonParser {
 
     public static Avaliacao parserJsonAvaliacao(JSONObject jsonAvaliacao) {
         try {
-            int id = jsonAvaliacao.getInt("id");
-            int jogoId = jsonAvaliacao.getInt("jogoId");
-            int utilizadorId = jsonAvaliacao.getInt("utilizadorId");
+            int jogoId = jsonAvaliacao.getInt("jogo_id");
+            int utilizadorId = jsonAvaliacao.getInt("utilizador_id");
             double numEstrelas = jsonAvaliacao.getDouble("numEstrelas");
             String dataAvaliacao = jsonAvaliacao.getString("dataAvaliacao");
-            return new Avaliacao(id, jogoId, utilizadorId, numEstrelas, dataAvaliacao);
+            return new Avaliacao(jogoId, utilizadorId, numEstrelas, dataAvaliacao);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

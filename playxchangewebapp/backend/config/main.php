@@ -108,8 +108,14 @@ return [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/avaliacao',
                     'extraPatterns' => [
-
-
+                        'GET jogos/{jogoid}' => 'view-by-jogo',
+                        'POST jogos' => 'create-by-jogo',
+                        'PUT jogos/{jogoid}' => 'update-by-jogo',
+                        'DELETE jogos/{jogoid}' => 'delete-by-jogo',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{jogoid}' => '<jogoid:\\d+>',
                     ],
                     'pluralize' => false
                 ],

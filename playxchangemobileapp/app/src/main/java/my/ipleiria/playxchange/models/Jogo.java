@@ -202,11 +202,11 @@ public class Jogo {
         private int id;
         private int utilizadorId;
         private int jogoId;
-        private boolean isJogado;
-        private boolean isDesejado;
-        private boolean isFavorito;
+        private int isJogado;
+        private int isDesejado;
+        private int isFavorito;
 
-        public Atividade(int id, int utilizadorId, int jogoId, boolean isJogado, boolean isDesejado, boolean isFavorito) {
+        public Atividade(int id, int utilizadorId, int jogoId, int isJogado, int isDesejado, int isFavorito) {
             this.id = id;
             this.utilizadorId = utilizadorId;
             this.jogoId = jogoId;
@@ -239,27 +239,27 @@ public class Jogo {
             this.jogoId = jogoId;
         }
 
-        public boolean isJogado() {
+        public int isJogado() {
             return isJogado;
         }
 
-        public void setJogado(boolean jogado) {
+        public void setJogado(int jogado) {
             isJogado = jogado;
         }
 
-        public boolean isDesejado() {
+        public int isDesejado() {
             return isDesejado;
         }
 
-        public void setDesejado(boolean desejado) {
+        public void setDesejado(int desejado) {
             isDesejado = desejado;
         }
 
-        public boolean isFavorito() {
+        public int isFavorito() {
             return isFavorito;
         }
 
-        public void setFavorito(boolean favorito) {
+        public void setFavorito(int favorito) {
             isFavorito = favorito;
         }
     }

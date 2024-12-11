@@ -22,4 +22,11 @@
     <color name="button_bg_hover">#0056b3</color>
     <color name="shadow">#000000</color>
     <color name="overlay">#121212CC</color>
+
+    <color name="highlight_played">#28A745</color>
+    <color name="highlight_favorited">#FF6F61</color>
+    <color name="highlight_wishlist">#FFCB45</color>
+    <color name="highlight_unplayed">#B0B0B0</color>
+    <color name="highlight_unfavorited">#B0B0B0</color>
+    <color name="highlight_unwishlist">#B0B0B0</color>
 </resources>

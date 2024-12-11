@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".GameDetailsActivity">
+<ScrollView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context=".GameDetailsActivity">
@@ -24,9 +29,9 @@
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder_jogo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraLarge" />
 
 
         <TextView
@@ -171,28 +176,34 @@
         </LinearLayout>
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/primary"
-            android:onClick="btnCartOnClick"
             android:text="@string/txt_add_carrinho"
             android:textColor="@color/text"
+            android:backgroundTint="@color/primary"
+            android:textAllCaps="false"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:icon="@drawable/ic_shopping_cart_24"
+            app:iconTint="@color/text"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:rippleColor="?attr/colorControlHighlight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llQuantity" />
-
 
 
         <LinearLayout
             android:id="@+id/llStat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_marginTop="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/btnCart"
             app:layout_constraintTop_toBottomOf="@+id/btnCart">
@@ -289,6 +300,7 @@
                         android:textSize="12sp" />
                 </LinearLayout>
             </FrameLayout>
+
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -324,9 +336,9 @@
             android:id="@+id/clDescricao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="2dp"
             app:layout_constraintTop_toBottomOf="@+id/llStat">
 
             <View
@@ -374,9 +386,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/clDescricao"
-            android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/clDescricao">
 
             <ImageView
@@ -384,97 +396,95 @@
                 android:layout_width="24dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
-                app:tint="@color/material_on_surface_disabled"
+                android:contentDescription="@string/txt_editora"
                 android:src="@drawable/ic_editora"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/txt_editora" />
+                app:tint="@color/material_on_surface_disabled" />
 
             <TextView
                 android:id="@+id/tvEditora"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="@string/txt_editora"
-                android:textStyle="bold"
                 android:textColor="@color/text"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/icEditor"
-                app:layout_constraintTop_toTopOf="@+id/icEditor"
-                android:layout_marginStart="8dp"/>
+                app:layout_constraintTop_toTopOf="@+id/icEditor" />
 
 
             <TextView
                 android:id="@+id/tvEditoraText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/text"
-                app:layout_constraintTop_toBottomOf="@+id/icEditor"
                 app:layout_constraintStart_toStartOf="@+id/tvEditora"
-                android:layout_marginTop="4dp"/>
+                app:layout_constraintTop_toBottomOf="@+id/icEditor" />
 
 
             <ImageView
                 android:id="@+id/icPublicadora"
                 android:layout_width="24dp"
                 android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/txt_distribuidora"
                 android:src="@drawable/ic_distribuidora"
                 app:layout_constraintStart_toStartOf="@+id/icEditor"
                 app:layout_constraintTop_toBottomOf="@+id/tvEditoraText"
-                app:tint="@color/material_on_surface_disabled"
-                android:contentDescription="@string/txt_distribuidora"
-                android:layout_marginTop="16dp"/>
+                app:tint="@color/material_on_surface_disabled" />
 
             <TextView
                 android:id="@+id/tvPublicadora"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="@string/txt_distribuidora"
-                android:textStyle="bold"
                 android:textColor="@color/text"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/icPublicadora"
-                app:layout_constraintTop_toTopOf="@+id/icPublicadora"
-                android:layout_marginStart="8dp"/>
+                app:layout_constraintTop_toTopOf="@+id/icPublicadora" />
 
             <TextView
                 android:id="@+id/tvPublicadoraText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/text"
-                app:layout_constraintTop_toBottomOf="@+id/tvPublicadora"
                 app:layout_constraintStart_toStartOf="@+id/tvEditora"
-                android:layout_marginTop="4dp"/>
+                app:layout_constraintTop_toBottomOf="@+id/tvPublicadora" />
 
             <ImageView
                 android:id="@+id/icTag"
                 android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_tag"
                 android:layout_marginTop="16dp"
+                android:contentDescription="@string/txt_tags"
+                android:src="@drawable/ic_tag"
                 app:layout_constraintStart_toStartOf="@+id/icEditor"
                 app:layout_constraintTop_toBottomOf="@+id/tvPublicadoraText"
-                app:tint="@color/material_on_surface_disabled"
-                android:contentDescription="@string/txt_tags" />
+                app:tint="@color/material_on_surface_disabled" />
 
             <TextView
                 android:id="@+id/tvTags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_tags"
                 android:layout_marginTop="16dp"
-                android:textStyle="bold"
+                android:text="@string/txt_tags"
                 android:textColor="@color/text"
-                app:layout_constraintTop_toBottomOf="@+id/tvPublicadoraText"
-                app:layout_constraintStart_toStartOf="@+id/tvEditora" />
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tvEditora"
+                app:layout_constraintTop_toBottomOf="@+id/tvPublicadoraText" />
 
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chGroupTags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tvTags"
+                app:layout_constraintStart_toStartOf="@+id/tvTags"
 
-                app:layout_constraintStart_toStartOf="@+id/tvTags">
-
-
+                app:layout_constraintTop_toBottomOf="@+id/tvTags">
 
 
             </com.google.android.material.chip.ChipGroup>
@@ -490,33 +500,51 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/divider3"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/divider3">
 
                 <TextView
                     android:id="@+id/tvScreenshotsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:text="@string/txt_screenshots"
-                    android:textStyle="bold"
                     android:textColor="@color/text"
                     android:textSize="16sp"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="16dp" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvScreenshotsCarousel"
                     android:layout_width="match_parent"
                     android:layout_height="200sp"
-                    android:orientation="horizontal"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tvScreenshotsTitle"
+                    android:orientation="horizontal"
                     app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvScreenshotsTitle" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fbAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:contentDescription="@string/txt_interagir"
+        android:onClick="onClickBottomSheet"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/primary"
+        app:layout_anchorGravity="bottom|end"
+        app:tint="@android:color/white" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

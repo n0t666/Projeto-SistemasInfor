@@ -243,11 +243,11 @@ class UserController extends ActiveController
             case '1': // Jogado
                 $userJogo->isJogado = $userJogo->isJogado ? 0 : 1;
                 break;
-            case '2': // Desejado
-                $userJogo->isDesejado = $userJogo->isDesejado ? 0 : 1;
-                break;
-            case '3': // Favorito
+            case '2': // Favorito
                 $userJogo->isFavorito = $userJogo->isFavorito ? 0 : 1;
+                break;
+            case '3': // Desejado
+                $userJogo->isDesejado = $userJogo->isDesejado ? 0 : 1;
                 break;
             default:
                 throw new \Exception('Tipo de interação inesperado');

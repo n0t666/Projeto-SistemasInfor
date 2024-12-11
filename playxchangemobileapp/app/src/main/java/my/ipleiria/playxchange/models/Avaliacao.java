@@ -1,25 +1,17 @@
 package my.ipleiria.playxchange.models;
 
 public class Avaliacao {
-    private int id,jogoId,utilizadorId;
+    private int jogoId,utilizadorId;
     private String dataAvaliacao;
     private double numEstrelas;
 
-    public Avaliacao(int id, int jogoId, int utilizadorId, double numEstrelas, String dataAvaliacao) {
-        this.id = id;
+    public Avaliacao(int jogoId, int utilizadorId, double numEstrelas, String dataAvaliacao) {
         this.jogoId = jogoId;
         this.utilizadorId = utilizadorId;
         this.numEstrelas = numEstrelas;
         this.dataAvaliacao = dataAvaliacao;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getJogoId() {
         return jogoId;

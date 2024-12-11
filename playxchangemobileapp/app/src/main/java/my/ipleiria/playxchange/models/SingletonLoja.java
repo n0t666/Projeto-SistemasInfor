@@ -132,19 +132,35 @@ public class SingletonLoja {
         }
     }
 
-    public void findJogoByIdAPI(final Context context, final int id, Response.Listener<Jogo> listener) {
+    public void findJogoByIdAPI(final Context context, final int id,final String token, Response.Listener<Jogo> listener) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
-            StringRequest req = new StringRequest(Request.Method.GET, Constants.IP_ADDRESS + "jogos/" + id, new Response.Listener<String>() {
+
+            String url = Constants.IP_ADDRESS + "jogos/" + id;
+
+            if (token != null) {
+                url += "?access-token=" + token;
+            }
+
+            StringRequest req = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    Log.d("API Response", response);
+
                     Jogo jogo = LojaJsonParser.parserJsonJogo(response);
                     listener.onResponse(jogo);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    try {
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        JSONObject data = new JSONObject(responseBody);
+                        String message = data.optString("msg");
+                    } catch (JSONException e) {
+                    } catch (UnsupportedEncodingException errorr) {
+                    }
                     Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
                 }
             });
@@ -267,6 +283,118 @@ public class SingletonLoja {
     }
 
 
+    //endregion
+
+    //region - User interaction with games API
+
+    public void addAvaliacaoAPI(final Context context, final int jogoId, final float avaliacao, String token, Response.Listener<String> listener) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "avaliacao/jogos?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    listener.onResponse(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("jogo_id", String.valueOf(jogoId));
+                    params.put("num_estrelas", String.valueOf(avaliacao));
+
+                    return params;
+
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void updateAvaliacaoAPI(final Context context, final int jogoId, final float avaliacao, String token, Response.Listener<String> listener) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.PUT, Constants.IP_ADDRESS + "avaliacao/jogos/" + Integer.toString(jogoId) + "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    listener.onResponse(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("num_estrelas", String.valueOf(avaliacao));
+                    return params;
+
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void deleteAvaliacaoAPI(final Context context, final int jogoId, String token, Response.Listener<String> listener) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.DELETE, Constants.IP_ADDRESS + "avaliacao/jogos/" + Integer.toString(jogoId) + "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    listener.onResponse(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+
+                    Log.e("ERROR", responseBody);
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void interactJogoAPI(final Context context, final int jogoId, final String token, final int tipo, Response.Listener<String> listener) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "user/interagir?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    listener.onResponse(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("jogo_id", String.valueOf(jogoId));
+                    params.put("tipo", String.valueOf(tipo));
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
 
     //endregion
 

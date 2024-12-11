@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:layout_height="wrap_content">
+    </com.google.android.material.bottomsheet.BottomSheetDragHandleView>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Título do Jogo"
+        android:textColor="@color/text"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvReleaseDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Data de lançamento"
+        android:textColor="@color/muted_text"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/border" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPlay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            app:icon="@drawable/ic_play_circle_outline"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/muted_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            app:icon="@drawable/ic_favorite"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/muted_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWishlist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            app:icon="@drawable/ic_bookmark_border"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/muted_text" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/border" />
+
+    <RatingBar
+        android:id="@+id/rbStars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:stepSize="0.5"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="@string/txt_clean_aval"
+        android:textSize="14sp"
+        android:textColor="@color/primary"
+        android:background="@android:color/transparent"
+        app:rippleColor="@color/primary" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/border" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_make_comment"
+        android:textAllCaps="false"
+        android:textSize="12sp"
+        android:background="@color/primary"
+        app:cornerRadius="0dp"
+        app:rippleColor="?attr/colorControlHighlight" />
+</LinearLayout>
+
+

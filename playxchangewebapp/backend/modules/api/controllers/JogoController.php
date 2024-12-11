@@ -122,7 +122,7 @@ class JogoController extends ActiveController
             $screenshots[] =  Yii::getAlias('@mobileIp')  . Yii::getAlias('@screenshotsJogoUrl') . '/' . $jogoScreenshot->filename;
         }
 
-        $avaliacoes = $jogo->getAvaliacoes()->where(['jogo_id' => $id])->all();
+        $avaliacoes = $user->profile->getAvaliacoes()->where(['jogo_id' => $id])->all();
 
 
         $numEstrelas = array_map(function ($avaliacao) {
