@@ -4,4 +4,5 @@ import my.ipleiria.playxchange.models.Carrinho;
 
 public interface CarrinhoListener {
  void onRefreshCarrinho(Carrinho carrinho);
+ void onLinhaCarrinhoChanged();
 }

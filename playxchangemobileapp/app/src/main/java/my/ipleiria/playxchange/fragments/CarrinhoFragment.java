@@ -67,6 +67,11 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener {
         }
     }
 
+    @Override
+    public void onLinhaCarrinhoChanged() {
+
+    }
+
     public void setComponents() {
         btnCheckout = view.findViewById(R.id.btnComp);
         tvTotal = view.findViewById(R.id.tvTotalText);

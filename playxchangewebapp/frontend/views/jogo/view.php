@@ -275,11 +275,11 @@ $this->title = $model->nome;
                             'marker' => [
                                 'show' => false,
                             ],
-                            'x' => [
-                                'show' => true,
-                                'formatter' => function ($value) {
-                                    return $value;
-                                },
+                            'x' => [ // Temporário até se arranjar uma solução melhor, visto que de outra forma assume sempre o valor default sem textoz
+                                'formatter' => new \yii\web\JsExpression("
+                                 function(value) {
+                                    return value + ' estrelas';
+                                }"),
                             ],
                             'y' => [
                                 'show' => true,
@@ -366,42 +366,46 @@ $this->title = $model->nome;
     </div>
     <div class="container my-4">
         <?php if ($reviewsPopular && $reviewsPopular->count > 0): ?>
-        <div class="row reviews-section">
-            <div class="col">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="reviews-title">Populares</h1>
-                    <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['comentario/index','jogoId' => $model->id,'filtro' => 'popular']); ?>">Ver Mais</a>
-                </div>
-                <?= ListView::widget([
-                    'dataProvider' => $reviewsPopular,
-                    'itemView' => '/comentario/_comentario',
-                    'layout' => "{items}\n{pager}",
-                    'itemOptions' => [
-                        'class' => 'review-item',
-                    ],
-                ]) ?>
+            <div class="row reviews-section">
+                <div class="col">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="reviews-title">Populares</h1>
+                        <a class="btn btn-outline-primary btn-sm"
+                           href="<?= Url::to(['comentario/index', 'jogoId' => $model->id, 'filtro' => 'popular']); ?>">Ver
+                            Mais</a>
+                    </div>
+                    <?= ListView::widget([
+                        'dataProvider' => $reviewsPopular,
+                        'itemView' => '/comentario/_comentario',
+                        'layout' => "{items}\n{pager}",
+                        'itemOptions' => [
+                            'class' => 'review-item',
+                        ],
+                    ]) ?>
 
+                </div>
             </div>
-        </div>
         <?php endif ?>
 
         <?php if ($reviewsRecentes && $reviewsRecentes->count > 0): ?>
-        <div class="row reviews-section mt-4">
-            <div class="col">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="reviews-title">Recentes</h1>
-                    <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['comentario/index','jogoId' => $model->id,'filtro' => 'recent']); ?>">Ver Mais</a>
+            <div class="row reviews-section mt-4">
+                <div class="col">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="reviews-title">Recentes</h1>
+                        <a class="btn btn-outline-primary btn-sm"
+                           href="<?= Url::to(['comentario/index', 'jogoId' => $model->id, 'filtro' => 'recent']); ?>">Ver
+                            Mais</a>
+                    </div>
+                    <?= ListView::widget([
+                        'dataProvider' => $reviewsRecentes,
+                        'itemView' => '/comentario/_comentario',
+                        'layout' => "{items}\n{pager}",
+                        'itemOptions' => [
+                            'class' => 'review-item',
+                        ],
+                    ]) ?>
                 </div>
-                <?= ListView::widget([
-                    'dataProvider' => $reviewsRecentes,
-                    'itemView' => '/comentario/_comentario',
-                    'layout' => "{items}\n{pager}",
-                    'itemOptions' => [
-                        'class' => 'review-item',
-                    ],
-                ]) ?>
             </div>
-        </div>
         <?php endif ?>
 
         <?php if ($reviewsFriends && count($reviewsFriends) > 0): ?>
@@ -409,7 +413,9 @@ $this->title = $model->nome;
                 <div class="col">
                     <div class="d-flex justify-content-between align-items-center">
                         <h1 class="reviews-title">Por Amigos</h1>
-                        <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['comentario/index','jogoId' => $model->id,'filtro' => 'friends']); ?>">Ver Mais</a>
+                        <a class="btn btn-outline-primary btn-sm"
+                           href="<?= Url::to(['comentario/index', 'jogoId' => $model->id, 'filtro' => 'friends']); ?>">Ver
+                            Mais</a>
                     </div>
                     <?= ListView::widget([
                         'dataProvider' => $reviewsFriends,
