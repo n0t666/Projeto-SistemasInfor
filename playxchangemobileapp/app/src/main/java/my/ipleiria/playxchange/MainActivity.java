@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import my.ipleiria.playxchange.fragments.CarrinhoFragment;
+import my.ipleiria.playxchange.fragments.FaturaFragment;
 import my.ipleiria.playxchange.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new CarrinhoFragment();
         } else if (item.getItemId() == R.id.orders) {
             setTitle(item.getTitle());
+            fragment = new FaturaFragment();
         } else if (item.getItemId() == R.id.user) {
             setTitle(item.getTitle());
         }

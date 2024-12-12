@@ -39,4 +39,6 @@
     <string name="txt_interagir">Interagir</string>
     <string name="txt_make_comment">Fazer Comentário Jogo</string>
     <string name="txt_clean_aval">Limpar avaliação</string>
+    <string name="txt_apply">Aplicar</string>
+    <string name="txt_cod">Código Promocional</string>
 </resources>

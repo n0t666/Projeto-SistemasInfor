@@ -13,6 +13,7 @@ import java.util.List;
 
 import my.ipleiria.playxchange.models.Avaliacao;
 import my.ipleiria.playxchange.models.Carrinho;
+import my.ipleiria.playxchange.models.Fatura;
 import my.ipleiria.playxchange.models.Jogo;
 import my.ipleiria.playxchange.models.LinhaCarrinho;
 
@@ -94,6 +95,8 @@ public class LojaJsonParser {
             if (jogo.has("atividade") && !jogo.isNull("atividade")) {
                 JSONObject jsonAtividade = jogo.getJSONObject("atividade");
                 atividade = parserJsonAtividade(jsonAtividade);
+            }else {
+                atividade = new Jogo.Atividade(0, 0, 0, 0, 0, 0);
             }
 
             List<Jogo.Produto> produtos = new ArrayList<>();
@@ -264,6 +267,35 @@ public class LojaJsonParser {
 
         return auxCarrinho;
     }
+
+    public static ArrayList<Fatura> parserJsonFaturas(JSONArray response){
+        ArrayList<Fatura> faturas = new ArrayList<>();
+        for (int i = 0; i < response.length(); i++) {
+            try {
+                JSONObject jsonFatura = response.getJSONObject(i);
+                int id = jsonFatura.has("id") && !jsonFatura.isNull("id") ? jsonFatura.getInt("id") : 0;
+                String data = jsonFatura.has("dataEncomenda") && !jsonFatura.isNull("dataEncomenda") ? jsonFatura.getString("dataEncomenda") : "";
+                double total = jsonFatura.has("total") && !jsonFatura.isNull("total") ? jsonFatura.getDouble("total") : 0.0;
+                String estado = jsonFatura.has("estado") && !jsonFatura.isNull("estado") ? jsonFatura.getString("estado") : "";
+                int quantidade = jsonFatura.has("quantidade") && !jsonFatura.isNull("quantidade") ? jsonFatura.getInt("quantidade") : 0;
+                List <String> capasPreview = new ArrayList<>();
+                if (jsonFatura.has("imagensJogos") && !jsonFatura.isNull("imagensJogos")) {
+                    JSONArray jsonCapasPreview = jsonFatura.getJSONArray("imagensJogos");
+                    for (int j = 0; j < jsonCapasPreview.length(); j++) {
+                        capasPreview.add(jsonCapasPreview.getString(j));
+                    }
+                }
+
+                Fatura auxFatura = new Fatura(id,quantidade,estado,null,null,null,data,total,  new ArrayList<>(),capasPreview);
+                faturas.add(auxFatura);
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return faturas;
+    }
+
 
 
 

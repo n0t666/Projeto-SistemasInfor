@@ -61,17 +61,33 @@ class FaturaController extends ActiveController
 
         $faturas = $user->profile->faturas;
         $response = null;
+        $imagensJogos = [];
+        $idsJogos = [];
 
 
+        // Utilizar para obter uma preview da foto de capa de 4 jogos distintos
         foreach ($faturas as $fatura) {
-            $response[] = [
+           foreach ($fatura->linhasfaturas as $linha){
+               $produto = $linha->produto;
+               $jogo = $produto->jogo;
+               if (!in_array($jogo->id, $idsJogos)) { // Verificar se o jogo já foi adicionado anteriormente, se não, adicionar a esse mesmo
+                   if(count($imagensJogos) < 4){ // Garantir que não passa o limite definid de 4 imagens de jogos diferentes
+                       $imagensJogos[] = Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa;
+                       $idsJogos[] = $jogo->id;
+                   }
+               }
+           }
+            $response [] = [
                 'id' => $fatura->id,
                 'estado' => $fatura->getEstadoLabel(),
-                'total' => Yii::$app->formatter->asCurrency($fatura->total),
+                'total' => $fatura->total,
                 'dataEncomenda' => $fatura->dataEncomenda,
                 'quantidade' => count($fatura->linhasfaturas),
+                'imagensJogos' => $imagensJogos,
             ];
         }
+
+
 
         return $response;
     }

@@ -50,16 +50,16 @@ public class CarrinhoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (inflater == null){
+        if (inflater == null) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
-        if (convertView == null){
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.carrinho_item, null);
         }
 
         ViewHolderList viewHolder = (ViewHolderList) convertView.getTag();
-        if (viewHolder == null){
+        if (viewHolder == null) {
             viewHolder = new ViewHolderList(convertView);
             convertView.setTag(viewHolder);
         }
@@ -70,12 +70,12 @@ public class CarrinhoAdapter extends BaseAdapter {
 
     }
 
-    private class ViewHolderList{
-        private TextView tvNome, tvPreco, tvQuantidade,tvPlataforma;
-        private ImageView ivCapa,ivDelete;
-        private Button  btnDec, btnInc;
+    private class ViewHolderList {
+        private TextView tvNome, tvPreco, tvQuantidade, tvPlataforma, tvTotal, tvSubtotal, tvDesconto;
+        private ImageView ivCapa, ivDelete;
+        private Button btnDec, btnInc, btnCheckout;
 
-        public ViewHolderList(View view){
+        public ViewHolderList(View view) {
             tvNome = view.findViewById(R.id.tvNome);
             tvPreco = view.findViewById(R.id.tvPreco);
             tvQuantidade = view.findViewById(R.id.tvQuant);
@@ -84,13 +84,15 @@ public class CarrinhoAdapter extends BaseAdapter {
             ivDelete = view.findViewById(R.id.ivDelete);
             btnDec = view.findViewById(R.id.btnDec);
             btnInc = view.findViewById(R.id.btnInc);
+
         }
 
-        public void update(LinhaCarrinho linha){
+        public void update(LinhaCarrinho linha) {
             tvNome.setText(linha.getNome());
             tvPreco.setText(String.format("€%.2f", linha.getPreco()));
             tvQuantidade.setText(String.valueOf(linha.getQuantidade()));
             tvPlataforma.setText(linha.getPlataforma());
+
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
             String token = sharedPreferences.getString(Constants.TOKEN, null);
@@ -102,10 +104,11 @@ public class CarrinhoAdapter extends BaseAdapter {
 
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 int produtoId = linha.getIdProduto();
+
                 @Override
                 public void onClick(View v) {
-                    if(token != null){
-                        SingletonLoja.getInstance(context).deleteProdutoCarrinhoAPI(context,produtoId,token, new Response.Listener<String>() {
+                    if (token != null) {
+                        SingletonLoja.getInstance(context).deleteProdutoCarrinhoAPI(context, produtoId, token, new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 linhas.remove(linha);
@@ -119,12 +122,12 @@ public class CarrinhoAdapter extends BaseAdapter {
             });
 
             btnDec.setOnClickListener(v -> {
-                if(token!=null){
-                    if(linha.getQuantidade() > 1){
-                        SingletonLoja.getInstance(context).changeQuantityProdutoCarrinhoAPI(context, linha.getIdProduto(), token, 1,"-" ,new Response.Listener<String>() {
+                if (token != null) {
+                    if (linha.getQuantidade() > 1) {
+                        SingletonLoja.getInstance(context).changeQuantityProdutoCarrinhoAPI(context, linha.getIdProduto(), token, 1, "-", new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                linha.setQuantidade(linha.getQuantidade()-1);
+                                linha.setQuantidade(linha.getQuantidade() - 1);
                                 notifyDataSetChanged();
                             }
                         });
@@ -135,11 +138,11 @@ public class CarrinhoAdapter extends BaseAdapter {
             });
 
             btnInc.setOnClickListener(v -> {
-                if(token!=null){
-                    SingletonLoja.getInstance(context).changeQuantityProdutoCarrinhoAPI(context, linha.getIdProduto(), token, 1,"+" ,new Response.Listener<String>() {
+                if (token != null) {
+                    SingletonLoja.getInstance(context).changeQuantityProdutoCarrinhoAPI(context, linha.getIdProduto(), token, 1, "+", new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            linha.setQuantidade(linha.getQuantidade()+1);
+                            linha.setQuantidade(linha.getQuantidade() + 1);
                             notifyDataSetChanged();
                         }
                     });

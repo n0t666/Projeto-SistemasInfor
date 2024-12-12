@@ -395,6 +395,30 @@ public class SingletonLoja {
             volleyQueue.add(req);
         }
     }
+    //endregion
+
+    //region - Fatura related API
+    public void getFaturasAPI(final Context context, String token, Response.Listener<ArrayList<Fatura>> listener){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "faturas?access-token=" + token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    ArrayList<Fatura> faturas = LojaJsonParser.parserJsonFaturas(response);
+                    listener.onResponse(faturas);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
 
     //endregion
 
