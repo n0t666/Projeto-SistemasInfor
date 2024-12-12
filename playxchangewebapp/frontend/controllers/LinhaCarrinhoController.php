@@ -51,17 +51,11 @@ class LinhaCarrinhoController extends Controller
             $userId = Yii::$app->user->id;
             $carrinho = Yii::$app->user->identity->profile->carrinho;
             //$carrinho = Carrinho::find()->where(['utilizador_id' => $userId])->one();
+
             if (!$userId) {
                 throw new NotAcceptableHttpException();
             }
-            if (!$carrinho) {
-                $carrinho = new Carrinho();
-                $carrinho->utilizador_id = $userId;
-                if (!$carrinho->save()) {
-                    Yii::$app->session->setFlash('error', 'Falha ao encontrar o carrinho.');
-                    return $this->goBack();
-                }
-            }
+
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 if ($model->load(Yii::$app->request->post())) {

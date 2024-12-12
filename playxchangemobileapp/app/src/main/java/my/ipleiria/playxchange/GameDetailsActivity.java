@@ -39,13 +39,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 
 import my.ipleiria.playxchange.adapters.CarouselAdapterScreenshots;
+import my.ipleiria.playxchange.listeners.JogoListener;
+import my.ipleiria.playxchange.listeners.ProdutoListener;
 import my.ipleiria.playxchange.models.Avaliacao;
 import my.ipleiria.playxchange.models.Jogo;
 import my.ipleiria.playxchange.models.PlataformaItem;
 import my.ipleiria.playxchange.models.SingletonLoja;
 import my.ipleiria.playxchange.utils.Constants;
 
-public class GameDetailsActivity extends AppCompatActivity {
+public class GameDetailsActivity extends AppCompatActivity implements JogoListener {
 
     private TextView tvTitle,tvReleaseDate,tvPrice,tvQuantity,tvAvg,tvWish,tvPlayed,tvReviews,tvEditora,tvDistribuidora,tvDescricao;
     private Button btnCart;
@@ -63,9 +65,6 @@ public class GameDetailsActivity extends AppCompatActivity {
     private int selectedProdutoId = -1;
 
     private BottomSheetDialog bottomSheet;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,18 +103,11 @@ public class GameDetailsActivity extends AppCompatActivity {
 
     public void getJogo(int id) {
         String token = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE).getString(Constants.TOKEN, null);
-        SingletonLoja.getInstance(getApplicationContext()).findJogoByIdAPI(getApplicationContext(), id,token, new Response.Listener<Jogo>() {
-            @Override
-            public void onResponse(Jogo jogo) {
-                if (jogo != null) {
-                    lJogo = jogo;
-                    setJogo();
-                } else {
-                    Toast.makeText(GameDetailsActivity.this, "Detalhes do jogo não encontrados", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        SingletonLoja.getInstance(getApplicationContext()).setJogoListener(this);
+        SingletonLoja.getInstance(getApplicationContext()).findJogoByIdAPI(getApplicationContext(), id,token);
     }
+
+
 
     private void setJogo(){
         if(lJogo != null){
@@ -195,12 +187,7 @@ public class GameDetailsActivity extends AppCompatActivity {
 
     private void saveCart(int produtoId, int quantidade){
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-        SingletonLoja.getInstance(getApplicationContext()).addProdutoCarrinhoAPI(getApplicationContext(), produtoId, quantidade, sharedPreferences.getString(Constants.TOKEN,""), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(), "Produto adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-            }
-        });
+        SingletonLoja.getInstance(getApplicationContext()).addProdutoCarrinhoAPI(getApplicationContext(), produtoId, quantidade, sharedPreferences.getString(Constants.TOKEN,""));
     }
 
     private void setTags(){
@@ -431,8 +418,17 @@ public class GameDetailsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onRefreshJogo(Jogo jogo) {
+        if(jogo != null){
+            lJogo = jogo;
+            setJogo();
+        }
+    }
 
-
-
+    @Override
+    public void onAddCarrinho() {
+        Toast.makeText(this, "Produto adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+    }
 
 }

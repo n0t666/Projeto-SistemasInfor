@@ -103,14 +103,15 @@ class Carrinho extends \yii\db\ActiveRecord
     {
         $total = 0;
         $totalProdutos = 0;
-        foreach ($this->linhascarrinhos as $linhaCarrinho) {
-            $total += ($linhaCarrinho->produtos->preco) * ($linhaCarrinho->quantidade);
-            $totalProdutos += $linhaCarrinho->quantidade;
+        $linhascarrinho = $this->linhascarrinhos;
+        foreach ($linhascarrinho as $linhaCarrinho) {
+            $totalProdutos = $totalProdutos + $linhaCarrinho->quantidade;
+            $total += $linhaCarrinho->produtos->preco * $linhaCarrinho->quantidade;
         }
         $this->total = $total;
         $this->count = $totalProdutos;
 
-        if (!$this->save(false)) {
+        if (!$this->save()) {
             throw new \Exception('Erro ao salvar o carrinho após recalcular o total');
         }
     }

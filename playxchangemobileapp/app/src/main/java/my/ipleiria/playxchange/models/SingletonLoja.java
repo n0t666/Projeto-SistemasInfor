@@ -23,7 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import my.ipleiria.playxchange.R;
+import my.ipleiria.playxchange.listeners.CarrinhoListener;
+import my.ipleiria.playxchange.listeners.FaturaListener;
+import my.ipleiria.playxchange.listeners.FaturasListener;
+import my.ipleiria.playxchange.listeners.JogoListener;
 import my.ipleiria.playxchange.listeners.JogosListener;
+import my.ipleiria.playxchange.listeners.LoginListener;
 import my.ipleiria.playxchange.parsers.LojaJsonParser;
 import my.ipleiria.playxchange.utils.Constants;
 
@@ -32,6 +37,40 @@ public class SingletonLoja {
     private static SingletonLoja instance = null;
     private static RequestQueue volleyQueue = null;
     private JogosListener jogosListener;
+
+    private JogoListener jogoListener;
+
+    private CarrinhoListener carrinhoListener;
+    private FaturasListener faturasListener;
+
+    private FaturaListener faturaListener;
+
+    private LoginListener loginListener;
+
+
+    public void setJogosListener(JogosListener jogosListener) {
+        this.jogosListener = jogosListener;
+    }
+
+    public void setLoginListener(LoginListener loginListener) {
+        this.loginListener = loginListener;
+    }
+
+    public void setFaturaListener(FaturaListener faturaListener) {
+        this.faturaListener = faturaListener;
+    }
+
+    public void setFaturasListener(FaturasListener faturasListener) {
+        this.faturasListener = faturasListener;
+    }
+
+    public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
+        this.carrinhoListener = carrinhoListener;
+    }
+
+    public void setJogoListener(JogoListener jogoListener) {
+        this.jogoListener = jogoListener;
+    }
 
     private SingletonLoja(Context context) {
         volleyQueue = Volley.newRequestQueue(context);
@@ -68,20 +107,23 @@ public class SingletonLoja {
     //region - API
 
     //region - Account related API
-    public void loginAPI(final String username, final String password, final Context context, Response.Listener listener) {
+    public void loginAPI(final String username, final String password, final Context context) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
             StringRequest request = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + Constants.LOGIN_ENDPOINT, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        editor.putString(Constants.TOKEN, jsonObject.getString("token"));
-                        editor.apply();
-                        listener.onResponse(response);
+                        String token = jsonObject.getString("access_token");
+                        if(!token.isEmpty()){
+                            throw new JSONException("Token is empty");
+                        }else{
+                            if(loginListener != null){
+                                loginListener.onLoginRefresh(token);
+                            }
+                        }
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
@@ -112,7 +154,7 @@ public class SingletonLoja {
 
     //region - Homepage related API
 
-    public void getJogosByCategoriaAPI(final Context context, final String categoria, Response.Listener<ArrayList<Jogo>> listener) {
+    public void getJogosByCategoriaAPI(final Context context, final String categoria) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
@@ -120,7 +162,17 @@ public class SingletonLoja {
                 @Override
                 public void onResponse(JSONArray response) {
                     ArrayList<Jogo> jogos = LojaJsonParser.parserJsonJogos(response);
-                    listener.onResponse(jogos);
+                    if(jogosListener != null){
+                        switch (categoria){
+                            case "populares":
+                                jogosListener.onRefreshListaJogosPopulares(jogos);
+                                break;
+                            case "recentes":
+                                jogosListener.onRefreshListaJogosRecentes(jogos);
+                                break;
+                        }
+                    }
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -132,7 +184,7 @@ public class SingletonLoja {
         }
     }
 
-    public void findJogoByIdAPI(final Context context, final int id,final String token, Response.Listener<Jogo> listener) {
+    public void findJogoByIdAPI(final Context context, final int id,final String token) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
@@ -149,7 +201,9 @@ public class SingletonLoja {
                     Log.d("API Response", response);
 
                     Jogo jogo = LojaJsonParser.parserJsonJogo(response);
-                    listener.onResponse(jogo);
+                    if(jogoListener != null){
+                        jogoListener.onRefreshJogo(jogo);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -170,14 +224,16 @@ public class SingletonLoja {
     //endregion
 
     //region - Cart related API
-    public void addProdutoCarrinhoAPI(final Context context, final int id, final int quantidade, String token, Response.Listener<String> listener) {
+    public void addProdutoCarrinhoAPI(final Context context, final int id, final int quantidade, String token) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
             StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "carrinhos/linhas/adicionar?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    listener.onResponse(response);
+                    if(jogoListener!=null){
+                        jogoListener.onAddCarrinho();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -199,7 +255,7 @@ public class SingletonLoja {
         }
     }
 
-    public void getCarrinhoAPI(final Context context, String token, Response.Listener<Carrinho> listener){
+    public void getCarrinhoAPI(final Context context, String token){
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
@@ -207,7 +263,10 @@ public class SingletonLoja {
                 @Override
                 public void onResponse(String response) {
                     Carrinho carrinho = LojaJsonParser.parserJsonCarrinho(response);
-                    listener.onResponse(carrinho);
+                    if(carrinhoListener != null){
+                        carrinhoListener.onRefreshCarrinho(carrinho);
+                    }
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -398,7 +457,7 @@ public class SingletonLoja {
     //endregion
 
     //region - Fatura related API
-    public void getFaturasAPI(final Context context, String token, Response.Listener<ArrayList<Fatura>> listener){
+    public void getFaturasAPI(final Context context, String token){
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
@@ -406,7 +465,9 @@ public class SingletonLoja {
                 @Override
                 public void onResponse(JSONArray response) {
                     ArrayList<Fatura> faturas = LojaJsonParser.parserJsonFaturas(response);
-                    listener.onResponse(faturas);
+                    if(faturasListener != null){
+                        faturasListener.onRefreshListaFaturas(faturas);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

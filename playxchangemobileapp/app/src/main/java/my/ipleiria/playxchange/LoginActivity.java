@@ -19,10 +19,11 @@ import com.android.volley.Response;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import my.ipleiria.playxchange.listeners.LoginListener;
 import my.ipleiria.playxchange.models.SingletonLoja;
 import my.ipleiria.playxchange.utils.Constants;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     private TextInputEditText txtUsername,txtPassword;
     private TextInputLayout tvUsername, tvPassword;
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         tvUsername = findViewById(R.id.tvUsername);
         tvPassword = findViewById(R.id.tvPassword);
         ivConfig = findViewById(R.id.ivConfig);
+        sharedPreferences = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
 
         checkLoginStatus();
     }
@@ -87,17 +89,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(String username, String password) {
-        SingletonLoja.getInstance(getApplicationContext()).loginAPI(username, password, getApplicationContext(), new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
+        SingletonLoja.getInstance(getApplicationContext()).loginAPI(username, password, getApplicationContext());
     }
 
     private void checkLoginStatus() {
-        sharedPreferences = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(Constants.TOKEN, null);
 
         if (token != null) {
@@ -105,5 +100,14 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+    }
+
+    @Override
+    public void onLoginRefresh(String token) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.TOKEN, token);
+        editor.apply();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 }

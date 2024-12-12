@@ -194,7 +194,7 @@ class CarrinhoController extends ActiveController
                 $linhaCarrinho->quantidade += $quantidade;
                 break;
             case '-':
-                if ($linhaCarrinho->quantidade > $quantidade) {
+                if ($linhaCarrinho->quantidade > $quantidade  ) {
                     $linhaCarrinho->quantidade -= $quantidade;
                 } elseif ($linhaCarrinho->quantidade == $quantidade) {
                     $linhaCarrinho->delete();
@@ -208,12 +208,13 @@ class CarrinhoController extends ActiveController
         }
 
 
+
         if (!$linhaCarrinho->save()) {
             throw new \Exception('Ocorreu um problema ao guardar a alteração do carrinho');
         }
-
+        
+        $carrinho->refresh();
         $carrinho->recalculateTotal();
-
 
         return [
             'message' => 'Linha do carrinho alteradas com sucesso',

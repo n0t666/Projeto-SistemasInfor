@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import my.ipleiria.playxchange.GameDetailsActivity;
 import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.adapters.CarouselAdapterJogos;
+import my.ipleiria.playxchange.listeners.JogosListener;
 import my.ipleiria.playxchange.models.Jogo;
 import my.ipleiria.playxchange.models.SingletonLoja;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements JogosListener {
 
     private RecyclerView rvPopular, rvRecent;
 
@@ -44,57 +45,19 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         rvPopular = view.findViewById(R.id.rvPopular);
         rvRecent = view.findViewById(R.id.rvRecent);
-
         popularCarouselAdapter = new CarouselAdapterJogos(getContext(), popularJogos);
         recentCarouselAdapter = new CarouselAdapterJogos(getContext(), recentJogos);
 
-        popularCarouselAdapter.setOnItemClickListener(new CarouselAdapterJogos.OnItemClickListener() {
-            @Override
-            public void onClick(ImageView imageView, Jogo jogo) {
-                openGameDetails(jogo);
-            }
-        });
-
-        recentCarouselAdapter.setOnItemClickListener(new CarouselAdapterJogos.OnItemClickListener() {
-            @Override
-            public void onClick(ImageView imageView, Jogo jogo) {
-                openGameDetails(jogo);
-            }
-        });
-
-        rvPopular.setAdapter(popularCarouselAdapter);
-        rvRecent.setAdapter(recentCarouselAdapter);
-
-        getJogos();
+        SingletonLoja.getInstance(getContext()).setJogosListener(this);
+        SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(),"populares");
+        SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(),"recentes");
 
 
         return view;
     }
 
-    private void getJogos() {
-        SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(), "populares", new Response.Listener<ArrayList<Jogo>>() {
-            @Override
-            public void onResponse(ArrayList<Jogo> jogos) {
-                popularJogos.clear();
-                popularJogos.addAll(jogos);
-                popularCarouselAdapter.notifyDataSetChanged();
-            }
-        });
-
-
-
-        SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(), "recentes", new Response.Listener<ArrayList<Jogo>>() {
-            @Override
-            public void onResponse(ArrayList<Jogo> jogos) {
-                recentJogos.clear();
-                recentJogos.addAll(jogos);
-                recentCarouselAdapter.notifyDataSetChanged();
-            }
-        });
-    }
 
     private void openGameDetails(Jogo jogo) {
         Intent intent = new Intent(getContext(), GameDetailsActivity.class);
@@ -103,4 +66,36 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void onRefreshListaJogos(ArrayList<Jogo> jogos) {
+
+    }
+
+    @Override
+    public void onRefreshListaJogosRecentes(ArrayList<Jogo> jogos) {
+        recentJogos.clear();
+        recentJogos.addAll(jogos);
+        recentCarouselAdapter = new CarouselAdapterJogos(getContext(), recentJogos);
+        recentCarouselAdapter.setOnItemClickListener(new CarouselAdapterJogos.OnItemClickListener() {
+            @Override
+            public void onClick(ImageView imageView, Jogo jogo) {
+                openGameDetails(jogo);
+            }
+        });
+        rvRecent.setAdapter(recentCarouselAdapter);
+    }
+
+    @Override
+    public void onRefreshListaJogosPopulares(ArrayList<Jogo> jogos) {
+        popularJogos.clear();
+        popularJogos.addAll(jogos);
+        popularCarouselAdapter = new CarouselAdapterJogos(getContext(), popularJogos);
+        popularCarouselAdapter.setOnItemClickListener(new CarouselAdapterJogos.OnItemClickListener() {
+            @Override
+            public void onClick(ImageView imageView, Jogo jogo) {
+                openGameDetails(jogo);
+            }
+        });
+        rvPopular.setAdapter(popularCarouselAdapter);
+    }
 }
