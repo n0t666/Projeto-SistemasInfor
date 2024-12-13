@@ -70,6 +70,11 @@ return [
                 ],
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/codigo-promocional',
+                    'extraPatterns' => [
+                        'POST aplicar' => 'check-valid',
+
+
+                        ],
                     'pluralize' => false
                 ],
                 ['class' => 'yii\rest\UrlRule',
@@ -100,8 +105,6 @@ return [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/fatura',
                     'extraPatterns' => [
-
-
                     ],
                     'pluralize' => true
                 ],
@@ -122,8 +125,6 @@ return [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/comentario',
                     'extraPatterns' => [
-
-
                     ],
                     'pluralize' => true
                 ],

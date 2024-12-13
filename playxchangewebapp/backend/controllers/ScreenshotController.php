@@ -11,6 +11,7 @@ use common\models\UploadForm;
 use Yii;
 use common\models\Screenshot;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -204,12 +205,19 @@ class ScreenshotController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('removerScreenshots')){
-            $model = $this->findModel($id);
-            $jogo = $model->jogo_id;
-            $filePath = Yii::getAlias('@screenshotsJogoPath') . '/' . $model->filename;
+            try {
+                $model = $this->findModel($id);
+                $jogo = $model->jogo_id;
                 $model->delete();
                 Yii::$app->session->setFlash('success', 'Screenshot removida com sucesso!.');
                 return $this->redirect(['index', 'jogoId' => $jogo]);
+            } catch (NotFoundHttpException $e) {
+                Yii::$app->session->setFlash('error', 'Não foi possível encontrar a screenshot!.');
+                return $this->redirect(['index', 'jogoId' => $jogo]);
+            } catch (\Throwable $e) {
+                Yii::$app->session->setFlash('error', 'Ocorreu um erro ao tentar apagar a screenshot!.');
+                return $this->redirect(['index', 'jogoId' => $jogo]);
+            }
 
         }else{
             return $this->goHome();

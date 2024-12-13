@@ -13,6 +13,7 @@ import java.util.List;
 
 import my.ipleiria.playxchange.models.Avaliacao;
 import my.ipleiria.playxchange.models.Carrinho;
+import my.ipleiria.playxchange.models.CodigoPromocional;
 import my.ipleiria.playxchange.models.Fatura;
 import my.ipleiria.playxchange.models.Jogo;
 import my.ipleiria.playxchange.models.LinhaCarrinho;
@@ -244,7 +245,7 @@ public class LojaJsonParser {
             int id = carrinho.has("id") && !carrinho.isNull("id") ? carrinho.getInt("id") : 0;
             int quantidade = carrinho.has("quantidade") && !carrinho.isNull("quantidade") ? carrinho.getInt("quantidade") : 0;
             double total = carrinho.has("total") && !carrinho.isNull("total") ? carrinho.getDouble("total") : 0.0;
-            List<LinhaCarrinho> itensCarrinho = new ArrayList<>();
+            ArrayList<LinhaCarrinho> itensCarrinho = new ArrayList<>();
             if (jsonObject.has("itensCarrinho") && !jsonObject.isNull("itensCarrinho")) {
                 JSONArray jsonItensCarrinho = jsonObject.getJSONArray("itensCarrinho");
                 for (int i = 0; i < jsonItensCarrinho.length(); i++) {
@@ -294,6 +295,22 @@ public class LojaJsonParser {
             }
         }
         return faturas;
+    }
+
+    public static CodigoPromocional parserJsonCodigoPromocional(String response){
+        CodigoPromocional auxCodigo = null;
+        try {
+            JSONObject codigo = new JSONObject(response);
+            int id = codigo.has("id") && !codigo.isNull("id") ? codigo.getInt("id") : 0;
+            int status = codigo.has("status") && !codigo.isNull("status") ? codigo.getInt("status") : 0;
+            int desconto =  codigo.has("desconto") && !codigo.isNull("desconto") ? codigo.getInt("desconto") : 0;
+            double valorDescontado = codigo.has("valorDescontado") && !codigo.isNull("valorDescontado") ? codigo.getDouble("valorDescontado") : 0.0;
+            String codigoName = codigo.has("codigo") && !codigo.isNull("codigo") ? codigo.getString("codigo") : "";
+            auxCodigo = new CodigoPromocional(id,status,desconto,codigoName,valorDescontado);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return auxCodigo;
     }
 
 

@@ -15,9 +15,11 @@ import com.android.volley.Response;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import my.ipleiria.playxchange.R;
+import my.ipleiria.playxchange.listeners.CarrinhoListener;
 import my.ipleiria.playxchange.models.LinhaCarrinho;
 import my.ipleiria.playxchange.models.SingletonLoja;
 import my.ipleiria.playxchange.utils.Constants;
@@ -25,11 +27,15 @@ import my.ipleiria.playxchange.utils.Constants;
 public class CarrinhoAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
-    private List<LinhaCarrinho> linhas;
+    private ArrayList<LinhaCarrinho> linhas;
 
-    public CarrinhoAdapter(Context context, List<LinhaCarrinho> linhas) {
+    private CarrinhoListener listener;
+
+
+    public CarrinhoAdapter(Context context, ArrayList<LinhaCarrinho> linhas, CarrinhoListener listener) {
         this.context = context;
         this.linhas = linhas;
+        this.listener = listener;
     }
 
 

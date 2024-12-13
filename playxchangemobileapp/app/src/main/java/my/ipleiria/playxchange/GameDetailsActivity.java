@@ -66,6 +66,8 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
     private BottomSheetDialog bottomSheet;
 
+    RatingBar rbStars;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,18 +212,17 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     }
 
     public void onClickBottomSheet(View view) {
-
         if (lJogo != null) {
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this, R.style.BottomSheetDialog);
-            bottomSheetDialog.setContentView(R.layout.bottom_sheet_jogos);
-            MaterialButton btnPlay = bottomSheetDialog.findViewById(R.id.btnPlay);
-            MaterialButton btnFavorite = bottomSheetDialog.findViewById(R.id.btnFavorite);
-            MaterialButton btnWishlist = bottomSheetDialog.findViewById(R.id.btnWishlist);
-            MaterialButton btnComment = bottomSheetDialog.findViewById(R.id.btnComment);
-            TextView tvTitle = bottomSheetDialog.findViewById(R.id.tvTitle);
-            TextView tvReleaseDate = bottomSheetDialog.findViewById(R.id.tvReleaseDate);
-            RatingBar rbStars = bottomSheetDialog.findViewById(R.id.rbStars);
-            MaterialButton btnClearRating = bottomSheetDialog.findViewById(R.id.btnClear);
+            bottomSheet = new BottomSheetDialog(this, R.style.BottomSheetDialog);
+            bottomSheet.setContentView(R.layout.bottom_sheet_jogos);
+            MaterialButton btnPlay = bottomSheet.findViewById(R.id.btnPlay);
+            MaterialButton btnFavorite = bottomSheet.findViewById(R.id.btnFavorite);
+            MaterialButton btnWishlist = bottomSheet.findViewById(R.id.btnWishlist);
+            MaterialButton btnComment = bottomSheet.findViewById(R.id.btnComment);
+            TextView tvTitle = bottomSheet.findViewById(R.id.tvTitle);
+            TextView tvReleaseDate = bottomSheet.findViewById(R.id.tvReleaseDate);
+            MaterialButton btnClearRating = bottomSheet.findViewById(R.id.btnClear);
+            rbStars = bottomSheet.findViewById(R.id.rbStars);
 
 
             if(lJogo.getAvaliacao() != null){
@@ -253,7 +254,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                 btnPlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        interactionHandler(1,token,bottomSheetDialog);
+                        interactionHandler(1,token);
                     }
                 });
             }
@@ -262,7 +263,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                 btnFavorite.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        interactionHandler(2,token,bottomSheetDialog);
+                        interactionHandler(2,token);
                     }
                 });
             }
@@ -271,7 +272,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                 btnWishlist.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        interactionHandler(3,token,bottomSheetDialog);
+                        interactionHandler(3,token);
                     }
                 });
             }
@@ -293,32 +294,15 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                             if(lJogo.getAvaliacao() == null){
                                 if(rating > 0 && rating <= 5){
                                     lJogo.setAvaliacao(new Avaliacao(lJogo.getId(),-1,rating,null)); // É preciso criar uma nova , se no caso for apagado senão irá dar erro
-                                    SingletonLoja.getInstance(getApplicationContext()).addAvaliacaoAPI(getApplicationContext(), lJogo.getId(), rating, token, new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            lJogo.getAvaliacao().setNumEstrelas(rating);
-                                            Toast.makeText(getApplicationContext(), "Avaliação adicionada", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    SingletonLoja.getInstance(getApplicationContext()).addAvaliacaoAPI(getApplicationContext(), lJogo.getId(), rating, token);
                                 }else {
                                     Toast.makeText(getApplicationContext(), "Avaliação inválida (create)", Toast.LENGTH_SHORT).show();
                                 }
                             } else if (lJogo.getAvaliacao().getNumEstrelas() != rating){
                                 if(rating > 0 && rating <= 5) {
-                                    SingletonLoja.getInstance(getApplicationContext()).updateAvaliacaoAPI(getApplicationContext(), lJogo.getId(), rating, token, new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            lJogo.getAvaliacao().setNumEstrelas(rating);
-                                            Toast.makeText(getApplicationContext(), "Avaliação atualizada", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    SingletonLoja.getInstance(getApplicationContext()).updateAvaliacaoAPI(getApplicationContext(), lJogo.getId(), rating, token);
                                 }else if (rating == 0){
-                                    SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token, new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            Toast.makeText(getApplicationContext(), "Avaliação removida", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
                                 }else {
                                     Toast.makeText(getApplicationContext(), "Avaliação inválida", Toast.LENGTH_SHORT).show();
                                 }
@@ -333,19 +317,12 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                     btnClearRating.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            bottomSheetDialog.dismiss();
+                            bottomSheet.dismiss();
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(GameDetailsActivity.this, R.style.CustomMaterialAlertDialog);
                             builder.setTitle("Remover Avaliação")
                                     .setMessage("Tem a certeza que deseja remover a sua avaliação?")
                                     .setPositiveButton("Sim", (dialog, which) -> {
-                                        SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token, new Response.Listener<String>() {
-                                            @Override
-                                            public void onResponse(String response) {
-                                                lJogo.setAvaliacao(null);
-                                                rbStars.setRating(0);
-                                                Toast.makeText(getApplicationContext(), "Avaliação removida", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                        SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
                                     })
                                     .setNegativeButton("Não", (dialog, which) -> {
                                         dialog.dismiss();
@@ -359,7 +336,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                 }
             }
 
-            bottomSheetDialog.show();
+            bottomSheet.show();
         }else{
             Toast.makeText(this, "Não foi possível encontrar o jogo especificado", Toast.LENGTH_SHORT).show();
         }
@@ -384,34 +361,10 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     /*
      * 1 - Jogado , 2 - Favorito , 3 - Desejado
      */
-    private void interactionHandler(int action,String token, BottomSheetDialog bottomSheetDialog)  // Passar o bottomSheetDialog como argumento para evitar ter de passar os 3 botões para alterar a parte visual
+    private void interactionHandler(int action,String token)  // Passar o bottomSheetDialog como argumento para evitar ter de passar os 3 botões para alterar a parte visual
     {
-
         if (token != null && lJogo != null) {
-           switch (action){
-               case 1:
-                   lJogo.getAtividade().setJogado(lJogo.getAtividade().isJogado() == 1 ? 0 : 1);
-                   bottomSheetDialog.dismiss();
-                   break;
-                case 2:
-                    lJogo.getAtividade().setFavorito(lJogo.getAtividade().isFavorito() == 1 ? 0 : 1);
-                    bottomSheetDialog.dismiss();
-                    break;
-                case 3:
-                    lJogo.getAtividade().setDesejado(lJogo.getAtividade().isDesejado() == 1 ? 0 : 1);
-                    bottomSheetDialog.dismiss();
-                    break;
-               default:
-                   Toast.makeText(this, "Ação inválida", Toast.LENGTH_SHORT).show();
-           }
-
-            SingletonLoja.getInstance(getApplicationContext()).interactJogoAPI(getApplicationContext(), lJogo.getId(), token, action, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Toast.makeText(getApplicationContext(), "Atividade atualizada", Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            SingletonLoja.getInstance(getApplicationContext()).interactJogoAPI(getApplicationContext(), lJogo.getId(), token, action);
         }else {
             Toast.makeText(this, "Não foi possível efetuar o pedido", Toast.LENGTH_SHORT).show();
         }
@@ -429,6 +382,46 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     @Override
     public void onAddCarrinho() {
         Toast.makeText(this, "Produto adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onInteract(int action) {
+        switch (action){
+            case 1:
+                lJogo.getAtividade().setJogado(lJogo.getAtividade().isJogado() == 1 ? 0 : 1);
+                bottomSheet.dismiss();
+                break;
+            case 2:
+                lJogo.getAtividade().setFavorito(lJogo.getAtividade().isFavorito() == 1 ? 0 : 1);
+                bottomSheet.dismiss();
+                break;
+            case 3:
+                lJogo.getAtividade().setDesejado(lJogo.getAtividade().isDesejado() == 1 ? 0 : 1);
+                bottomSheet.dismiss();
+                break;
+            default:
+                Toast.makeText(this, "Ação inválida", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRatingCreated(double numEstrelas) {
+        lJogo.getAvaliacao().setNumEstrelas(numEstrelas);
+        Toast.makeText(getApplicationContext(), "Avaliação adicionada", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRatingChanged(double numEstrelas) {
+        lJogo.getAvaliacao().setNumEstrelas(numEstrelas);
+        Toast.makeText(getApplicationContext(), "Avaliação atualizada", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onRatingDeleted() {
+        lJogo.setAvaliacao(null);
+        rbStars.setRating(0);
+        Toast.makeText(getApplicationContext(), "Avaliação removida", Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -103,7 +103,7 @@ class ComentarioController extends ActiveController
 
 
         if(!$utilizadorId || !$jogoId || !$comentario){
-            throw new Exception('Para fazer um comentário é necessário passar um utilizador,jogo e comentário');
+            throw new \Exception('Para fazer um comentário é necessário passar um utilizador,jogo e comentário');
         }
 
         if($utilizadorId != $user->id){
@@ -115,11 +115,11 @@ class ComentarioController extends ActiveController
         }
 
         if (!$user->profile->getAvaliacaos()->where(['jogo_id' => $jogoId])->exists()) {
-            throw new exception('É necessário de avaliar um jogo antes de comentar.');
+            throw new \Exception('É necessário de avaliar um jogo antes de comentar.');
         }
 
         if($user->profile->getComentarios()->where(['jogo_id' => $jogoId])->exists()){
-            throw new Exception('Não pode criar mais do que um comentário para um determinado jogo');
+            throw new \Exception('Não pode criar mais do que um comentário para um determinado jogo');
         }
 
 

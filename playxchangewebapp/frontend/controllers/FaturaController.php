@@ -333,8 +333,6 @@ class FaturaController extends Controller
                 if(isset($transaction)){
                     $transaction->rollBack();
                 }
-                var_dump($e);
-                die();
                 Yii::$app->session->setFlash('error', 'Erro ao processar a fatura.');
                 return $this->redirect(['/carrinho']);
             }

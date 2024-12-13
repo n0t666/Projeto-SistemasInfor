@@ -25,12 +25,12 @@ class CarrinhoController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create','index','update'],
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['cliente'],
                     ],
                 ],
-            ],
+                ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [

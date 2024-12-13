@@ -7,6 +7,7 @@ use backend\models\TagSearch;
 use Yii;
 use common\models\Tag;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -146,8 +147,11 @@ class TagController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('removerTags')){
-            $this->findModel($id)->delete();
-
+            try {
+                $this->findModel($id)->delete();
+            }catch (\Throwable $e) {
+                Yii::$app->session->setFlash('error', 'Ocorreu um erro ao tentar apagar a tag!.');
+            }
             return $this->redirect(['index']);
         }else{
             $this->goHome();

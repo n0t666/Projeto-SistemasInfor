@@ -223,8 +223,10 @@ class UserController extends Controller
     public function actionDelete($id)
     {
         if(Yii::$app->user->can('banirUtilizador')){
-            $this->findModel($id)->delete();
-
+            $user = $this->findModel($id);
+            if($user){
+                $user->status = 0;
+            }
             return $this->redirect(['index']);
         }else{
             return $this->goHome();

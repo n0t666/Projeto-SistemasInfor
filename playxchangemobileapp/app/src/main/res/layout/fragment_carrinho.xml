@@ -41,7 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_weight="1.4"
+            android:layout_weight="1.2"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -49,6 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/txt_cod"
+                android:textColorHint="@color/text"
+                android:textColor="@color/text"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,16 +59,15 @@
             style="@style/Widget.Material3.Button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="@string/txt_apply"
-            android:textSize="15sp"
             android:layout_margin="16dp"
+            android:layout_weight="0.8"
+            android:text="@string/txt_apply"
             android:textColor="@color/text"
-            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraSmall"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tfCodigo"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_weight="0.6"
-            />
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraSmall" />
     </LinearLayout>
 
     <LinearLayout

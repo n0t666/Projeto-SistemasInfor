@@ -27,7 +27,7 @@ class FaturaController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create','update','delete','view'],
+                        'actions' => ['update','delete','view'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -89,7 +89,7 @@ class FaturaController extends Controller
             $linhasFatura = [];
             $totalSemDesconto = 0;
 
-            foreach ($fatura->linhasfaturas as $linha) {
+            foreach ($fatura->linhasfaturas as $linha) { // Visto que no meu caso cada item de uma compra é uma linha de fatura diferente, é necessário agrupar para mostrar
                 $produto = $linha->produto_id;
                 if (!isset($linhasFatura[$produto])) {
                     $linhasFatura[$produto] = [

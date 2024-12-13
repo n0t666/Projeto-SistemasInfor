@@ -1460,6 +1460,7 @@ figure img {
 
 .toast-warning .toast-body {
     border-top: 1px solid #FF9800;
+}
 
     .toast-error .toast-header {
         background-color: #CF6679;
@@ -1811,5 +1812,3 @@ figure img {
         font-size: 14px;
         padding: 8px;
     }
-}
-

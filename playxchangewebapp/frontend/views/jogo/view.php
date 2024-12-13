@@ -355,7 +355,7 @@ $this->title = $model->nome;
                         </div>
                         <div class="col-12 d-flex justify-content-center gap-3 py-2">
                             <?= Html::submitButton('Guardar Avaliação', ['class' => 'btn btn-primary']) ?>
-                            <?= Html::button('Escrever Avaliação', ['class' => 'btn btn-secondary reviewButton']) ?>
+                            <?= Html::button('Escrever Comentário', ['class' => 'btn btn-secondary reviewButton']) ?>
                         </div>
 
                         <?php ActiveForm::end(); ?>

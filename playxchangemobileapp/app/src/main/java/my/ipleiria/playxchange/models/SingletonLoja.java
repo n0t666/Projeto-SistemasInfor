@@ -24,6 +24,7 @@ import java.util.Map;
 
 import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.listeners.CarrinhoListener;
+import my.ipleiria.playxchange.listeners.CodigoPromocionalListener;
 import my.ipleiria.playxchange.listeners.FaturaListener;
 import my.ipleiria.playxchange.listeners.FaturasListener;
 import my.ipleiria.playxchange.listeners.JogoListener;
@@ -47,30 +48,9 @@ public class SingletonLoja {
 
     private LoginListener loginListener;
 
+    private CodigoPromocionalListener codigoPromocionalListener;
 
-    public void setJogosListener(JogosListener jogosListener) {
-        this.jogosListener = jogosListener;
-    }
 
-    public void setLoginListener(LoginListener loginListener) {
-        this.loginListener = loginListener;
-    }
-
-    public void setFaturaListener(FaturaListener faturaListener) {
-        this.faturaListener = faturaListener;
-    }
-
-    public void setFaturasListener(FaturasListener faturasListener) {
-        this.faturasListener = faturasListener;
-    }
-
-    public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
-        this.carrinhoListener = carrinhoListener;
-    }
-
-    public void setJogoListener(JogoListener jogoListener) {
-        this.jogoListener = jogoListener;
-    }
 
     private SingletonLoja(Context context) {
         volleyQueue = Volley.newRequestQueue(context);
@@ -97,8 +77,32 @@ public class SingletonLoja {
     }
 
     //region - Listeners
-    public void setJogoListener(JogosListener listener) {
-        this.jogosListener = listener;
+    public void setJogosListener(JogosListener jogosListener) {
+        this.jogosListener = jogosListener;
+    }
+
+    public void setLoginListener(LoginListener loginListener) {
+        this.loginListener = loginListener;
+    }
+
+    public void setFaturaListener(FaturaListener faturaListener) {
+        this.faturaListener = faturaListener;
+    }
+
+    public void setFaturasListener(FaturasListener faturasListener) {
+        this.faturasListener = faturasListener;
+    }
+
+    public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
+        this.carrinhoListener = carrinhoListener;
+    }
+
+    public void setJogoListener(JogoListener jogoListener) {
+        this.jogoListener = jogoListener;
+    }
+
+    public void setCodigoPromocionalListener(CodigoPromocionalListener codigoPromocionalListener){
+        this.codigoPromocionalListener = codigoPromocionalListener;
     }
     //endregion
 
@@ -312,7 +316,9 @@ public class SingletonLoja {
             StringRequest req = new StringRequest(Request.Method.PUT, Constants.IP_ADDRESS + "carrinhos/linhas/" + Integer.toString(id) + "?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    listener.onResponse(response);
+                    if(carrinhoListener!=null){
+                        carrinhoListener.onLinhaCarrinhoChanged();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -341,19 +347,59 @@ public class SingletonLoja {
         }
     }
 
+    public void applyDescontoAPI(final Context context, final String token, final String codigo) {
+        Log.e("SUCESS",codigo);
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "codigo-promocional/aplicar?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    CodigoPromocional codigoPromocional = LojaJsonParser.parserJsonCodigoPromocional(response);
+                    if(codigoPromocionalListener!=null){
+                        codigoPromocionalListener.onRefreshCodigo(codigoPromocional);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+
+                    Log.e("ERROR", responseBody);
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("codigo", codigo);
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
 
     //endregion
 
     //region - User interaction with games API
 
-    public void addAvaliacaoAPI(final Context context, final int jogoId, final float avaliacao, String token, Response.Listener<String> listener) {
+    public void addAvaliacaoAPI(final Context context, final int jogoId, final float avaliacao, String token) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
             StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "avaliacao/jogos?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    listener.onResponse(response);
+                    if(jogoListener!=null) {
+                        jogoListener.onRatingCreated(avaliacao);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -375,14 +421,16 @@ public class SingletonLoja {
         }
     }
 
-    public void updateAvaliacaoAPI(final Context context, final int jogoId, final float avaliacao, String token, Response.Listener<String> listener) {
+    public void updateAvaliacaoAPI(final Context context, final int jogoId, final float avaliacao, String token) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
             StringRequest req = new StringRequest(Request.Method.PUT, Constants.IP_ADDRESS + "avaliacao/jogos/" + Integer.toString(jogoId) + "?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    listener.onResponse(response);
+                    if(jogoListener!=null) {
+                        jogoListener.onRatingChanged(avaliacao);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -401,14 +449,16 @@ public class SingletonLoja {
         }
     }
 
-    public void deleteAvaliacaoAPI(final Context context, final int jogoId, String token, Response.Listener<String> listener) {
+    public void deleteAvaliacaoAPI(final Context context, final int jogoId, String token) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
             StringRequest req = new StringRequest(Request.Method.DELETE, Constants.IP_ADDRESS + "avaliacao/jogos/" + Integer.toString(jogoId) + "?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    listener.onResponse(response);
+                    if(jogoListener!=null) {
+                        jogoListener.onRatingDeleted();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -429,14 +479,16 @@ public class SingletonLoja {
         }
     }
 
-    public void interactJogoAPI(final Context context, final int jogoId, final String token, final int tipo, Response.Listener<String> listener) {
+    public void interactJogoAPI(final Context context, final int jogoId, final String token, final int tipo) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
             StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "user/interagir?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    listener.onResponse(response);
+                    if(jogoListener!=null){
+                        jogoListener.onInteract(tipo);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

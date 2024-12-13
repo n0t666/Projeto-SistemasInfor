@@ -1,5 +1,6 @@
 package my.ipleiria.playxchange.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Carrinho
@@ -8,10 +9,10 @@ public class Carrinho
 
     private double total;
 
-    private List<LinhaCarrinho> linhas;
+    private ArrayList<LinhaCarrinho> linhas;
 
 
-    public Carrinho(double total, int id, int quantidade, List<LinhaCarrinho> linhas) {
+    public Carrinho(double total, int id, int quantidade, ArrayList<LinhaCarrinho> linhas) {
         this.total = total;
         this.id = id;
         this.quantidade = quantidade;
@@ -42,11 +43,11 @@ public class Carrinho
         this.quantidade = quantidade;
     }
 
-    public List<LinhaCarrinho> getLinhas() {
+    public ArrayList<LinhaCarrinho> getLinhas() {
         return linhas;
     }
 
-    public void setItensCarrinho(List<LinhaCarrinho> linhas) {
+    public void setItensCarrinho(ArrayList<LinhaCarrinho> linhas) {
         this.linhas = linhas;
     }
 }

@@ -1,16 +1,16 @@
 package my.ipleiria.playxchange.models;
 
-public class CodigoPromocional
-{
-    int id,isAtivo,isUsado,percentagem;
+public class CodigoPromocional {
+    int id, status, percentagem;
     String codigo;
+    double valorDescontado;
 
-    public CodigoPromocional(int id, int isAtivo, int isUsado, int percentagem, String codigo) {
+    public CodigoPromocional(int id, int status, int percentagem, String codigo, double valorDescontado) {
         this.id = id;
-        this.isAtivo = isAtivo;
-        this.isUsado = isUsado;
+        this.status = status;
         this.percentagem = percentagem;
         this.codigo = codigo;
+        this.valorDescontado = valorDescontado;
     }
 
     public int getId() {
@@ -21,20 +21,13 @@ public class CodigoPromocional
         this.id = id;
     }
 
-    public int getIsAtivo() {
-        return isAtivo;
+
+    public int getStatus() {
+        return status;
     }
 
-    public void setIsAtivo(int isAtivo) {
-        this.isAtivo = isAtivo;
-    }
-
-    public int getIsUsado() {
-        return isUsado;
-    }
-
-    public void setIsUsado(int isUsado) {
-        this.isUsado = isUsado;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public int getPercentagem() {
@@ -51,5 +44,13 @@ public class CodigoPromocional
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public double getValorDescontado() {
+        return valorDescontado;
+    }
+
+    public void setValorDescontado(double valorDescontado) {
+        this.valorDescontado = valorDescontado;
     }
 }

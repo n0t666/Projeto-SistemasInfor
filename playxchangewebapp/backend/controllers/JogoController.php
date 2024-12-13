@@ -222,10 +222,8 @@ function actionUpdate($id)
                 $modelUploadScreenshots->imageFiles = UploadedFile::getInstances($modelUploadScreenshots, 'imageFiles');
                 if ($modelUploadCapa->imageFile && $modelUploadCapa->imageFile!='') {
                     if ($modelUploadCapa->upload('@capasJogoPath')) {
-                        if(UtilsController::deleteFile(Yii::getAlias('@capasJogoPath'). '/' . $model->imagemCapa)){
                             $model->imagemCapa = $modelUploadCapa->imageFile->name;
                             $model->save();
-                        }
                     }
                 }
                 if ($modelUploadScreenshots->imageFiles && $modelUploadScreenshots->imageFiles!='') {

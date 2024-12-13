@@ -9,6 +9,8 @@ use common\models\Jogo;
 use Yii;
 use common\models\Comentario;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotAcceptableHttpException;
@@ -134,7 +136,12 @@ class ComentarioController extends Controller
             throw new NotAcceptableHttpException();
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        try {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['jogo/view', 'id' => $model->jogo_id]);
+            }
+        } catch (Exception $e) {
+            Yii::$app->session->setFlash('error', 'Ocorreu um erro ao tentar editar o comentário.');
             return $this->redirect(['jogo/view', 'id' => $model->jogo_id]);
         }
 
@@ -153,8 +160,13 @@ class ComentarioController extends Controller
         $model = $this->findModel($id);
 
         if ($model && $model->utilizador_id == Yii::$app->user->id) {
-            $jogo = $model->jogo_id;
-            $model->delete();
+            try {
+                $jogo = $model->jogo_id;
+                $model->delete();
+            }catch (\Throwable $e) {
+                Yii::$app->session->setFlash('error', 'Ocorreu um erro ao tentar apagar o comentario.');
+                return $this->redirect(['jogo/view', 'id' => $jogo]);
+            }
             return $this->redirect(['jogo/view', 'id' => $jogo]);
         }
 
@@ -173,7 +185,7 @@ class ComentarioController extends Controller
 
         switch ($filtro) {
             case 'recent':
-                $query = Comentario::find()->where(['jogo_id' => $jogoId])->orderBy(['dataComentario' => SORT_DESC]);
+                $query = $jogo->getComentarios()->orderBy(['dataComentario' => SORT_DESC]);
                 break;
             case 'friends':
                 if($utilizadorId){
@@ -192,7 +204,7 @@ class ComentarioController extends Controller
                     ->orderBy(['COUNT(gostoscomentarios.comentario_id)' => SORT_DESC]);
                 break;
             default:
-                $query = Comentario::find()->where(['jogo_id' => $jogoId]);
+                $query = $jogo->getComentarios();
         }
 
         return $query;

@@ -5,6 +5,7 @@ namespace backend\modules\api\controllers;
 use common\models\CodigoPromocional;
 use common\models\User;
 use Yii;
+use yii\db\Exception;
 use yii\filters\auth\QueryParamAuth;
 use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
@@ -96,6 +97,64 @@ class CodigoPromocionalController extends ActiveController
             'desconto' => $codigo->desconto,
             'usado' => $usado ? 1 : 0,
         ];
+    }
+
+    /*
+     *
+     *  Returnar 0 - se já foi usado e 1 caso possa ser utilizado pelo utilizador que fez o pedido
+     *
+     */
+
+    public function actionCheckValid(){
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            throw new UnauthorizedHttpException('Access token inválido.');
+        }
+
+        $carrinho = $user->profile->carrinho;
+        $body = Yii::$app->getRequest()->getBodyParams();
+
+        $codigoNome = $body['codigo'] ?? null;
+
+        if(!$codigoNome){
+            throw new \Exception('Pedido incompleto, é necessário de indicar o código promocional que desejada verficiar');
+        }
+
+        $codigo = CodigoPromocional::find()->where(['codigo' => $codigoNome,'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
+
+
+        if(!$codigo){
+            throw new NotFoundHttpException('Não foi possível encontrar o código promocional especificado');
+        }
+
+        $usado = $user->profile->getCodigos()
+            ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id'])
+            ->andWhere(['codigosPromocionais.id' => $codigo->id])
+            ->exists();
+
+        if($usado){
+            return [
+                'status' => 0
+            ];
+        }else{
+            $total = null;
+            $valorDescontado = null;
+            if(count($carrinho->linhascarrinhos) > 0){
+                if($carrinho->total!=0){
+                    $valorDescontado = ($carrinho->total * $codigo->desconto )/100;
+                    $total = $carrinho->total - $valorDescontado;
+                }
+            }
+            return [
+                'id' => $codigo->id,
+                'status' => 1,
+                'total' => $total,
+                'desconto' => $codigo->desconto,
+                'codigo' => $codigo->codigo,
+                'valorDescontado' => $valorDescontado,
+            ];
+        }
     }
 
 

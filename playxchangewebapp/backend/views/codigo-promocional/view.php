@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model common\models\CodigoPromocional */
 
-$this->title = $model->id;
+$this->title = 'Código Promocional: ' . $model->codigo;
 $this->params['breadcrumbs'][] = ['label' => 'Codigo Promocionals', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -22,8 +22,18 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attributes' => [
                             //'id',
                             'codigo',
-                            'desconto',
-                            'isAtivo',
+                            [
+                                'attribute'=>'desconto',
+                                'value'=>function($model){
+                                    return $model->desconto . " %" ;
+                                }
+                            ],
+                            [
+                                'attribute'=>'isAtivo',
+                                'value'=>function($model){
+                                    return $model->isAtivo ? 'Sim' : 'Não';
+                                }
+                            ],
                         ],
                     ]) ?>
                 </div>

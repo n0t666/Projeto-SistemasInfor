@@ -41,4 +41,5 @@
     <string name="txt_clean_aval">Limpar avaliação</string>
     <string name="txt_apply">Aplicar</string>
     <string name="txt_cod">Código Promocional</string>
+    <string name="txt_remove_coupoun">Remover</string>
 </resources>

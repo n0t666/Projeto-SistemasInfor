@@ -92,19 +92,6 @@ public class FaturaAdapter extends BaseAdapter {
                     ivImagens[i].setVisibility(View.INVISIBLE);
                 }
             }
-
-
-
-
-            btnVerDetalhes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
-
-
         }
     }
 
