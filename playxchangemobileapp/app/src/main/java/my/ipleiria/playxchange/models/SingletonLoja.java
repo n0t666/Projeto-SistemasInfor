@@ -24,6 +24,7 @@ import java.util.Map;
 
 import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.listeners.CarrinhoListener;
+import my.ipleiria.playxchange.listeners.CheckoutListener;
 import my.ipleiria.playxchange.listeners.CodigoPromocionalListener;
 import my.ipleiria.playxchange.listeners.FaturaListener;
 import my.ipleiria.playxchange.listeners.FaturasListener;
@@ -49,6 +50,8 @@ public class SingletonLoja {
     private LoginListener loginListener;
 
     private CodigoPromocionalListener codigoPromocionalListener;
+
+    private CheckoutListener checkoutListener;
 
 
 
@@ -103,6 +106,9 @@ public class SingletonLoja {
 
     public void setCodigoPromocionalListener(CodigoPromocionalListener codigoPromocionalListener){
         this.codigoPromocionalListener = codigoPromocionalListener;
+    }
+    public void setCheckoutListener(CheckoutListener checkoutListener){
+        this.checkoutListener = checkoutListener;
     }
     //endregion
 
@@ -316,9 +322,7 @@ public class SingletonLoja {
             StringRequest req = new StringRequest(Request.Method.PUT, Constants.IP_ADDRESS + "carrinhos/linhas/" + Integer.toString(id) + "?access-token=" + token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    if(carrinhoListener!=null){
-                        carrinhoListener.onLinhaCarrinhoChanged();
-                    }
+                    listener.onResponse(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -509,7 +513,7 @@ public class SingletonLoja {
     //endregion
 
     //region - Fatura related API
-    public void getFaturasAPI(final Context context, String token){
+    public void getFaturasAPI(final Context context, final String token){
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
@@ -528,6 +532,66 @@ public class SingletonLoja {
                     Log.e("ERROR", error.toString());
                 }
             });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getFaturaAPI(final Context context, final String token,final int id){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.GET, Constants.IP_ADDRESS + "faturas/" + id + "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Fatura fatura = LojaJsonParser.parserJsonFatura(response);
+                    if(faturaListener != null){
+                        faturaListener.onRefreshFatura(fatura);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void checkoutAPI(final Context context,final String token, final int codigoId){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        }else{
+            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "faturas/checkout?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Checkout checkout = LojaJsonParser.parserJsonCheckout(response);
+                    if(checkoutListener!=null){
+                        checkoutListener.onRefreshCheckout(checkout);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+
+                    Log.e("ERROR", responseBody);
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("codigo", String.valueOf(codigoId));
+                    return params;
+                }
+            };
             volleyQueue.add(req);
         }
     }

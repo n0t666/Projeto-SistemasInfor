@@ -105,6 +105,7 @@ return [
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/fatura',
                     'extraPatterns' => [
+                        'POST checkout' => 'checkout',
                     ],
                     'pluralize' => true
                 ],

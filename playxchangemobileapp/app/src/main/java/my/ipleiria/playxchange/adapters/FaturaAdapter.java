@@ -1,20 +1,23 @@
 package my.ipleiria.playxchange.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import my.ipleiria.playxchange.FaturaDetailsActivity;
 import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.models.Fatura;
 
@@ -69,6 +72,7 @@ public class FaturaAdapter extends BaseAdapter {
         private MaterialTextView tvTotalPreco,tvStatus,tvTotalQuantidade;
         MaterialButton btnVerDetalhes;
         ImageView[] ivImagens = {null, null, null, null};
+        View vStatus;
 
         public ViewHolderList(View view){
             tvTotalPreco = view.findViewById(R.id.tvTotalPreco);
@@ -79,19 +83,35 @@ public class FaturaAdapter extends BaseAdapter {
             ivImagens[1] = view.findViewById(R.id.ivCover2);
             ivImagens[2] = view.findViewById(R.id.ivCover3);
             ivImagens[3] = view.findViewById(R.id.ivCover4);
+            vStatus = view.findViewById(R.id.vStatus);
         }
 
         public void update(Fatura fatura){
             tvTotalPreco.setText(String.format("%.2f€", fatura.getTotal()));
-            tvStatus.setText(fatura.getEstado());
+            tvStatus.setText(fatura.getEstado().getEstadoNome());
             tvTotalQuantidade.setText("(" + String.valueOf(fatura.getTotalItens()) + " itens)");
             for(int i = 0; i < 4; i++) {
-                if (i < fatura.getCapasPreview().size()) {
+                if (i < fatura.getCapasPreview().size()) { //se existir imagem no determinado indice
                     Glide.with(context).load(fatura.getCapasPreview().get(i)).into(ivImagens[i]);
                 } else {
-                    ivImagens[i].setVisibility(View.INVISIBLE);
+                    ivImagens[i].setVisibility(View.INVISIBLE); //se não existir imagem, tornar invisivel mas ocupar espaço na mesma no layout
                 }
             }
+            // Não será possível pois faz override no background inteiro
+            //vStatus.setBackgroundColor(fatura.getEstado().getCor());
+            GradientDrawable drawable = (GradientDrawable) vStatus.getBackground();
+            int strokeColor = ContextCompat.getColor(context, fatura.getEstado().getCor()); //cor do estado
+            drawable.setStroke(5, strokeColor); // definir a espessura e a cor do do circulo sem preenchimento
+
+            btnVerDetalhes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, FaturaDetailsActivity.class);
+                    intent.putExtra("ID_FATURA", fatura.getId());
+                    context.startActivity(intent);
+                }
+            });
+
         }
     }
 

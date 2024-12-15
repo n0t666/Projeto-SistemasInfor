@@ -42,4 +42,18 @@
     <string name="txt_apply">Aplicar</string>
     <string name="txt_cod">Código Promocional</string>
     <string name="txt_remove_coupoun">Remover</string>
+    <string name="txt_plataforma_label">Plataforma:</string>
+    <string name="txt_preco_unit_label">Preço Unitário:</string>
+    <string name="txt_quantidade_label">Quantidade:</string>
+    <string name="txt_chaves_label">Chaves:</string>
+    <string name="txt_description_jogo">Poster do jogo</string>
+    <string name="txt_subtotal_label">Subtotal:</string>
+    <string name="txt_shipping_label">Método de Expedição:</string>
+    <string name="txt_payment_label">Método de Pagamento:</string>
+    <string name="txt_desconto_label">Desconto:</string>
+    <string name="txt_total_label">Total:</string>
+    <string name="txt_estado_label">Estado:</string>
+    <string name="txt_data_label">Data:</string>
+    <string name="txt_completar_pag">Completar pagamento</string>
+    <string name="txt_taxas_label">Taxas:</string>
 </resources>

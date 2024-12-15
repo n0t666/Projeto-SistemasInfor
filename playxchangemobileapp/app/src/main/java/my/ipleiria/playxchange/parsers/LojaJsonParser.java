@@ -13,6 +13,7 @@ import java.util.List;
 
 import my.ipleiria.playxchange.models.Avaliacao;
 import my.ipleiria.playxchange.models.Carrinho;
+import my.ipleiria.playxchange.models.Checkout;
 import my.ipleiria.playxchange.models.CodigoPromocional;
 import my.ipleiria.playxchange.models.Fatura;
 import my.ipleiria.playxchange.models.Jogo;
@@ -100,7 +101,7 @@ public class LojaJsonParser {
                 atividade = new Jogo.Atividade(0, 0, 0, 0, 0, 0);
             }
 
-            List<Jogo.Produto> produtos = new ArrayList<>();
+            ArrayList<Jogo.Produto> produtos = new ArrayList<>();
             if (jogo.has("produtos")) {
                 Object jsonProdutos = jogo.get("produtos");
                 if (jsonProdutos instanceof JSONObject) {
@@ -118,7 +119,7 @@ public class LojaJsonParser {
             }
 
 
-            List<Jogo.Tag> tags = new ArrayList<>();
+            ArrayList<Jogo.Tag> tags = new ArrayList<>();
             if (jogo.has("tags")) {
                 Object jsonTags = jogo.get("tags");
                 if (jsonTags instanceof JSONObject) {
@@ -135,7 +136,7 @@ public class LojaJsonParser {
                 }
             }
 
-            List<Jogo.Genero> generos = new ArrayList<>();
+            ArrayList<Jogo.Genero> generos = new ArrayList<>();
             if (jogo.has("generos")) {
                 Object jsonGeneros = jogo.get("generos");
                 if (jsonGeneros instanceof JSONObject) {
@@ -153,7 +154,7 @@ public class LojaJsonParser {
             }
 
 
-            List<String> screenshots = new ArrayList<>();
+            ArrayList<String> screenshots = new ArrayList<>();
             if (jogo.has("screenshots")) {
                 Object jsonScreenshots = jogo.get("screenshots");
                 if (jsonScreenshots instanceof String) {
@@ -277,9 +278,11 @@ public class LojaJsonParser {
                 int id = jsonFatura.has("id") && !jsonFatura.isNull("id") ? jsonFatura.getInt("id") : 0;
                 String data = jsonFatura.has("dataEncomenda") && !jsonFatura.isNull("dataEncomenda") ? jsonFatura.getString("dataEncomenda") : "";
                 double total = jsonFatura.has("total") && !jsonFatura.isNull("total") ? jsonFatura.getDouble("total") : 0.0;
-                String estado = jsonFatura.has("estado") && !jsonFatura.isNull("estado") ? jsonFatura.getString("estado") : "";
+                double totalSemDesconto = jsonFatura.has("totalSemDesconto") && !jsonFatura.isNull("totalSemDesconto") ? jsonFatura.getDouble("totalSemDesconto") : 0.0;
+                double quantidadeDesconto = jsonFatura.has("quantidadeDesconto") && !jsonFatura.isNull("quantidadeDesconto") ? jsonFatura.getDouble("quantidadeDesconto") : 0.0;
+                int estado = jsonFatura.has("estado") && !jsonFatura.isNull("estado") ? jsonFatura.getInt("estado") : -1;
                 int quantidade = jsonFatura.has("quantidade") && !jsonFatura.isNull("quantidade") ? jsonFatura.getInt("quantidade") : 0;
-                List <String> capasPreview = new ArrayList<>();
+                ArrayList <String> capasPreview = new ArrayList<>();
                 if (jsonFatura.has("imagensJogos") && !jsonFatura.isNull("imagensJogos")) {
                     JSONArray jsonCapasPreview = jsonFatura.getJSONArray("imagensJogos");
                     for (int j = 0; j < jsonCapasPreview.length(); j++) {
@@ -287,7 +290,7 @@ public class LojaJsonParser {
                     }
                 }
 
-                Fatura auxFatura = new Fatura(id,quantidade,estado,null,null,null,data,total,  new ArrayList<>(),capasPreview);
+                Fatura auxFatura = new Fatura(id,quantidade, Fatura.EstadoFatura.getEstadoFromNum(estado),null,null,null,data,total,  new ArrayList<>(),capasPreview,totalSemDesconto,quantidadeDesconto);
                 faturas.add(auxFatura);
 
             } catch (JSONException e) {
@@ -296,6 +299,60 @@ public class LojaJsonParser {
         }
         return faturas;
     }
+
+    public static Fatura parserJsonFatura(String response) {
+        Fatura auxFatura = null;
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject jsonFatura = jsonObject.getJSONObject("fatura");
+
+            int id = jsonFatura.has("id") && !jsonFatura.isNull("id") ? jsonFatura.getInt("id") : 0;
+            String totalString = jsonFatura.has("total") && !jsonFatura.isNull("total") ? jsonFatura.getString("total") : "0,00 €";
+            double total = jsonFatura.has("total") && !jsonFatura.isNull("total") ? jsonFatura.getDouble("total") : 0.0;
+            double totalSemDesconto = jsonFatura.has("totalSemDesconto") && !jsonFatura.isNull("totalSemDesconto") ? jsonFatura.getDouble("totalSemDesconto") : 0.0;
+            double quantidadeDesconto = jsonFatura.has("quantidadeDesconto") && !jsonFatura.isNull("quantidadeDesconto") ? jsonFatura.getDouble("quantidadeDesconto") : 0.0;
+            String data = jsonFatura.has("dataEncomenda") && !jsonFatura.isNull("dataEncomenda") ? jsonFatura.getString("dataEncomenda") : "";
+            String pagamento = jsonFatura.has("pagamento") && !jsonFatura.isNull("pagamento") ? jsonFatura.getString("pagamento") : "";
+            String envio = jsonFatura.has("envio") && !jsonFatura.isNull("envio") ? jsonFatura.getString("envio") : "";
+            String codigo = jsonFatura.has("codigo") && !jsonFatura.isNull("codigo") ? jsonFatura.getString("codigo") : "";
+            int totalItens = jsonFatura.has("count") && !jsonFatura.isNull("count") ? jsonFatura.getInt("count") : 0;
+            int estado = jsonFatura.has("estado") && !jsonFatura.isNull("estado") ? jsonFatura.getInt("estado") : -1;
+
+
+            ArrayList<Fatura.LinhaFatura> linhasFatura = new ArrayList<>();
+            if (jsonObject.has("linhasFatura") && !jsonObject.isNull("linhasFatura")) {
+                JSONArray jsonLinhasFatura = jsonObject.getJSONArray("linhasFatura");
+                for (int i = 0; i < jsonLinhasFatura.length(); i++) {
+                    JSONObject jsonLinhaFatura = jsonLinhasFatura.getJSONObject(i);
+                    int jogoId = jsonLinhaFatura.has("jogoId") && !jsonLinhaFatura.isNull("jogoId") ? jsonLinhaFatura.getInt("jogoId") : 0;
+                    String produtoNome = jsonLinhaFatura.has("produtoNome") && !jsonLinhaFatura.isNull("produtoNome") ? jsonLinhaFatura.getString("produtoNome") : "";
+                    int quantidadeProduto = jsonLinhaFatura.has("quantidade") && !jsonLinhaFatura.isNull("quantidade") ? jsonLinhaFatura.getInt("quantidade") : 0;
+                    double preco = jsonLinhaFatura.has("precoUnitario") && !jsonLinhaFatura.isNull("precoUnitario") ? jsonLinhaFatura.getDouble("precoUnitario") : 0.0;
+                    String imagem = jsonLinhaFatura.has("capa") && !jsonLinhaFatura.isNull("capa") ? jsonLinhaFatura.getString("capa") : "";
+                    double totalProduto = jsonLinhaFatura.has("subtotal") && !jsonLinhaFatura.isNull("subtotal") ? jsonLinhaFatura.getDouble("subtotal") : 0.0;
+                    String plataforma = jsonLinhaFatura.has("plataforma") && !jsonLinhaFatura.isNull("plataforma") ? jsonLinhaFatura.getString("plataforma") : "";
+
+                    ArrayList<String> chaves = new ArrayList<>();
+                    if (jsonLinhaFatura.has("chaves") && !jsonLinhaFatura.isNull("chaves")) {
+                        JSONArray jsonChaves = jsonLinhaFatura.getJSONArray("chaves");
+                        for (int j = 0; j < jsonChaves.length(); j++) {
+                            String chave = jsonChaves.getString(j);
+                            chaves.add(chave);
+                        }
+                    }
+
+                    Fatura.LinhaFatura linhaFatura = new Fatura.LinhaFatura(jogoId,produtoNome,quantidadeProduto,imagem,preco,chaves,plataforma,totalProduto);
+                    linhasFatura.add(linhaFatura);
+                }
+            }
+
+            auxFatura = new Fatura(id,totalItens,Fatura.EstadoFatura.getEstadoFromNum(estado),pagamento,envio,codigo,data,total,linhasFatura,null,totalSemDesconto,quantidadeDesconto);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return auxFatura;
+    }
+
 
     public static CodigoPromocional parserJsonCodigoPromocional(String response){
         CodigoPromocional auxCodigo = null;
@@ -311,6 +368,52 @@ public class LojaJsonParser {
             throw new RuntimeException(e);
         }
         return auxCodigo;
+    }
+
+    public static Checkout parserJsonCheckout(String response){
+        Checkout auxCheckout = null;
+        try {
+            JSONObject checkout = new JSONObject(response);
+            double total = checkout.has("total") && !checkout.isNull("total") ? checkout.getDouble("total") : 0.0;
+            double totalSemDesconto = checkout.has("totalSemDesconto") && !checkout.isNull("totalSemDesconto") ? checkout.getDouble("totalSemDesconto") : 0.0;
+            double valorDesconto = checkout.has("valorDescontado") && !checkout.isNull("valorDescontado") ? checkout.getDouble("valorDescontado") : 0.0;
+            String codigo ="";
+            int codigoId = -1;
+            String logo = "";
+            if(checkout.has("codigo") && !checkout.isNull("codigo")){
+                JSONObject jsonCodigo = checkout.getJSONObject("codigo");
+                codigo = jsonCodigo.has("codigo") && !jsonCodigo.isNull("codigo") ? jsonCodigo.getString("codigo") : "";
+                codigoId = jsonCodigo.has("id") && !jsonCodigo.isNull("id") ? jsonCodigo.getInt("id") : -1;
+            }
+            ArrayList<Checkout.MetodoPagamento> metodosPagamento = new ArrayList<>();
+            if(checkout.has("metodosPagamento") && !checkout.isNull("metodosPagamento")){
+                JSONArray jsonMetodosPagamento = checkout.getJSONArray("metodosPagamento");
+                for (int i = 0; i < jsonMetodosPagamento.length(); i++) {
+                    JSONObject jsonMetodoPagamento = jsonMetodosPagamento.getJSONObject(i);
+                    int id = jsonMetodoPagamento.has("id") && !jsonMetodoPagamento.isNull("id") ? jsonMetodoPagamento.getInt("id") : 0;
+                    String nome = jsonMetodoPagamento.has("nome") && !jsonMetodoPagamento.isNull("nome") ? jsonMetodoPagamento.getString("nome") : "";
+                    String logotipo = jsonMetodoPagamento.has("logotipo") && !jsonMetodoPagamento.isNull("logotipo") ? jsonMetodoPagamento.getString("logotipo") : "";
+                    Checkout.MetodoPagamento metodoPagamento = new Checkout.MetodoPagamento(id,nome,logotipo);
+                    metodosPagamento.add(metodoPagamento);
+                }
+            }
+
+            ArrayList<Checkout.MetodoEnvio> metodosEnvio = new ArrayList<>();
+            if(checkout.has("metodosEnvio") && !checkout.isNull("metodosEnvio")){
+                JSONArray jsonMetodosEnvio = checkout.getJSONArray("metodosEnvio");
+                for (int i = 0; i < jsonMetodosEnvio.length(); i++) {
+                    JSONObject jsonMetodoEnvio = jsonMetodosEnvio.getJSONObject(i);
+                    int id = jsonMetodoEnvio.has("id") && !jsonMetodoEnvio.isNull("id") ? jsonMetodoEnvio.getInt("id") : 0;
+                    String nome = jsonMetodoEnvio.has("nome") && !jsonMetodoEnvio.isNull("nome") ? jsonMetodoEnvio.getString("nome") : "";
+                    Checkout.MetodoEnvio metodoEnvio = new Checkout.MetodoEnvio(id,nome);
+                    metodosEnvio.add(metodoEnvio);
+                }
+            }
+            auxCheckout = new Checkout(codigoId,total,totalSemDesconto,valorDesconto,codigo,metodosPagamento,metodosEnvio);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return auxCheckout;
     }
 
 

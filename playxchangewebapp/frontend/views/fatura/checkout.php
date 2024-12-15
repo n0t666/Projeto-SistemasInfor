@@ -21,7 +21,7 @@ $this->registerCssFile('@web/css/checkout.css', ['depends' => [\yii\bootstrap5\B
                 <h5 class="mb-3 section-title">Escolha o método de entrega</h5>
                 <div class="btn-group delivery-methods" role="group" aria-label="Entrega options">
                     <?= $form->field($model, 'envio_id')
-                    ->radioList(
+                    ->radioList( // O widget radiolist espera algo do tipo: ['id' => 'nome', 'id' => 'nome']
                         array_combine( // Criar um array associativo sendo os ids de cada pagamento a chave e o valor o nome do pagamento ( que será exibido como label)
                             array_map(function ($envio) { // Extrair o id do array dos métodos de envio para depois usar como chave
                                 return $envio->id;
@@ -34,7 +34,6 @@ $this->registerCssFile('@web/css/checkout.css', ['depends' => [\yii\bootstrap5\B
                             'separator' => '',
                             'class' => 'd-flex flex-wrap',
                             'inline' => true,
-
                         ]
                     )->label(false) ?>
 
@@ -100,22 +99,5 @@ $this->registerCssFile('@web/css/checkout.css', ['depends' => [\yii\bootstrap5\B
         <?php ActiveForm::end(); ?>
     </div>
 </div>
-
-<script>
-    // Wait for the DOM to be fully loaded before adding the event listener
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('payment-form');
-
-        // Add event listener for the submit event
-        form.addEventListener('submit', function(event) {
-            // Log the form data to the console
-            console.log('Form Data:', new FormData(form));
-
-            // Prevent form submission
-            event.preventDefault();
-            return false
-        });
-    });
-</script>
 
 

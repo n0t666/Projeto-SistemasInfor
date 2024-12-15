@@ -1,5 +1,7 @@
 package my.ipleiria.playxchange.listeners;
 
+import my.ipleiria.playxchange.models.Fatura;
+
 public interface FaturaListener {
-    void onRefreshFatura(FaturaListener fatura);
+    void onRefreshFatura(Fatura fatura);
 }

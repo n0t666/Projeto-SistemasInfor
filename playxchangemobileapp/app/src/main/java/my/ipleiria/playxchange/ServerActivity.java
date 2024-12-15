@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import my.ipleiria.playxchange.utils.Constants;
 
-public class ServidorActivity extends AppCompatActivity {
+public class ServerActivity extends AppCompatActivity {
 
     private EditText etIp;
 
@@ -27,7 +27,7 @@ public class ServidorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_servidor);
+        setContentView(R.layout.activity_server);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

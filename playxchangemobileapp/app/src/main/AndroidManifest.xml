@@ -17,14 +17,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".CheckoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FaturaDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".GameDetailsActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/AppThemeNoAction"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/AppThemeNoAction">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,12 +37,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ServidorActivity"
+            android:name=".ServerActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

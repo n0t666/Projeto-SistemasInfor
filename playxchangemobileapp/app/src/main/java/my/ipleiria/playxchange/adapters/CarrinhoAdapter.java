@@ -120,6 +120,7 @@ public class CarrinhoAdapter extends BaseAdapter {
                                 linhas.remove(linha);
                                 notifyDataSetChanged();
                                 Toast.makeText(context, "Produto removido do carrinho", Toast.LENGTH_SHORT).show();
+                                listener.onLinhaCarrinhoChanged();
                             }
                         });
 
@@ -135,6 +136,7 @@ public class CarrinhoAdapter extends BaseAdapter {
                             public void onResponse(String response) {
                                 linha.setQuantidade(linha.getQuantidade() - 1);
                                 notifyDataSetChanged();
+                                listener.onLinhaCarrinhoChanged();
                             }
                         });
                     }
@@ -150,6 +152,7 @@ public class CarrinhoAdapter extends BaseAdapter {
                         public void onResponse(String response) {
                             linha.setQuantidade(linha.getQuantidade() + 1);
                             notifyDataSetChanged();
+                            listener.onLinhaCarrinhoChanged();
                         }
                     });
                 }

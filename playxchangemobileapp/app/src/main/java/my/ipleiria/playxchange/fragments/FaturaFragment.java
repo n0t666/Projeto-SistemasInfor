@@ -12,14 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.adapters.FaturaAdapter;
-import my.ipleiria.playxchange.listeners.FaturaListener;
 import my.ipleiria.playxchange.listeners.FaturasListener;
 import my.ipleiria.playxchange.models.Fatura;
 import my.ipleiria.playxchange.models.SingletonLoja;
@@ -47,7 +43,7 @@ public class FaturaFragment extends Fragment implements FaturasListener {
         lvFaturas = view.findViewById(R.id.lvFaturas);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(Constants.TOKEN, null);
-
+        SingletonLoja.getInstance(getContext()).setFaturasListener(this);
         SingletonLoja.getInstance(getContext()).getFaturasAPI(getContext(), token);
 
         return view;
@@ -62,4 +58,10 @@ public class FaturaFragment extends Fragment implements FaturasListener {
             lvFaturas.setAdapter(adapter);
         }
     }
+
+    @Override
+    public void onRefreshFatura(Fatura fatura) {
+
+    }
+
 }

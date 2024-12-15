@@ -101,6 +101,11 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
         dpPlataforma = findViewById(R.id.dpPlataforma);
         chGroupTags = findViewById(R.id.chGroupTags);
         rvScreenshots = findViewById(R.id.rvScreenshotsCarousel);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
     }
 
     public void getJogo(int id) {
@@ -422,6 +427,12 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
         lJogo.setAvaliacao(null);
         rbStars.setRating(0);
         Toast.makeText(getApplicationContext(), "Avaliação removida", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 
 }

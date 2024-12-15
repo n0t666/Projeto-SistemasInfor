@@ -50,4 +50,12 @@ public class Carrinho
     public void setItensCarrinho(ArrayList<LinhaCarrinho> linhas) {
         this.linhas = linhas;
     }
+
+    public int getQuantidadeTotal(){
+        int quantidade = 0;
+        for(LinhaCarrinho linha : linhas){
+            quantidade += linha.getQuantidade();
+        }
+        return quantidade;
+    }
 }

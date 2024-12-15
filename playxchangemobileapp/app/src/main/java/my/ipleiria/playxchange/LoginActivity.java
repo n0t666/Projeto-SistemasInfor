@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.android.volley.Response;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -72,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     public void onClickConfig(View view){
-        Intent intent = new Intent(getApplicationContext(), ServidorActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ServerActivity.class);
         startActivity(intent);
     }
 

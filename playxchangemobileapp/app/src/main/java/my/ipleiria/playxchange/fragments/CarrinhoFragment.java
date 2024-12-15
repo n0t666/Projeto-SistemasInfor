@@ -1,6 +1,7 @@
 package my.ipleiria.playxchange.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -9,12 +10,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -25,6 +24,7 @@ import my.ipleiria.playxchange.listeners.CodigoPromocionalListener;
 import my.ipleiria.playxchange.models.Carrinho;
 import my.ipleiria.playxchange.models.CodigoPromocional;
 import my.ipleiria.playxchange.models.SingletonLoja;
+import my.ipleiria.playxchange.CheckoutActivity;
 import my.ipleiria.playxchange.utils.Constants;
 
 
@@ -67,6 +67,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     @Override
     public void onRefreshCarrinho(Carrinho carrinho) {
         carrinhoAux = carrinho;
+        getActivity().setTitle("Carrinho" + " (" + carrinhoAux.getQuantidadeTotal()+ ")");
         if (carrinhoAux == null || carrinhoAux.getLinhas() == null) {
             Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
         } else {
@@ -108,6 +109,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                 btnApply.setText(R.string.txt_apply);
                 tfCodigoText.setText("");
                 tfCodigoText.setEnabled(true);
+                btnApply.setBackgroundColor(getResources().getColor(R.color.primary));
                 tvTotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
                 tvDesconto.setText(String.format("€%.2f", 0.00));
                 tvSubtotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
@@ -126,9 +128,16 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                 onButtonApplyClick(v);
             }
         });
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckoutClick(v);
+            }
+        });
         tfCodigoText = view.findViewById(R.id.tfCodigoText);
         lvLinhas.setAdapter(new CarrinhoAdapter(getContext(), carrinhoAux.getLinhas(), this));
         tvTotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
+        tvSubtotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
 
     }
 
@@ -155,6 +164,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
 
                 if(btnApply!= null){
                     btnApply.setText(R.string.txt_remove_coupoun);
+                    btnApply.setBackgroundColor(getResources().getColor(R.color.error));
                     tfCodigoText.setEnabled(false);
                 }
             }
@@ -167,21 +177,18 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
             double total = 0;
 
             for(int i=0;i < carrinhoAux.getLinhas().size();i++){
-                total += (carrinhoAux.getLinhas().get(i).getPreco()) * (carrinhoAux.getLinhas().get(i).getTotal());
+                total += (carrinhoAux.getLinhas().get(i).getPreco()) * (carrinhoAux.getLinhas().get(i).getQuantidade() );
             }
             carrinhoAux.setTotal(total);
 
-            if(tvTotal != null){
-                tvTotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
+            if (tvSubtotal != null) {
+                tvSubtotal.setText(String.format("€%.2f", total));
             }
 
-            if(tvSubtotal!=null){
-                tvSubtotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
-            }
 
             if(codigo!=null && codigo.getStatus()!= 0){
-                double valorDescontado = (carrinhoAux.getTotal() * codigo.getValorDescontado()) / 100;
-                double totalComDesconto = carrinhoAux.getTotal() - valorDescontado;
+                double valorDescontado = (total * codigo.getValorDescontado()) / 100;
+                double totalComDesconto = total - valorDescontado;
 
                 if(totalComDesconto < 0 ){
                     totalComDesconto = 0;
@@ -192,7 +199,28 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                 }
 
                 tvTotal.setText(String.format("€%.2f", totalComDesconto));
+            }else {
+                tvTotal.setText(String.format("€%.2f", total));
             }
+        }
+    }
+
+    private void onCheckoutClick(View view)
+    {
+        int codigoId = -1;
+
+        if(codigo != null && codigo.getId() != -1){
+            codigoId = codigo.getId();
+        }
+
+        if(carrinhoAux != null && carrinhoAux.getLinhas() != null && !carrinhoAux.getLinhas().isEmpty()){
+            Intent intent = new Intent(getContext(), CheckoutActivity.class);
+            if(codigoId != -1) {
+                intent.putExtra("CODIGO_ID", codigoId);
+            }
+            startActivity(intent);
+        }else{
+            Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
         }
     }
 }

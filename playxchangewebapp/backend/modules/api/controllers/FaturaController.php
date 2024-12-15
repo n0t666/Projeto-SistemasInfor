@@ -79,7 +79,7 @@ class FaturaController extends ActiveController
            }
             $response [] = [
                 'id' => $fatura->id,
-                'estado' => $fatura->getEstadoLabel(),
+                'estado' => $fatura->estado,
                 'total' => $fatura->total,
                 'dataEncomenda' => $fatura->dataEncomenda,
                 'quantidade' => count($fatura->linhasfaturas),
@@ -118,7 +118,8 @@ class FaturaController extends ActiveController
 
         $faturaResponse = [
             'id' => $fatura->id,
-            'total' => Yii::$app->formatter->asCurrency($fatura->total),
+            'estado' => $fatura->estado,
+            'total' => $fatura->total,
             'dataEncomenda' => $fatura->dataEncomenda,
             'pagamento' => $fatura->pagamento->nome,
             'envio' => $fatura->envio->nome,
@@ -129,7 +130,10 @@ class FaturaController extends ActiveController
             $produto = $linha->produto;
             if (!isset($linhasFatura[$produto->id])) {
                 $linhasFatura[$produto->id] = [
-                    'nome' => $produto->jogo->nome,
+                    'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $produto->jogo->imagemCapa,
+                    'produtoId' => $produto->id,
+                    'jogoId' => $produto->jogo->id,
+                    'produtoNome' => $produto->jogo->nome,
                     'precoUnitario' => $linha->precoUnitario,
                     'quantidade' => 0,
                     'subtotal' => 0,
@@ -140,7 +144,7 @@ class FaturaController extends ActiveController
             $linhasFatura[$produto->id]['quantidade'] += 1;
             $linhasFatura[$produto->id]['subtotal'] += $linha->precoUnitario;
             if($linha->chave != null){
-                $linhasFatura[$produto->id]['chaves'][] = $linha->chave;
+                $linhasFatura[$produto->id]['chaves'][] = $linha->chave->chave;
             }
 
             $totalSemDesconto += $linha->precoUnitario;
@@ -153,12 +157,12 @@ class FaturaController extends ActiveController
             $quantidadeDesconto = ($totalSemDesconto * $desconto) / 100;
         }
 
+        $faturaResponse['totalSemDesconto'] = $totalSemDesconto;
+        $faturaResponse['quantidadeDesconto'] = $quantidadeDesconto;
+
         return [
-            'id' => $fatura->id,
             'fatura' => $faturaResponse,
-            'linhasFatura' => $linhasFatura,
-            'totalSemDesconto' => $totalSemDesconto,
-            'quantidadeDesconto' => $quantidadeDesconto,
+            'linhasFatura' => array_values($linhasFatura), // (bug android) com as chaves do array não consigo obter as linahas
         ];
     }
 
@@ -337,8 +341,85 @@ class FaturaController extends ActiveController
             throw new BadRequestHttpException('Ocorreu um erro ao tentar guardar o fatura');
 
         }
+    }
 
+    public function actionCheckout(){
+        $user = Yii::$app->user->identity;
+        if(!$user){
+            throw new UnauthorizedHttpException('Access token inválido.');
+        }
 
+        $carrinho = $user->profile->carrinho;
+
+        if (!$carrinho || empty($carrinho->linhascarrinhos)) {
+            throw new \Exception('O carrinho está vazio.');
+        }
+
+        $body = Yii::$app->getRequest()->getBodyParams();
+
+        $codigo = $body['codigo'] ?? null;
+
+        $total = 0;
+
+        foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
+            $subtotal = $linhaCarrinho->quantidade * $linhaCarrinho->produtos->preco;
+            $total += $subtotal;
+        }
+
+        $totalSemDesconto = $total;
+        $valorDescontado = null;
+        $codigoArray = null;
+
+        if($codigo != null && $codigo != -1){
+            $codigoPromocional = CodigoPromocional::find()->where(['id' => $codigo, 'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
+            if(!$codigoPromocional){
+                throw new \Exception('O código promocional não é válido.' . $codigo);
+            }
+            $isCodigoUsed = $user->profile->getCodigos()
+                ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id']) // Fazer join com a tabela pivot
+                ->andWhere(['codigosPromocionais.id' => $codigoPromocional->id])
+                ->exists(); // Devolve true or false dependendo se o utilizador já utilizou o código promocional
+
+            if($isCodigoUsed){
+                throw new \Exception('O código promocional já foi utilizado.');
+            }
+            $desconto = $codigoPromocional->desconto;
+            $valorDescontado = ($total * ($desconto / 100));
+            $total -= $valorDescontado;
+            $codigoArray = [
+                'id' => $codigoPromocional->id,
+                'codigo' => $codigoPromocional->codigo,
+                'desconto' => $codigoPromocional->desconto,
+            ];
+        }
+
+        $metodosPagamento = [];
+
+        foreach (MetodoPagamento::find()->all() as $metodoPagamento) {
+            $metodosPagamento[] = [
+                'id' => $metodoPagamento->id,
+                'nome' => $metodoPagamento->nome,
+                'logotipo' => Yii::getAlias('@mobileIp') . Yii::getAlias('@utilsUrl') . '/' . $metodoPagamento->logotipo,
+            ];
+        }
+
+        $metodosEnvio = [];
+
+        foreach (MetodoEnvio::find()->all() as $metodoEnvio) {
+            $metodosEnvio[] = [
+                'id' => $metodoEnvio->id,
+                'nome' => $metodoEnvio->nome,
+            ];
+        }
+
+        return [
+            'total' => $total,
+            'totalSemDesconto' => $totalSemDesconto,
+            'valorDescontado' => $valorDescontado,
+            'codigo' => $codigoArray,
+            'metodosPagamento' => $metodosPagamento,
+            'metodosEnvio' => $metodosEnvio,
+        ];
     }
 
 

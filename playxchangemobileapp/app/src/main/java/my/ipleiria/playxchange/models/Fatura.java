@@ -1,15 +1,88 @@
 package my.ipleiria.playxchange.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Fatura {
-    private int id, totalItens;
-    private String pagamento, envio, codigo, dataPagamento,estado;
-    private double total;
-    private List<LinhaFatura> linhasFatura;
-    private List<String> capasPreview;
+import my.ipleiria.playxchange.R;
 
-    public Fatura(int id, int totalItens, String estado, String pagamento, String envio, String codigo, String dataPagamento, double total, List<LinhaFatura> linhasFatura, List<String> capasPreview) {
+public class Fatura {
+
+    private int id, totalItens;
+    private String pagamento, envio, codigo, dataPagamento;
+    private double total,totalSemDesconto,quantidadeDesconto;
+    private ArrayList<LinhaFatura> linhasFatura;
+    private ArrayList<String> capasPreview;
+    private EstadoFatura estado;
+
+
+    public enum EstadoFatura {
+        DESCONHECIDO(-1,"Desconhecido", R.color.estado_unknown),
+        PENDENTE(1,"Pendente", R.color.estado_pending),
+        PAGO(2,"Pago", R.color.estado_paid),
+        ENVIADO(3,"Enviado", R.color.estado_shipped),
+        ENTREGUE(4,"Entregue", R.color.estado_delivered),
+        COMPLETO(5,"Completo", R.color.estado_completed),
+        CANCELADO(6,"Cancelado", R.color.estado_cancelled),
+        REEMBOLSADO(7,"Reembolsado", R.color.estado_refunded),;
+
+        private final int estado;
+        private final String estadoNome;
+        private final int cor;
+
+        EstadoFatura(int estado, String estadoNome,int cor) {
+            this.estado = estado;
+            this.estadoNome = estadoNome;
+            this.cor = cor;
+        }
+
+        public String getEstadoNome() {
+            return estadoNome;
+        }
+
+        public int getEstado() {
+            return estado;
+        }
+
+        public int getCor() {
+            return cor;
+        }
+
+        public static EstadoFatura getEstadoFromNum(int estado){
+            for(EstadoFatura e : EstadoFatura.values()){
+                if(e.getEstado() == estado){
+                    return e;
+                }
+            }
+            return null;
+        }
+
+        public static EstadoFatura getEstadoFromNome(String estadoNome){
+            for(EstadoFatura e : EstadoFatura.values()){
+                if(e.getEstadoNome().equals(estadoNome)){
+                    return e;
+                }
+            }
+            return null;
+        }
+    }
+
+    public double getQuantidadeDesconto() {
+        return quantidadeDesconto;
+    }
+
+    public void setQuantidadeDesconto(double quantidadeDesconto) {
+        this.quantidadeDesconto = quantidadeDesconto;
+    }
+
+    public double getTotalSemDesconto() {
+        return totalSemDesconto;
+    }
+
+    public void setTotalSemDesconto(double totalSemDesconto) {
+        this.totalSemDesconto = totalSemDesconto;
+    }
+
+    public Fatura(int id, int totalItens, EstadoFatura estado, String pagamento, String envio, String codigo, String dataPagamento, double total, ArrayList<LinhaFatura> linhasFatura, ArrayList<String> capasPreview, double totalSemDesconto, double quantidadeDesconto) {
         this.id = id;
         this.totalItens = totalItens;
         this.estado = estado;
@@ -20,6 +93,9 @@ public class Fatura {
         this.total = total;
         this.linhasFatura = linhasFatura;
         this.capasPreview = capasPreview;
+        this.totalSemDesconto = totalSemDesconto;
+        this.quantidadeDesconto = quantidadeDesconto;
+
     }
 
     public int getId() {
@@ -38,11 +114,11 @@ public class Fatura {
         this.totalItens = totalItens;
     }
 
-    public String getEstado() {
+    public EstadoFatura getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoFatura estado) {
         this.estado = estado;
     }
 
@@ -86,31 +162,31 @@ public class Fatura {
         this.total = total;
     }
 
-    public List<LinhaFatura> getLinhasFatura() {
+    public ArrayList<LinhaFatura> getLinhasFatura() {
         return linhasFatura;
     }
 
-    public void setLinhasFatura(List<LinhaFatura> linhasFatura) {
+    public void setLinhasFatura(ArrayList<LinhaFatura> linhasFatura) {
         this.linhasFatura = linhasFatura;
     }
 
-    public List<String> getCapasPreview() {
+
+    public ArrayList<String> getCapasPreview() {
         return capasPreview;
     }
 
-    public void setCapasPreview(List<String> capasPreview) {
+    public void setCapasPreview(ArrayList<String> capasPreview) {
         this.capasPreview = capasPreview;
     }
 
     public static class LinhaFatura {
-        private int id, idProduto, quantidade;
+        private int idJogo, quantidade;
         private double preco,subtotal;
         private String nome, imagem, plataforma;
-        private List<String> chaves;
+        private ArrayList<String> chaves;
 
-        public LinhaFatura(int id, int idProduto, String nome, int quantidade, String imagem, double preco, List<String> chaves, String plataforma, double subtotal) {
-            this.id = id;
-            this.idProduto = idProduto;
+        public LinhaFatura(int idJogo, String nome, int quantidade, String imagem, double preco, ArrayList<String> chaves, String plataforma, double subtotal) {
+            this.idJogo = idJogo;
             this.nome = nome;
             this.quantidade = quantidade;
             this.imagem = imagem;
@@ -120,20 +196,12 @@ public class Fatura {
             this.subtotal = subtotal;
         }
 
-        public int getId() {
-            return id;
+        public int getIdJogo() {
+            return idJogo;
         }
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public int getIdProduto() {
-            return idProduto;
-        }
-
-        public void setIdProduto(int idProduto) {
-            this.idProduto = idProduto;
+        public void setIdJogo(int idJogo) {
+            this.idJogo = idJogo;
         }
 
         public int getQuantidade() {
@@ -176,11 +244,11 @@ public class Fatura {
             this.plataforma = plataforma;
         }
 
-        public List<String> getChaves() {
+        public ArrayList<String> getChaves() {
             return chaves;
         }
 
-        public void setChaves(List<String> chaves) {
+        public void setChaves(ArrayList<String> chaves) {
             this.chaves = chaves;
         }
 

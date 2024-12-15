@@ -29,4 +29,13 @@
     <color name="highlight_unplayed">#B0B0B0</color>
     <color name="highlight_unfavorited">#B0B0B0</color>
     <color name="highlight_unwishlist">#B0B0B0</color>
+
+    <color name="estado_unknown">#888888</color>
+    <color name="estado_pending">#61646B</color>
+    <color name="estado_paid">#28A745</color>
+    <color name="estado_shipped">#17A2B8</color>
+    <color name="estado_delivered">#BB86FC</color>
+    <color name="estado_completed">#FF6F61</color>
+    <color name="estado_cancelled">#FF3B30</color>
+    <color name="estado_refunded">#FFC107</color>
 </resources>

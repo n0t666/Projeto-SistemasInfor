@@ -8,8 +8,7 @@
     tools:context=".GameDetailsActivity">
 <ScrollView
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    tools:context=".GameDetailsActivity">
+    android:layout_height="fill_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -17,8 +16,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:padding="16dp"
-        tools:context=".GameDetailsActivity">
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/ivCapa"
