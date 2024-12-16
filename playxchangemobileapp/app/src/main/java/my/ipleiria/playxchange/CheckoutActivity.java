@@ -1,11 +1,14 @@
 package my.ipleiria.playxchange;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -34,8 +37,9 @@ import my.ipleiria.playxchange.utils.Constants;
 public class CheckoutActivity extends AppCompatActivity implements CheckoutListener {
 
     private RadioGroup rgMetodosPagamento, rgMetodosEnvio;
-    private MaterialTextView tvTotalComDesconto, tvSubtotal, tvDesconto, tvEnvio, tvPagamento,tvTaxas;
+    private MaterialTextView tvTotalComDesconto, tvSubtotal, tvDesconto, tvEnvio, tvPagamento,tvTaxas,tvPagamentoError,tvEnvioError;
     private Checkout auxCheckout;
+    private int codigoId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +58,19 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         tvTotalComDesconto = findViewById(R.id.tvTotalComDesconto);
         tvTaxas = findViewById(R.id.tvTaxas);
         tvDesconto = findViewById(R.id.tvDesconto);
-
-        int codigoId = -1;
+        tvPagamentoError = findViewById(R.id.tvPagamentoError);
+        tvEnvioError = findViewById(R.id.tvEnvioError);
         Bundle extras = getIntent().getExtras();
-
         if (extras != null) {
             codigoId = extras.getInt("CODIGO_ID");
         }
-        getCheckoutDetails(codigoId);
+
+        this.setTitle("Checkout");
+
+        getCheckoutDetails();
     }
 
-    private void getCheckoutDetails(int codigoId){
+    private void getCheckoutDetails(){
         SingletonLoja.getInstance(getApplicationContext()).setCheckoutListener(this);
         String token = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE).getString(Constants.TOKEN, null);
         SingletonLoja.getInstance(getApplicationContext()).checkoutAPI(getApplicationContext(), token,codigoId);
@@ -96,12 +102,19 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
     }
 
+    @Override
+    public void onCheckoutSucess() {
+        Toast.makeText(this,"Compra efetuada com sucesso",Toast.LENGTH_LONG).show();
+
+    }
+
     private void setMetodosPagamento(ArrayList<Checkout.MetodoPagamento> metodosPagamento){
        if(rgMetodosPagamento!=null){
            rgMetodosPagamento.removeAllViews();
            for(Checkout.MetodoPagamento metodoPagamento : metodosPagamento){
                 RadioButton rb = new RadioButton(new ContextThemeWrapper(this, R.style.PagamentosRadioButton));
                 rb.setId(View.generateViewId());
+                rb.setTag(metodoPagamento.getId());
                 rb.setButtonDrawable(null);
                 rb.setBackground(AppCompatResources.getDrawable(this,R.drawable.bg_radio_button));
                 Glide.with(this)
@@ -131,6 +144,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                         RadioGroup.LayoutParams.WRAP_CONTENT,
                         RadioGroup.LayoutParams.WRAP_CONTENT
                 );
+                rb.setTag(metodoEnvio.getId());
                 rb.setLayoutParams(layoutParams);
                 rb.setText(metodoEnvio.getNome());
                 rb.setId(View.generateViewId());
@@ -138,4 +152,47 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
             }
         }
     }
+    public void onFinalizarCompra(View view){
+        int selectedPagamento = rgMetodosPagamento.getCheckedRadioButtonId();
+        int selectedEnvio = rgMetodosEnvio.getCheckedRadioButtonId();
+        if(selectedPagamento == -1){
+            Toast.makeText(this,"Selecione um método de pagamento",Toast.LENGTH_LONG).show();
+            tvPagamentoError.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if(selectedEnvio == -1){
+            Toast.makeText(this,"Selecione um método de envio",Toast.LENGTH_LONG).show();
+            tvEnvioError.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        tvPagamentoError.setVisibility(View.GONE);
+        tvEnvioError.setVisibility(View.GONE);
+
+        RadioButton rbPagamento = findViewById(selectedPagamento);
+        int pagamentoId = (int) rbPagamento.getTag();
+
+        MaterialRadioButton rbEnvio = findViewById(selectedEnvio);
+        int envioId = (int) rbEnvio.getTag();
+
+        Checkout.MetodoPagamento pagamento = auxCheckout.getMetodoPagamentoById(pagamentoId);
+        Checkout.MetodoEnvio envio = auxCheckout.getMetodoEnvioById(envioId);
+
+        if(pagamento==null){
+            tvPagamentoError.setVisibility(View.VISIBLE);
+            tvPagamentoError.setText(R.string.txt_pagamento_invalid);
+            return;
+        }
+
+        if(envio==null){
+            tvEnvioError.setVisibility(View.VISIBLE);
+            tvEnvioError.setText(R.string.txt_envio_invalid);
+            return;
+        }
+
+        String token = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE).getString(Constants.TOKEN, null);
+        SingletonLoja.getInstance(getApplicationContext()).addFaturaAPI(getApplicationContext(),token,pagamento.getId(),envio.getId(),codigoId);
+    }
+
 }

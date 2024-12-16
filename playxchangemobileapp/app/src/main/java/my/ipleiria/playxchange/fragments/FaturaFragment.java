@@ -59,9 +59,6 @@ public class FaturaFragment extends Fragment implements FaturasListener {
         }
     }
 
-    @Override
-    public void onRefreshFatura(Fatura fatura) {
 
-    }
 
 }

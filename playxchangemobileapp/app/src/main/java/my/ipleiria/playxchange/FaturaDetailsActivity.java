@@ -54,6 +54,7 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
         tvPagamento = findViewById(R.id.tvPagamento);
         tvEnvio = findViewById(R.id.tvEnvio);
         tvData = findViewById(R.id.tvData);
+        this.setTitle("Detalhes da Fatura");
     }
 
     private void getFatura(int id) {
@@ -76,6 +77,11 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
         }else {
             Toast.makeText(this, "Não foi possível encontrar a fatura especificada", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onCreateFatura(Fatura fatura) {
+
     }
 
 

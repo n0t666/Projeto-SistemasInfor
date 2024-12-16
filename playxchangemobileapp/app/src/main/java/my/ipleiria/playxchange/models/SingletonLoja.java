@@ -596,6 +596,53 @@ public class SingletonLoja {
         }
     }
 
+    public void addFaturaAPI(final  Context context , final String token, final int metodoPagamentoId, final int metodoEnvioId, final int codigoId){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        }else{
+            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "faturas?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if(checkoutListener!=null) {
+                        checkoutListener.onCheckoutSucess();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String body = "";
+                    if (error.networkResponse != null && error.networkResponse.data != null) {
+                        try {
+                            body = new String(error.networkResponse.data, "UTF-8");
+
+                            JSONObject jsonObject = new JSONObject(body);
+
+                            if (jsonObject.has("message")) {
+                                String errorMessage = jsonObject.getString("message");
+
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                            } else {
+                            }
+                        } catch (UnsupportedEncodingException | JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                    }
+
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("pagamento_id", String.valueOf(metodoPagamentoId));
+                    params.put("envio_id", String.valueOf(metodoEnvioId));
+                    params.put("codigo_id", String.valueOf(codigoId));
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
 
     //endregion
 

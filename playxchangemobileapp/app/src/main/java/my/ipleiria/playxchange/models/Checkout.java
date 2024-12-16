@@ -75,6 +75,26 @@ public class Checkout {
         this.metodosEnvio = metodosEnvio;
     }
 
+    public MetodoPagamento getMetodoPagamentoById(int id){
+        for(MetodoPagamento mp : metodosPagamento){
+            if(mp.getId() == id){
+                return mp;
+            }
+        }
+        return null;
+    }
+
+    public MetodoEnvio getMetodoEnvioById(int id){
+        for(MetodoEnvio me : metodosEnvio){
+            if(me.getId() == id){
+                return me;
+            }
+        }
+        return null;
+    }
+
+
+
     public static class MetodoPagamento {
         private int id;
         private String nome,logo;
@@ -108,6 +128,7 @@ public class Checkout {
         public void setLogo(String logo) {
             this.logo = logo;
         }
+
     }
 
     public static class MetodoEnvio {

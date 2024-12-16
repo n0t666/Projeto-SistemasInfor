@@ -67,10 +67,12 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     @Override
     public void onRefreshCarrinho(Carrinho carrinho) {
         carrinhoAux = carrinho;
-        getActivity().setTitle("Carrinho" + " (" + carrinhoAux.getQuantidadeTotal()+ ")");
+
+
         if (carrinhoAux == null || carrinhoAux.getLinhas() == null) {
             Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
         } else {
+            getActivity().setTitle("Carrinho" + " (" + carrinhoAux.getQuantidadeTotal()+ ")");
             setComponents();
         }
     }

@@ -65,8 +65,15 @@
                     android:gravity="center_vertical"
                     android:layout_gravity="center_vertical"
                     />
-
             </RadioGroup>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvPagamentoError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_error_pagamento"
+                android:textColor="@color/error"
+                android:visibility="gone"
+                android:textAppearance="?attr/textAppearanceBody2" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -97,13 +104,22 @@
                     android:text="Envio Expresso"
                     style="@style/Widget.AppCompat.CompoundButton.RadioButton" />
             </RadioGroup>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvEnvioError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_error_envio"
+                android:textColor="@color/error"
+                android:visibility="gone"
+                android:textAppearance="?attr/textAppearanceBody2" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvSub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/txt_subtotal_label"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvTaxas"
@@ -135,13 +151,14 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnComp"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_completar_pag"
                 android:layout_marginTop="24dp"
-                android:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary"
-                style="@style/Widget.Material3.Button" />
+                android:onClick="onFinalizarCompra"
+                android:text="@string/txt_completar_pag"
+                android:textColor="@color/text"
+                android:textSize="14sp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

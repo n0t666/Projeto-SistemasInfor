@@ -210,7 +210,7 @@ class FaturaController extends ActiveController
 
             $codigo = null;
             $isCodigoUsed = true;
-            if ($codigoId) {
+            if ($codigoId != null && $codigoId != -1) {
                 $codigo = CodigoPromocional::find()->where(['id' => $codigoId, 'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
                 if (!$codigo) {
                     throw new NotFoundHttpException('Não foi possível encontrar o código promocional solicitado');
@@ -248,7 +248,7 @@ class FaturaController extends ActiveController
                         $produto = $linhaCarrinho->produtos;
                         $chavesDisponiveis = $produto->getChaves()->where(['isUsada' => 0])->count();
                         if ($chavesDisponiveis < $linhaCarrinho->quantidade) {
-                            throw new Exception('Não há chaves suficientes para o produto: ' . $produto->jogo->nome);
+                            throw new \Exception('Não há chaves suficientes para o produto: ' . $produto->jogo->nome);
                         }
                         $chavesReservar = $produto->getChaves()
                             ->where(['isUsada' => 0])
@@ -278,7 +278,7 @@ class FaturaController extends ActiveController
                         $produtosDisponiveis = $produto->quantidade;
 
                         if ($produtosDisponiveis < $linhaCarrinho->quantidade) {
-                            throw new Exception('error', 'Não há stock suficiente para o produto: ' . $produto->jogo->nome);
+                            throw new \Exception('Não há stock suficiente para o produto: ' . $produto->jogo->nome);
                         }
 
                         for ($i = 0; $i < $linhaCarrinho->quantidade; $i++) {
@@ -297,7 +297,7 @@ class FaturaController extends ActiveController
                             }
 
                             if (!$linhaFatura->save()) {
-                                throw new Exception('error', 'Erro ao guardar as linhas da fatura para o produto: ' . $produto->jogo->nome);
+                                throw new \Exception( 'Erro ao guardar as linhas da fatura para o produto: ' . $produto->jogo->nome);
                             }
                             $total += $produto->preco;
                         }
@@ -338,7 +338,7 @@ class FaturaController extends ActiveController
             if(isset($transaction)){
                 $transaction->rollBack();
             }
-            throw new BadRequestHttpException('Ocorreu um erro ao tentar guardar o fatura');
+            throw new \Exception($e->getMessage());
 
         }
     }

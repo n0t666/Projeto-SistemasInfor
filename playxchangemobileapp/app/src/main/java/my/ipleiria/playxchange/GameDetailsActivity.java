@@ -118,6 +118,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
     private void setJogo(){
         if(lJogo != null){
+            this.setTitle(lJogo.getNome());
             tvTitle.setText(lJogo.getNome());
             tvReleaseDate.setText(lJogo.getDataLancamento());
             tvAvg.setText(String.valueOf(lJogo.getMedia())); ;
@@ -434,5 +435,6 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
         finish();
         return true;
     }
+
 
 }
