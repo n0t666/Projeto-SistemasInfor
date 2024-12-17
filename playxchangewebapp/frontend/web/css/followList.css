@@ -8,9 +8,8 @@
     color: var(--primary-color);
 }
 
-a{
+.fol-container a{
     color: var(--primary-color) !important;
-
 }
 
 .list-group {

@@ -370,9 +370,12 @@ $this->title = $model->nome;
                 <div class="col">
                     <div class="d-flex justify-content-between align-items-center">
                         <h1 class="reviews-title">Populares</h1>
+                        <?php if ($reviewsPopular->count > 5): ?>
                         <a class="btn btn-outline-primary btn-sm"
                            href="<?= Url::to(['comentario/index', 'jogoId' => $model->id, 'filtro' => 'popular']); ?>">Ver
-                            Mais</a>
+                            Mais
+                        </a>
+                        <?php endif;?>
                     </div>
                     <?= ListView::widget([
                         'dataProvider' => $reviewsPopular,
@@ -392,9 +395,12 @@ $this->title = $model->nome;
                 <div class="col">
                     <div class="d-flex justify-content-between align-items-center">
                         <h1 class="reviews-title">Recentes</h1>
+                        <?php if ($reviewsRecentes->count > 5): ?>
                         <a class="btn btn-outline-primary btn-sm"
                            href="<?= Url::to(['comentario/index', 'jogoId' => $model->id, 'filtro' => 'recent']); ?>">Ver
-                            Mais</a>
+                            Mais
+                        </a>
+                        <?php endif;?>
                     </div>
                     <?= ListView::widget([
                         'dataProvider' => $reviewsRecentes,
@@ -413,9 +419,12 @@ $this->title = $model->nome;
                 <div class="col">
                     <div class="d-flex justify-content-between align-items-center">
                         <h1 class="reviews-title">Por Amigos</h1>
+                        <?php if ($reviewsFriends->count > 5): ?>
                         <a class="btn btn-outline-primary btn-sm"
                            href="<?= Url::to(['comentario/index', 'jogoId' => $model->id, 'filtro' => 'friends']); ?>">Ver
-                            Mais</a>
+                            Mais
+                        </a>
+                        <?php endif;?>
                     </div>
                     <?= ListView::widget([
                         'dataProvider' => $reviewsFriends,

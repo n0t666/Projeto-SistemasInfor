@@ -32,7 +32,11 @@ if (ComentarioController::isLikedByCurrentUser($model->id)) {
              width="50" height="50">
         <div class="review-content">
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="user-name mb-2 me-2"><?= Html::encode($model->utilizador->user->username) ?></h5>
+                <a href="<?= \yii\helpers\Url::to(['utilizador/profile','username' => $model->utilizador->user->username])?>" class="text-decoration-none review-username">
+                    <h5 class="user-name mb-2 me-2"><?= Html::encode($model->utilizador->user->username) ?></h5>
+                </a>
+
+
                 <?php
                 if ($model->utilizador->getAvaliacoes()) {
                     $avaliacao = $model->utilizador->getAvaliacoes()->where(['jogo_id' => $model->jogo])->one();

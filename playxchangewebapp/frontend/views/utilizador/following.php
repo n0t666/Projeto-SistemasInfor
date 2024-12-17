@@ -12,7 +12,7 @@ $this->registerCssFile('@web/css/followList.css');
 
 ?>
 
-<div class="container mt-2">
+<div class="container mt-2 fol-container">
     <div class="row">
         <div class="col-md-12">
             <div class="section-header mb-4">

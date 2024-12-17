@@ -144,6 +144,11 @@ class ChaveController extends Controller
                 throw new NotFoundHttpException("Não foi possível encontrar a chave solicitada.");
             }
 
+            if($model->isUsada){
+                \Yii::$app->session->setFlash('error', 'Não pode modificar chaves que já foram usadas!');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
             try{
                 if ($model->load(Yii::$app->request->post())) {
                     $model->plataforma_id = $model->produto->plataforma_id;

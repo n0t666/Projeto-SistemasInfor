@@ -30,7 +30,7 @@ class UtilizadorController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['block', 'unblock', 'follow', 'unfollow', 'update'],
+                        'actions' => ['block', 'unblock', 'follow', 'unfollow', 'update','delete'],
                         'allow' => true,
                         'roles' => ['cliente'],
                     ],

@@ -117,12 +117,12 @@ class Chave extends \yii\db\ActiveRecord
                     try {
                         if (empty($this->dataGeracao)) {
                             $this->dataGeracao = null;
-                        }else{
-                            $this->dataGeracao = date('Y-m-d');
+                        } else {
+                            $this->dataGeracao = date('Y-m-d', strtotime($this->dataGeracao));
                         }
                     } catch (\Exception $e) {
                         Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
-                        $this->dataLancamento = date('Y-m-d');
+                        $this->dataGeracao = date('Y-m-d');
                     }
 
                     return $this->dataGeracao;
@@ -135,7 +135,7 @@ class Chave extends \yii\db\ActiveRecord
                     ActiveRecord::EVENT_AFTER_FIND => ['dataExpiracao'],
                 ],
                 'value' => function ($event) {
-                    return $this->dataGeracao ? date('d-m-Y', strtotime($this->dataGeracao)) : null;
+                    return $this->dataExpiracao ? date('d-m-Y', strtotime($this->dataExpiracao)) : null;
                 },
             ],
             [
@@ -146,10 +146,12 @@ class Chave extends \yii\db\ActiveRecord
                 ],
                 'value' => function ($event) {
                     try {
+                        // Only update dataExpiracao if it's not already set
                         if (empty($this->dataExpiracao)) {
                             $this->dataExpiracao = null;
-                        }else{
-                            $this->dataExpiracao = date('Y-m-d');
+                        } else {
+                            // Ensure correct format before saving
+                            $this->dataExpiracao = date('Y-m-d', strtotime($this->dataExpiracao));
                         }
                     } catch (\Exception $e) {
                         Yii::error("Erro durante a conversão" . $e->getMessage(), __METHOD__);
@@ -161,4 +163,7 @@ class Chave extends \yii\db\ActiveRecord
             ],
         ];
     }
+
+
+
 }

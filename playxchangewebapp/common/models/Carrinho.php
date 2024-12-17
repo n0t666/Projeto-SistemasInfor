@@ -101,11 +101,12 @@ class Carrinho extends \yii\db\ActiveRecord
 
     public function recalculateTotal()
     {
+        $this->refresh();
         $total = 0;
         $totalProdutos = 0;
         $linhascarrinho = $this->linhascarrinhos;
         foreach ($linhascarrinho as $linhaCarrinho) {
-            $totalProdutos = $totalProdutos + $linhaCarrinho->quantidade;
+            $totalProdutos += $linhaCarrinho->quantidade;
             $total += $linhaCarrinho->produtos->preco * $linhaCarrinho->quantidade;
         }
         $this->total = $total;

@@ -225,9 +225,9 @@ class User extends ActiveRecord implements IdentityInterface
             case self::STATUS_ACTIVE:
                 return 'Ativo';
             case self::STATUS_INACTIVE:
-                return 'Inativo';
+                return 'Não confirmada';
             case self::STATUS_DELETED:
-                return 'Bloqueado';
+                return 'Apagada';
             default:
                 return 'Desconhecido';
         }

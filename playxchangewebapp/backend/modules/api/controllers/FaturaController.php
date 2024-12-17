@@ -51,41 +51,43 @@ class FaturaController extends ActiveController
         throw new \yii\web\ForbiddenHttpException('No authentication');
     }
 
-    public function actionIndex()
-    {
-        $user = Yii::$app->user->identity;
+        public function actionIndex()
+        {
+            $user = Yii::$app->user->identity;
 
-        if(!$user){
-            throw new UnauthorizedHttpException('Access token inválido.');
-        }
+            if(!$user){
+                throw new UnauthorizedHttpException('Access token inválido.');
+            }
 
-        $faturas = $user->profile->faturas;
-        $response = null;
-        $imagensJogos = [];
-        $idsJogos = [];
+            $faturas = $user->profile->faturas;
+            $response = null;
+            $imagensJogos = [];
+            $idsJogos = [];
 
 
-        // Utilizar para obter uma preview da foto de capa de 4 jogos distintos
-        foreach ($faturas as $fatura) {
-           foreach ($fatura->linhasfaturas as $linha){
-               $produto = $linha->produto;
-               $jogo = $produto->jogo;
-               if (!in_array($jogo->id, $idsJogos)) { // Verificar se o jogo já foi adicionado anteriormente, se não, adicionar a esse mesmo
-                   if(count($imagensJogos) < 4){ // Garantir que não passa o limite definid de 4 imagens de jogos diferentes
-                       $imagensJogos[] = Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa;
-                       $idsJogos[] = $jogo->id;
+            // Utilizar para obter uma preview da foto de capa de 4 jogos distintos
+            foreach ($faturas as $fatura) {
+                $imagensJogos = [];
+                $idsJogos = [];
+               foreach ($fatura->linhasfaturas as $linha){
+                   $produto = $linha->produto;
+                   $jogo = $produto->jogo;
+                   if (!in_array($jogo->id, $idsJogos)) { // Verificar se o jogo já foi adicionado anteriormente, se não, adicionar a esse mesmo
+                       if(count($imagensJogos) < 4){ // Garantir que não passa o limite definid de 4 imagens de jogos diferentes
+                           $imagensJogos[] = Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa;
+                           $idsJogos[] = $jogo->id;
+                       }
                    }
                }
-           }
-            $response [] = [
-                'id' => $fatura->id,
-                'estado' => $fatura->estado,
-                'total' => $fatura->total,
-                'dataEncomenda' => $fatura->dataEncomenda,
-                'quantidade' => count($fatura->linhasfaturas),
-                'imagensJogos' => $imagensJogos,
-            ];
-        }
+                $response [] = [
+                    'id' => $fatura->id,
+                    'estado' => $fatura->estado,
+                    'total' => $fatura->total,
+                    'dataEncomenda' => $fatura->dataEncomenda,
+                    'quantidade' => count($fatura->linhasfaturas),
+                    'imagensJogos' => $imagensJogos,
+                ];
+            }
 
 
 

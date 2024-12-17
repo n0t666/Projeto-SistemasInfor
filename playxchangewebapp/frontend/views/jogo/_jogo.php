@@ -6,7 +6,6 @@ $interaction = \common\models\UtilizadorJogo::find()
     ->where(['jogo_id' => $jogo->id, 'utilizador_id' => Yii::$app->user->id])
     ->one();
 
-
 ?>
     <div class="card game-card">
         <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa; ?>" class="game-poster img-fluid" alt="Game Poster">
