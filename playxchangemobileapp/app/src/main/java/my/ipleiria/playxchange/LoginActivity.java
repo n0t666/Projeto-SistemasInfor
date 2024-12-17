@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         tvPassword = findViewById(R.id.tvPassword);
         ivConfig = findViewById(R.id.ivConfig);
         sharedPreferences = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-
+        SingletonLoja.getInstance(getApplicationContext()).setLoginListener(this);
         checkLoginStatus();
     }
 

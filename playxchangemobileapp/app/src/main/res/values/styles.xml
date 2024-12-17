@@ -46,6 +46,10 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="EnviosText" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textColor">@color/text</item>
+    </style>
+
 
 
 </resources>

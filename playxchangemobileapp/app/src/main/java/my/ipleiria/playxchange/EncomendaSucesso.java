@@ -1,6 +1,8 @@
 package my.ipleiria.playxchange;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,4 +23,15 @@ public class EncomendaSucesso extends AppCompatActivity {
             return insets;
         });
     }
+
+    public void onClickContinuar(View view)
+    {
+        startContinuarIntent();
+    }
+
+    public void startContinuarIntent(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 }

@@ -22,6 +22,7 @@ import my.ipleiria.playxchange.utils.Constants;
 public class ServerActivity extends AppCompatActivity {
 
     private EditText etIp;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +35,17 @@ public class ServerActivity extends AppCompatActivity {
             return insets;
         });
         etIp = findViewById(R.id.etIp);
-        etIp.setText(Constants.IP_ADDRESS);
+        sharedPreferences = getApplicationContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+        Constants.IP_ADDRESS = sharedPreferences.getString(Constants.IP_ADDRESS, "");
+        if(Constants.IP_ADDRESS.equals("IP_ADDRESS") || Constants.IP_ADDRESS.isEmpty()){
+            etIp.setText("");
+        }else{
+            etIp.setText(Constants.IP_ADDRESS);
+        }
+        this.setTitle("Configuração do servidor");
     }
 
     public void onClickServidor(View view){
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String oldIp = sharedPreferences.getString(Constants.IP_ADDRESS, "");
         String newIp = etIp.getText().toString().trim();
@@ -46,9 +53,9 @@ public class ServerActivity extends AppCompatActivity {
             Constants.IP_ADDRESS = newIp;
             editor.putString(Constants.IP_ADDRESS, newIp);
             editor.apply();
-            Snackbar.make(view, "IP alterado com sucesso", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view, "IP alterado com sucesso", Snackbar.LENGTH_LONG).show();
         }else {
-            Snackbar.make(view, "IP inválido", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view, "IP inválido", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -56,23 +63,17 @@ public class ServerActivity extends AppCompatActivity {
         return !newIp.isEmpty() && !newIp.equals(oldIp) && isValidIp(newIp);
     }
 
-    private boolean isValidIp(String ip) {
-        /*
-        String ipPattern =  "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\\d{1,5})$";
-        Pattern pattern = Pattern.compile(ipPattern);
-        Matcher matcher = pattern.matcher(ip);
-        if (matcher.matches()) {
-            int port = Integer.parseInt(matcher.group(4));
-            return port >= 1 && port <= 65535;
-        }
-        return false;
-         */
-        String ipPattern = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-        Pattern pattern = Pattern.compile(ipPattern);
-        Matcher matcher = pattern.matcher(ip);
-        if (matcher.matches()) {
+    private boolean isValidIp(String ip)
+    {
+        Pattern ipPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}):(\\d{1,5})");
+        Matcher matcher = ipPattern.matcher(ip);
+
+        if(matcher.find()){
             return true;
+        }else{
+            Snackbar.make(findViewById(android.R.id.content), "O endereço ip deve seguir a estrutura 1.1.1.1:1", Snackbar.LENGTH_LONG).show();
         }
+
         return false;
     }
 }

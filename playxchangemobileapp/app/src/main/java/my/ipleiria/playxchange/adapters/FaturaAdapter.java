@@ -92,6 +92,7 @@ public class FaturaAdapter extends BaseAdapter {
             tvTotalQuantidade.setText("(" + String.valueOf(fatura.getTotalItens()) + " itens)");
             for(int i = 0; i < 4; i++) {
                 if (i < fatura.getCapasPreview().size()) { //se existir imagem no determinado indice
+                    ivImagens[i].setVisibility(View.VISIBLE);
                     Glide.with(context).load(fatura.getCapasPreview().get(i)).into(ivImagens[i]);
                 } else {
                     ivImagens[i].setVisibility(View.INVISIBLE); //se não existir imagem, tornar invisivel mas ocupar espaço na mesma no layout

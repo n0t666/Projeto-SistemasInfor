@@ -3,6 +3,7 @@ package my.ipleiria.playxchange;
 import static android.app.PendingIntent.getActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -92,6 +93,10 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 tvDesconto.setVisibility(View.GONE);
             }
 
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+
             tvTaxas.setVisibility(View.GONE);
 
             setMetodosPagamento(checkout.getMetodosPagamento());
@@ -104,8 +109,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
     @Override
     public void onCheckoutSucess() {
-        Toast.makeText(this,"Compra efetuada com sucesso",Toast.LENGTH_LONG).show();
-
+        Intent intent = new Intent(this, EncomendaSucesso.class);
+        startActivity(intent);
     }
 
     private void setMetodosPagamento(ArrayList<Checkout.MetodoPagamento> metodosPagamento){
@@ -139,7 +144,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
             for(Checkout.MetodoEnvio metodoEnvio : metodosEnvio){
                 MaterialRadioButton rb = new MaterialRadioButton(this);
                 rb.setId(View.generateViewId());
-                rb.setTextAppearance(com.google.android.material.R.style.Widget_AppCompat_CompoundButton_RadioButton);
+                rb.setTextAppearance(R.style.EnviosText);
                 RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(
                         RadioGroup.LayoutParams.WRAP_CONTENT,
                         RadioGroup.LayoutParams.WRAP_CONTENT
@@ -193,6 +198,12 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
         String token = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE).getString(Constants.TOKEN, null);
         SingletonLoja.getInstance(getApplicationContext()).addFaturaAPI(getApplicationContext(),token,pagamento.getId(),envio.getId(),codigoId);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 
 }

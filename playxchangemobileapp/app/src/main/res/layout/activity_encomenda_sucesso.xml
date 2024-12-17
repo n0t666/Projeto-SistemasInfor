@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EncomendaSucesso">
+    tools:context=".EncomendaSucesso"
+    android:id="@+id/main">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clCenter"
@@ -48,15 +49,15 @@
             android:id="@+id/btnContinuar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:onClick="onClickContinuar"
             android:text="Continuar a comprar"
             android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/tvStatus"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:backgroundTint="@color/primary"
             app:cornerRadius="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvStatus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -56,6 +56,11 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_carrinho, container, false);
         lvLinhas = view.findViewById(R.id.lvLinhas);
+        btnCheckout = view.findViewById(R.id.btnComp);
+        tvTotal = view.findViewById(R.id.tvTotalText);
+        tvSubtotal = view.findViewById(R.id.tvSubtotalTexto);
+        tvDesconto = view.findViewById(R.id.tvDescontoTexto);
+        btnApply = view.findViewById(R.id.btnApply);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(Constants.TOKEN, null);
         SingletonLoja.getInstance(getContext()).setCarrinhoListener(this);
@@ -71,9 +76,15 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
 
         if (carrinhoAux == null || carrinhoAux.getLinhas() == null) {
             Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
+            btnApply.setEnabled(false);
+            btnCheckout.setEnabled(false);
+            tfCodigoText.setEnabled(false);
         } else {
             getActivity().setTitle("Carrinho" + " (" + carrinhoAux.getQuantidadeTotal()+ ")");
             setComponents();
+            btnApply.setEnabled(true);
+            btnCheckout.setEnabled(true);
+            tfCodigoText.setEnabled(true);
         }
     }
 
@@ -90,24 +101,26 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
 
     public void onButtonApplyClick(View view)
     {
-        String txtButton = btnApply.getText().toString();
-        if(txtButton.equals(getResources().getString(R.string.txt_apply))){
-            if(!tfCodigoText.getText().toString().isEmpty()){
-                String codigo = tfCodigoText.getText().toString();
-                if(codigo.isEmpty()){
-                    Toast.makeText(getContext(), "Necessita de inserir um código promocional válido", Toast.LENGTH_SHORT).show();
-                    return;
+        if (carrinhoAux != null && carrinhoAux.getLinhas() != null && !carrinhoAux.getLinhas().isEmpty())
+        {
+            String txtButton = btnApply.getText().toString();
+            if(txtButton.equals(getResources().getString(R.string.txt_apply))){
+                if(!tfCodigoText.getText().toString().isEmpty()){
+                    String codigo = tfCodigoText.getText().toString();
+                    if(codigo.isEmpty()){
+                        Toast.makeText(getContext(), "Necessita de inserir um código promocional válido", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+                    String token = sharedPreferences.getString(Constants.TOKEN,"");
+                    if(!token.isEmpty()){
+                        SingletonLoja.getInstance(getContext()).setCodigoPromocionalListener(this);
+                        SingletonLoja.getInstance(getContext()).applyDescontoAPI(getContext(),token,codigo);
+                    }else{
+                        return;
+                    }
                 }
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-                String token = sharedPreferences.getString(Constants.TOKEN,"");
-                if(!token.isEmpty()){
-                    SingletonLoja.getInstance(getContext()).setCodigoPromocionalListener(this);
-                    SingletonLoja.getInstance(getContext()).applyDescontoAPI(getContext(),token,codigo);
-                }else{
-                    return;
-                }
-            }
-        }else if (txtButton.equals(getResources().getString(R.string.txt_remove_coupoun))){
+            }else if (txtButton.equals(getResources().getString(R.string.txt_remove_coupoun))){
                 btnApply.setText(R.string.txt_apply);
                 tfCodigoText.setText("");
                 tfCodigoText.setEnabled(true);
@@ -115,15 +128,13 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                 tvTotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
                 tvDesconto.setText(String.format("€%.2f", 0.00));
                 tvSubtotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
+            }
+        }else{
+            Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void setComponents() {
-        btnCheckout = view.findViewById(R.id.btnComp);
-        tvTotal = view.findViewById(R.id.tvTotalText);
-        tvSubtotal = view.findViewById(R.id.tvSubtotalTexto);
-        tvDesconto = view.findViewById(R.id.tvDescontoTexto);
-        btnApply = view.findViewById(R.id.btnApply);
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,6 +160,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
             codigo = codigoPromocional;
             if(codigoPromocional.getStatus() == 0){
                 Toast.makeText(getContext(), "O código promocional já foi usado", Toast.LENGTH_SHORT).show();
+                return;
             }else if (codigoPromocional.getStatus() == 1){
                 tvDesconto.setText(String.format("€%.2f", codigoPromocional.getValorDescontado()));
                 if(tvSubtotal!= null && carrinhoAux!=null){
@@ -211,7 +223,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     {
         int codigoId = -1;
 
-        if(codigo != null && codigo.getId() != -1){
+        if(codigo != null && codigo.getId() > 0){
             codigoId = codigo.getId();
         }
 

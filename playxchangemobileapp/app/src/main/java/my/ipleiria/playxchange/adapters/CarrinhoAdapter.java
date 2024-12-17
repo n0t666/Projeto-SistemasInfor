@@ -156,8 +156,6 @@ public class CarrinhoAdapter extends BaseAdapter {
                         }
                     });
                 }
-
-
             });
 
 

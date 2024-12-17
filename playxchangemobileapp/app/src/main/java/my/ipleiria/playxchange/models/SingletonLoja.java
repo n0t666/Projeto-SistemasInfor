@@ -126,8 +126,8 @@ public class SingletonLoja {
                 public void onResponse(String response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        String token = jsonObject.getString("access_token");
-                        if(!token.isEmpty()){
+                        String token = jsonObject.getString("token");
+                        if(token.isEmpty()){
                             throw new JSONException("Token is empty");
                         }else{
                             if(loginListener != null){
