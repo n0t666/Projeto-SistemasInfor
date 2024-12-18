@@ -12,7 +12,7 @@ $primProduto = $model->linhasfaturas[0]->produto->jogo;
         <div>
             <h5>Encomenda #<?= $model->id ?></h5>
             <p><strong>Total de Itens:</strong> <?= count($model->linhasfaturas) ?></p>
-            <p><strong>Data:</strong> <?= $model->dataEncomenda ?></p>
+            <p><strong>Data:</strong> <?= $model->getDataEncomenda() ?></p>
             <p><strong>Custo total:</strong> <?= $model->total ?>€</p>
             <p><strong>Estado:</strong> <span class="badge bg-success"><?= $model->getEstadoLabel() ?></span></p>
         </div>

@@ -59,7 +59,7 @@ class JogoController extends ActiveController
                 'id' => $jogo->id,
                 'nome' => $jogo->nome,
                 'dataLancamento' => $jogo->dataLancamento,
-                'capa' => Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
+                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
             ];
         }
         return $data;

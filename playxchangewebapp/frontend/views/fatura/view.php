@@ -6,7 +6,7 @@ use yii\bootstrap5\BootstrapAsset;
 
 $this->registerCssFile('@web/css/faturas.css', ['depends' => [BootstrapAsset::className()]]);
 
-
+$this->title = 'Detalhes da encomenda';
 
 ?>
 
@@ -23,7 +23,7 @@ $this->registerCssFile('@web/css/faturas.css', ['depends' => [BootstrapAsset::cl
                     <div class="card-body">
                         <div class="mb-3 d-flex justify-content-between">
                             <div>
-                                <span class="me-3"><?= $fatura->dataEncomenda ?></span>
+                                <span class="me-3"><?= $fatura->getDataEncomenda() ?></span>
                                 <span class="badge rounded-pill bg-info"><?= $fatura->getEstadoLabel() ?></span>
                             </div>
                         </div>

@@ -9,6 +9,7 @@ use common\models\User;
 use common\models\UtilizadorJogo;
 use Yii;
 use yii\db\Exception;
+use yii\db\Expression;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\rest\ActiveController;
@@ -258,6 +259,66 @@ class UserController extends ActiveController
         } else {
             throw new \Exception('Falha ao Guardar o estado do jogo.');
         }
+    }
+
+    public function actionProfile()
+    {
+        $user = Yii::$app->user->identity;
+
+        if (!$user) {
+            throw new UnauthorizedHttpException('Token inválido');
+        }
+
+        $profile = $user->profile;
+        $numReviews = count($profile->getAvaliacoes()->all());
+        $numJogos = count($profile->getInteracoes()->where(['isJogado' => 1])->all());
+        $numFavoritos = count($profile->getInteracoes()->where(['isFavorito' => 1])->all());
+        $numDesejados = count($profile->getInteracoes()->where(['isDesejado' => 1])->all());
+        $numSeguidores = count($profile->getSeguidores()->all());
+        $numSeguir = count($profile->getSeguidos()->all());
+
+        // Devido á sobrecraga de trabalho não será possível implementar a funcionaldade realmente por ordem de recentes
+
+        $previewFavoritos = $profile
+            ->getInteracoes()
+            ->where(['isFavorito' => 1])
+            ->orderBy(new Expression('rand()'))
+            ->limit(4)
+            ->all();
+
+        $imgsFavoritos = [];
+
+        foreach ($previewFavoritos as $favorito) {
+            $idJogo = $favorito->jogo->id;
+            $imgsFavoritos[] =  [
+                'id' => $idJogo,
+                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. Jogo::findOne($idJogo)->imagemCapa
+            ];
+        }
+
+
+
+        return[
+            'username' => $user->username,
+            'email' => $user->email,
+            'nome' => $profile->nome,
+            'dataNascimento' => $profile->dataNascimento,
+            'biografia' => $profile->biografia,
+            'fotoCapa' => Yii::getAlias('@mobileIp') . $profile->getFotoCapa(),
+            'fotoPerfil' => Yii::getAlias('@mobileIp') . $profile->getFotoPerfil(),
+            'nif' => $profile->nif,
+            'privacidadeSeguidores' => $profile->privacidadeSeguidores,
+            'privacidadePerfil' => $profile->privacidadePerfil,
+            'privacidadeJogos' =>  $profile->privacidadeJogos,
+            'numReviews' => $numReviews,
+            'numJogados' => $numJogos,
+            'numFavoritos' => $numFavoritos,
+            'numDesejados' => $numDesejados,
+            'numSeguidores' => $numSeguidores,
+            'numSeguir' => $numSeguir,
+            'previewFavoritos' => $imgsFavoritos
+        ];
+
     }
 
 

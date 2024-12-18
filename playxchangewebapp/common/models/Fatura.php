@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\controllers\UtilsController;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -51,7 +52,7 @@ class Fatura extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['utilizador_id', 'pagamento_id', 'envio_id','total', 'estado'], 'required'],
+            [['utilizador_id', 'pagamento_id', 'envio_id', 'total', 'estado'], 'required'],
             [['utilizador_id', 'pagamento_id', 'envio_id', 'codigo_id', 'estado'], 'integer'],
             [['dataEncomenda'], 'safe'],
             [['total'], 'number'],
@@ -138,17 +139,14 @@ class Fatura extends \yii\db\ActiveRecord
                 'updatedAtAttribute' => false,
                 'value' => new Expression('NOW()'),
             ],
-            [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_AFTER_FIND => ['dataEncomenda'],
-                ],
-                'value' => function ($event) {
-                    return $this->dataEncomenda ? date('d-m-Y', strtotime($this->dataEncomenda)) : null;
-                },
-            ],
         ];
     }
+
+    public function getDataEncomenda()
+    {
+        return $this->dataEncomenda ? date('d-m-Y', strtotime($this->dataEncomenda)) : null;
+    }
+
 
     public function getEstadoLabel()
     {
@@ -169,6 +167,29 @@ class Fatura extends \yii\db\ActiveRecord
                 return 'Reembolsado';
             default:
                 return 'Desconhecido';
+        }
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if (!$insert && array_key_exists('estado', $changedAttributes)) {
+            if ($changedAttributes['estado'] != $this->estado) {
+                $id = $this->id;
+                $estado = $this->getEstadoLabel();
+                $utilizador = $this->utilizador->user->username;
+                $data = $this->dataEncomenda;
+                $msg = "A encomenda feita a " . $data . " com o id " . $id . " mudou de estado para " . $estado;
+                $obj = new \stdClass();
+                $obj->id = $id;
+                $obj->msg = $msg;
+                $obj->user = $utilizador;
+                $obj->estado = $this->estado;
+                $json = json_encode($obj);
+                UtilsController::publishMosquitto("ORDER-UPDATE", $json);
+            }
+
+
         }
     }
 

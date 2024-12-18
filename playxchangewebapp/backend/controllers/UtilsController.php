@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\mosquitto\phpMQTT;
 use yii\web\Controller;
 
 class UtilsController extends Controller
@@ -62,6 +63,27 @@ class UtilsController extends Controller
 
         return $n_format . $suffix;
     }
+
+    public static function publishMosquitto($topic, $msg)
+    {
+        if (empty($topic) || empty($msg)) {
+            return;
+        }
+
+        $server = 'test.mosquitto.org';
+        $port = 1883 ;
+        $username = '';
+        $password = '';
+        $client_id = 'phpMQTT-publisher';
+
+        $mqtt = new \Bluerhinos\phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, $username, $password)) {
+            $mqtt->publish($topic, $msg, 0);
+            $mqtt->close();
+        }
+    }
+
 
 
 }

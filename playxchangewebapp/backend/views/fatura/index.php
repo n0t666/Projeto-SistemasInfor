@@ -42,10 +42,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute'=>'dataEncomenda',
                                 'content'=>function($model){
-                                    return $model->total . '€';
+                                    return $model->getDataEncomenda();
                                 }
                             ],
-                            'dataEncomenda',
                             [
                                 'attribute'=>'total',
                                 'content'=>function($model){

@@ -89,13 +89,15 @@ class ComentarioController extends Controller
      */
     public function actionDelete($id)
     {
+
         if (Yii::$app->user->can('apagarComentario')) {
             try {
-                $this->findModel($id)->delete();
+                $comentario = $this->findModel($id);
+                $comentario->delete();
             } catch (\Exception $e) {
                 throw new NotFoundHttpException('The requested page does not exist.');
             }
-            return $this->redirect(['index']);
+            return $this->redirect(['index', 'userId' => $comentario->utilizador_id]);
         }else{
             return $this->goHome();
         }

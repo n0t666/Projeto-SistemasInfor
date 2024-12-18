@@ -58,6 +58,7 @@ return [
                         'GET jogados' => 'jogados',
                         'GET favoritos' => 'favoritos',
                         'POST interagir' => 'interagir',
+                        'GET perfil' => 'profile',
                     ]
                 ],
                 ['class' => 'yii\rest\UrlRule',

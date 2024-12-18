@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\controllers\UtilsController;
 use Yii;
 
 /**
@@ -130,12 +131,51 @@ class Produto extends \yii\db\ActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
 
-        if (!$insert && array_key_exists('preco', $changedAttributes)) { //Devolve um array com todos os campos novos
-            if ($changedAttributes['preco'] != $this->preco) { //Verificar se o old attribute é diferente de o novo a ser inserido
+        // Excluir o insert visto que só será alguma utilidade quando se trata de um update
 
+        if (!$insert && array_key_exists('preco', $changedAttributes)) { // Verificar se o preco foi alterado
+            if ($changedAttributes['preco'] != $this->preco) { //Verificar se o old attribute é diferente de o novo a ser inserido
                 foreach ($this->carrinhos as $carrinho) { // intera sobre todos os carrinhos
                     $carrinho->recalculateTotal();
                 }
+                foreach($this->jogo->getUtilizadoresjogos()->where(['isDesejado' => 1])->all() as $utilizadorJogo) { // Enviar notificação para todos os utilizadores que têm o jogo como desejado
+                    $id = $this->jogo->id;
+                    $msg = "O preco do jogo " . $this->jogo->nome . " foi alterado para " . $this->preco . " Euros";
+                    $user = $utilizadorJogo->utilizador->user->username;
+
+                    $obj = new \stdClass();
+                    $obj->id = $id;
+                    $obj->msg = $msg;
+                    $obj->user = $user;
+                    $json = json_encode($obj);
+
+                    UtilsController::publishMosquitto("PRICE-UPDATE", $json);
+                }
+            }
+        }
+
+        if (!$insert && array_key_exists('quantidade', $changedAttributes)) {
+            if ($changedAttributes['quantidade'] != $this->quantidade)
+            {
+                if ($this->quantidade == 0) {
+                    $msg = "O jogo " . $this->jogo->nome . " está esgotado";
+                } elseif ($this->quantidade < 10) {
+                    $msg = "O jogo " . $this->jogo->nome .  " na plataforma " . $this->plataforma->nome . " está com poucas unidades em stock";
+                } else {
+                    return;
+                }
+                $topic = "STOCK-UPDATE";
+                $obj = new \stdClass();
+                $obj->id = $this->jogo->id;
+                $obj->msg = $msg;
+                $json = json_encode($obj);
+
+                foreach($this->jogo->getUtilizadoresjogos()->where(['isDesejado' => 1])->all() as $utilizadorJogo) {
+                    $obj->user = $utilizadorJogo->utilizador->user->username;
+                    $json = json_encode($obj);
+                    UtilsController::publishMosquitto($topic, $json);
+                }
+
             }
         }
     }

@@ -52,7 +52,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return $model->codigo ? $model->codigo->codigo : 'Sem código';
                                 },
                             ],
-                            'dataEncomenda',
+                            [
+                                'attribute' => 'dataEncomenda',
+                                'value' => function($model) {
+                                    return $model->getDataEncomenda();
+                                },
+                            ],
                             [
                                 'attribute' => 'total',
                                 'value' => function($model) {
