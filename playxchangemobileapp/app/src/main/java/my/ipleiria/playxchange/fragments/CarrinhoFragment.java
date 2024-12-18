@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     private MaterialButton btnCheckout,btnApply;
     private TextInputEditText tfCodigoText;
     private View view;
+    private ConstraintLayout clContent, clCarrinhoVazio;
 
     private CodigoPromocional codigo;
 
@@ -61,6 +63,9 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         tvSubtotal = view.findViewById(R.id.tvSubtotalTexto);
         tvDesconto = view.findViewById(R.id.tvDescontoTexto);
         btnApply = view.findViewById(R.id.btnApply);
+        tfCodigoText = view.findViewById(R.id.tfCodigoText);
+        clContent = view.findViewById(R.id.clContent);
+        clCarrinhoVazio = view.findViewById(R.id.clCarrinhoVazio);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(Constants.TOKEN, null);
         SingletonLoja.getInstance(getContext()).setCarrinhoListener(this);
@@ -72,19 +77,21 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     @Override
     public void onRefreshCarrinho(Carrinho carrinho) {
         carrinhoAux = carrinho;
-
-
         if (carrinhoAux == null || carrinhoAux.getLinhas() == null) {
             Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
             btnApply.setEnabled(false);
             btnCheckout.setEnabled(false);
             tfCodigoText.setEnabled(false);
+            clContent.setVisibility(View.GONE);
+            clCarrinhoVazio.setVisibility(View.VISIBLE);
         } else {
             getActivity().setTitle("Carrinho" + " (" + carrinhoAux.getQuantidadeTotal()+ ")");
             setComponents();
             btnApply.setEnabled(true);
             btnCheckout.setEnabled(true);
             tfCodigoText.setEnabled(true);
+            clContent.setVisibility(View.VISIBLE);
+            clCarrinhoVazio.setVisibility(View.GONE);
         }
     }
 

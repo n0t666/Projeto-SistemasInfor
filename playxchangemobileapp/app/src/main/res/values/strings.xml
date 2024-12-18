@@ -60,4 +60,10 @@
     <string name="txt_error_pagamento">Por favor selecione um método de pagamento.</string>
     <string name="txt_pagamento_invalid">Método de pagamento inválido</string>
     <string name="txt_envio_invalid">Método de envio inválido</string>
+    <string name="txt_grid_poster_desc">Capa do jogo</string>
+    <string name="txt_carrinho_vazio">O seu carrinho está vazio!</string>
+    <string name="txt_products">Descobrir novos produtos</string>
+    <string name="txt_jogados">Jogados</string>
+    <string name="txt_following">A seguir</string>
+    <string name="txt_followers">Seguidores</string>
 </resources>

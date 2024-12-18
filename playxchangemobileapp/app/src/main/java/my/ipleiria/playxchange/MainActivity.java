@@ -21,6 +21,8 @@ import com.google.android.material.navigation.NavigationView;
 import my.ipleiria.playxchange.fragments.CarrinhoFragment;
 import my.ipleiria.playxchange.fragments.FaturaFragment;
 import my.ipleiria.playxchange.fragments.HomeFragment;
+import my.ipleiria.playxchange.fragments.JogosFragment;
+import my.ipleiria.playxchange.fragments.PerfilFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new HomeFragment();
         } else if (item.getItemId() == R.id.games) {
             setTitle(item.getTitle());
+            fragment = new JogosFragment();
         } else if (item.getItemId() == R.id.cart) {
             setTitle(item.getTitle());
             fragment = new CarrinhoFragment();
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new FaturaFragment();
         } else if (item.getItemId() == R.id.user) {
             setTitle(item.getTitle());
+            fragment = new PerfilFragment();
         }
 
         if(fragment!=null){

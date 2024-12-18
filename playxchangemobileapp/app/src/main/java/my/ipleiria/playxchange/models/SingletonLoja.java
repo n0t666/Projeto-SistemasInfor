@@ -31,6 +31,7 @@ import my.ipleiria.playxchange.listeners.FaturasListener;
 import my.ipleiria.playxchange.listeners.JogoListener;
 import my.ipleiria.playxchange.listeners.JogosListener;
 import my.ipleiria.playxchange.listeners.LoginListener;
+import my.ipleiria.playxchange.listeners.UserListener;
 import my.ipleiria.playxchange.parsers.LojaJsonParser;
 import my.ipleiria.playxchange.utils.Constants;
 
@@ -52,6 +53,8 @@ public class SingletonLoja {
     private CodigoPromocionalListener codigoPromocionalListener;
 
     private CheckoutListener checkoutListener;
+
+    private UserListener userListener;
 
 
 
@@ -110,6 +113,9 @@ public class SingletonLoja {
     public void setCheckoutListener(CheckoutListener checkoutListener){
         this.checkoutListener = checkoutListener;
     }
+    public void setUserListener(UserListener userListener){
+        this.userListener = userListener;
+    }
     //endregion
 
 
@@ -160,6 +166,30 @@ public class SingletonLoja {
             volleyQueue.add(request);
         }
     }
+
+    public void getProfileAPI(final Context context, final String token){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.GET, Constants.IP_ADDRESS + "users/perfil?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    User user = LojaJsonParser.parserJsonUser(response);
+                    if(userListener != null){
+                        userListener.onProfileLoaded(user);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
     //endregion
 
     //region - Homepage related API
@@ -642,9 +672,31 @@ public class SingletonLoja {
             volleyQueue.add(req);
         }
     }
-
-
     //endregion
+
+    //region - Jogos related API
+    public void getJogosAPI(final Context context){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "jogos", null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    ArrayList<Jogo> jogos = LojaJsonParser.parserJsonJogos(response);
+                    if(jogosListener != null){
+                        jogosListener.onRefreshListaJogos(jogos);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
 
 
     //endregion

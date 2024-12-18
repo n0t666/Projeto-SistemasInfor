@@ -18,6 +18,7 @@ import my.ipleiria.playxchange.models.CodigoPromocional;
 import my.ipleiria.playxchange.models.Fatura;
 import my.ipleiria.playxchange.models.Jogo;
 import my.ipleiria.playxchange.models.LinhaCarrinho;
+import my.ipleiria.playxchange.models.User;
 
 public class LojaJsonParser {
     public static boolean isConnectionInternet(Context context){
@@ -414,6 +415,46 @@ public class LojaJsonParser {
             throw new RuntimeException(e);
         }
         return auxCheckout;
+    }
+
+    public static User parserJsonUser(String response){
+        User auxUser = null;
+        try {
+            JSONObject user = new JSONObject(response);
+            String username = user.has("username") && !user.isNull("username") ? user.getString("username") : "";
+            String email = user.has("email") && !user.isNull("email") ? user.getString("email") : "";
+            String nome = user.has("nome") && !user.isNull("nome") ? user.getString("nome") : "";
+            String dataNascimento = user.has("dataNascimento") && !user.isNull("dataNascimento") ? user.getString("dataNascimento") : "";
+            String biografia = user.has("biografia") && !user.isNull("biografia") ? user.getString("biografia") : "";
+            String fotoCapa = user.has("fotoCapa") && !user.isNull("fotoCapa") ? user.getString("fotoCapa") : "";
+            String fotoPerfil = user.has("fotoPerfil") && !user.isNull("fotoPerfil") ? user.getString("fotoPerfil") : "";
+            String nif = user.has("nif") && !user.isNull("nif") ? user.getString("nif") : "";
+            int privacidadeSeguidores = user.has("privacidadeSeguidores") && !user.isNull("privacidadeSeguidores") ? user.getInt("privacidadeSeguidores") : 0;
+            int privacidadeJogos = user.has("privacidadeJogos") && !user.isNull("privacidadeJogos") ? user.getInt("privacidadeJogos") : 0;
+            int privacidadePerfil = user.has("privacidadePerfil") && !user.isNull("privacidadePerfil") ? user.getInt("privacidadePerfil") : 0;
+            int numReviews = user.has("numReviews") && !user.isNull("numReviews") ? user.getInt("numReviews") : 0;
+            int numSeguidores = user.has("numSeguidores") && !user.isNull("numSeguidores") ? user.getInt("numSeguidores") : 0;
+            int numSeguir = user.has("numSeguir") && !user.isNull("numSeguir") ? user.getInt("numSeguir") : 0;
+            int numJogados = user.has("numJogados") && !user.isNull("numJogados") ? user.getInt("numJogados") : 0;
+            int numFavoritos = user.has("numFavoritos") && !user.isNull("numFavoritos") ? user.getInt("numFavoritos") : 0;
+            int numDesejados = user.has("numDesejados") && !user.isNull("numDesejados") ? user.getInt("numDesejados") : 0;
+            ArrayList<Jogo> favoritosPreview = new ArrayList<>();
+            if (user.has("previewFavoritos") && !user.isNull("previewFavoritos")) {
+                JSONArray jsonFavoritosPreview = user.getJSONArray("previewFavoritos");
+                for (int i = 0; i < jsonFavoritosPreview.length(); i++) {
+                    JSONObject jsonFavorito = jsonFavoritosPreview.getJSONObject(i);
+                    int id = jsonFavorito.has("id") && !jsonFavorito.isNull("id") ? jsonFavorito.getInt("id") : 0;
+                    String capa = jsonFavorito.has("capa") && !jsonFavorito.isNull("capa") ? jsonFavorito.getString("capa") : "";
+                    Jogo jogo = new Jogo(id,null,null,null,capa,null,null,null,null,0,0,0.0,0,null,null,null,null,null,null);
+                    favoritosPreview.add(jogo);
+                }
+            }
+            auxUser = new User(biografia,0,nome,nif,dataNascimento,fotoCapa,fotoPerfil,username,email,numSeguidores,numSeguir,numJogados,numFavoritos,numDesejados,favoritosPreview);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return auxUser;
+
     }
 
 
