@@ -81,7 +81,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -106,7 +106,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -125,31 +125,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/txt_following"
-                        android:textColor="@color/subtle_dark"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvJogadosNum"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/text"
-                        android:textSize="18sp" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvJogados"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/txt_jogados"
                         android:textColor="@color/subtle_dark"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -241,6 +216,7 @@
 
 
             <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/dividerStats"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
@@ -248,115 +224,122 @@
                 app:dividerColor="@color/border"
                 app:layout_constraintTop_toBottomOf="@id/llFavoritos" />
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:layout_marginTop="30dp"
-                android:gravity="center_vertical"
-                app:layout_constraintTop_toBottomOf="@id/llFavoritos"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_margin="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="5dp"
+                app:strokeColor="@color/primary"
+                app:layout_constraintTop_toBottomOf="@+id/dividerStats"
+                app:strokeWidth="2dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="start">
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:divider="?attr/dividerVertical"
+                    android:background="@color/background">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvJogados2"
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvJogados"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:text="@string/txt_jogados"
+                            app:drawableTint="@color/subtle_dark"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@drawable/ic_videogame_asset_24"
+                            android:textColor="@color/subtle_dark" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvDesejados"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:text="@string/txt_desejados"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@drawable/ic_bookmark"
+                            app:drawableTint="@color/subtle_dark"
+                            android:textColor="@color/subtle_dark" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvFavoritos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:text="@string/txt_favoritos"
+                            android:drawablePadding="5dp"
+                            android:drawableStart="@drawable/ic_favorite_filled"
+                            app:drawableTint="@color/subtle_dark"
+                            android:textColor="@color/subtle_dark" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvReviews"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:text="@string/txt_reviews"
+                            android:drawableStart="@drawable/ic_reviews_24"
+                            android:drawablePadding="5dp"
+                            app:drawableTint="@color/subtle_dark"
+                            android:textColor="@color/subtle_dark" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Jogados"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="2dp"
-                        app:iconGravity="textStart"
-                        app:iconPadding="8dp" />
+                        android:orientation="vertical"
+                        android:gravity="end">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvDesejados"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Desejados"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvJogadosNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/text"
+                            android:textStyle="bold" />
 
-                        android:lineSpacingExtra="2dp"
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvDesejadosNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/text"
+                            android:textStyle="bold" />
 
-                        app:iconGravity="textStart"
-                        app:iconPadding="8dp" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvFavoritosNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/text"
+                            android:textStyle="bold" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvFavoritos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Favoritos"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="2dp"
-                        app:iconGravity="textStart"
-                        app:iconPadding="8dp" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvReviews"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reviews"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="2dp"
-                        app:iconGravity="textStart"
-                        app:iconPadding="8dp" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tvReviewsNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/text"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:orientation="vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+            </com.google.android.material.card.MaterialCardView>
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvJogadosNumber2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvDesejadosNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvFavoritosNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvReviewsNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

@@ -1,18 +1,25 @@
 package my.ipleiria.playxchange.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,27 +28,29 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
+import my.ipleiria.playxchange.EditProfileDetails;
+import my.ipleiria.playxchange.LoginActivity;
 import my.ipleiria.playxchange.R;
+import my.ipleiria.playxchange.ServerActivity;
 import my.ipleiria.playxchange.listeners.UserListener;
 import my.ipleiria.playxchange.models.SingletonLoja;
 import my.ipleiria.playxchange.models.User;
 import my.ipleiria.playxchange.utils.Constants;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PerfilFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PerfilFragment extends Fragment implements UserListener {
+
+
 
     private ImageView ivCapa;
     private ShapeableImageView ivPfp;
-    MaterialTextView tvUsername,tvBio, tvSeguidoresNum, tvSeguidosNum, tvJogadosNum1,getTvJogadosNum2;
+    MaterialTextView tvUsername,tvBio, tvSeguidoresNum, tvSeguidosNum, tvJogadosNum, tvFavoritosNum,tvReviewsNum,tvDesejadosNum;
     ImageView[] ivFavoritos = {null, null, null, null};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
     public PerfilFragment() {
         // Required empty public constructor
@@ -65,7 +74,12 @@ public class PerfilFragment extends Fragment implements UserListener {
         ivFavoritos[1] = view.findViewById(R.id.ivFavorito2);
         ivFavoritos[2] = view.findViewById(R.id.ivFavorito3);
         ivFavoritos[3] = view.findViewById(R.id.ivFavorito4);
+        tvJogadosNum = view.findViewById(R.id.tvJogadosNumber);
+        tvFavoritosNum = view.findViewById(R.id.tvFavoritosNumber);
+        tvReviewsNum = view.findViewById(R.id.tvReviewsNumber);
+        tvDesejadosNum = view.findViewById(R.id.tvDesejadosNumber);
 
+        requireActivity().setTitle("");
         return view;
     }
 
@@ -91,5 +105,55 @@ public class PerfilFragment extends Fragment implements UserListener {
                 ivFavoritos[i].setVisibility(View.GONE);
             }
         }
+        tvJogadosNum.setText(String.valueOf(user.getJogosJogados()));
+        tvFavoritosNum.setText(String.valueOf(user.getJogosFavoritos()));
+        tvReviewsNum.setText(String.valueOf(user.getNumReviews()));
+        tvDesejadosNum.setText(String.valueOf(user.getJogosDesejados()));
+    }
+
+    public void openSettings() {
+        Intent intent = new Intent(getContext(), ServerActivity.class);
+        startActivity(intent);
+    }
+
+    public void openEditProfile() {
+        Intent intent = new Intent(getContext(), EditProfileDetails.class);
+        startActivity(intent);
+    }
+
+    public void logout() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.putString(Constants.IP_ADDRESS, Constants.PROTOCOL + Constants.DEFAULT_IP + Constants.PROJECT);
+        editor.apply();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+        if(getActivity() != null) {
+            getActivity().finish();
+        }
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        // Inflate the menu specifically for this fragment
+        menuInflater.inflate(R.menu.profile_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.ac_settings) {
+            openSettings();
+            return true;
+        } else if (menuItem.getItemId() == R.id.ac_edit) {
+            openEditProfile();
+            return true;
+        }else if (menuItem.getItemId() == R.id.ac_logout) {
+            logout();
+            return true;
+        }
+        return false;
     }
 }

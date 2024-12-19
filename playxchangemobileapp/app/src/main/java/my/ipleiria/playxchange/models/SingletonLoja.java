@@ -65,9 +65,9 @@ public class SingletonLoja {
 
         if (ip != null && !ip.equals(Constants.IP_ADDRESS)) {
             //Constants.IP_ADDRESS =  Constants.PROTOCOL + ip + ":" + Constants.PORT + "/" + Constants.PROJECT;
-            Constants.IP_ADDRESS = Constants.PROTOCOL + ip + "/Projeto-SistemasInfor/playxchangewebapp/backend/web/api/";
+            Constants.IP_ADDRESS = Constants.PROTOCOL + ip + Constants.PROJECT;
         } else {
-            Constants.IP_ADDRESS = Constants.PROTOCOL + "10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/backend/web/api/";
+            Constants.IP_ADDRESS = Constants.PROTOCOL + Constants.DEFAULT_IP + Constants.PROJECT;
         }
     }
 
@@ -193,7 +193,6 @@ public class SingletonLoja {
     //endregion
 
     //region - Homepage related API
-
     public void getJogosByCategoriaAPI(final Context context, final String categoria) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();

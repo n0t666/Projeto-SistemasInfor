@@ -66,4 +66,9 @@
     <string name="txt_jogados">Jogados</string>
     <string name="txt_following">A seguir</string>
     <string name="txt_followers">Seguidores</string>
+    <string name="txt_desejados">Desejados</string>
+    <string name="txt_favoritos">Favoritos</string>
+    <string name="txt_config_api">Definições API</string>
+    <string name="txt_edit_per">Editar Perfil</string>
+    <string name="txt_logout">Logout</string>
 </resources>

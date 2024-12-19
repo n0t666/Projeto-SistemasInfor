@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class User {
     private int id;
     private String nome,nif,dataNascimento,biografia,imagemCapa,imagemPerfil,username,email;
-    private int seguidores,seguidos,jogosJogados,jogosFavoritos,jogosDesejados;
+    private int seguidores,seguidos,jogosJogados,jogosFavoritos,jogosDesejados,numReviews,privacidadeSeguidores,privacidadeJogos,privacidadePerfil;
     private ArrayList<Jogo> favoritosPreview;
 
-    public User(String biografia, int id, String nome, String nif, String dataNascimento, String imagemCapa, String imagemPerfil, String username, String email, int seguidores, int seguidos, int jogosJogados, int jogosFavoritos, int jogosDesejados, ArrayList<Jogo> favoritosPreview) {
+    public User(String biografia, int id, String nome, String nif, String dataNascimento, String imagemCapa, String imagemPerfil, String username, String email, int seguidores, int seguidos, int jogosJogados, int jogosFavoritos, int jogosDesejados, ArrayList<Jogo> favoritosPreview, int numReviews, int privacidadeSeguidores, int privacidadeJogos, int privacidadePerfil) {
         this.biografia = biografia;
         this.id = id;
         this.nome = nome;
@@ -24,6 +24,10 @@ public class User {
         this.jogosFavoritos = jogosFavoritos;
         this.jogosDesejados = jogosDesejados;
         this.favoritosPreview = favoritosPreview;
+        this.numReviews = numReviews;
+        this.privacidadeSeguidores = privacidadeSeguidores;
+        this.privacidadeJogos = privacidadeJogos;
+        this.privacidadePerfil = privacidadePerfil;
     }
 
     public String getImagemCapa() {
@@ -144,5 +148,37 @@ public class User {
 
     public void setFavoritosPreview(ArrayList<Jogo> favoritosPreview) {
         this.favoritosPreview = favoritosPreview;
+    }
+
+    public int getNumReviews() {
+        return numReviews;
+    }
+
+    public void setNumReviews(int numReviews) {
+        this.numReviews = numReviews;
+    }
+
+    public int getPrivacidadeSeguidores() {
+        return privacidadeSeguidores;
+    }
+
+    public void setPrivacidadeSeguidores(int privacidadeSeguidores) {
+        this.privacidadeSeguidores = privacidadeSeguidores;
+    }
+
+    public int getPrivacidadeJogos() {
+        return privacidadeJogos;
+    }
+
+    public void setPrivacidadeJogos(int privacidadeJogos) {
+        this.privacidadeJogos = privacidadeJogos;
+    }
+
+    public int getPrivacidadePerfil() {
+        return privacidadePerfil;
+    }
+
+    public void setPrivacidadePerfil(int privacidadePerfil) {
+        this.privacidadePerfil = privacidadePerfil;
     }
 }

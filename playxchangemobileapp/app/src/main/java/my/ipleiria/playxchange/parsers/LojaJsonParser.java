@@ -449,7 +449,7 @@ public class LojaJsonParser {
                     favoritosPreview.add(jogo);
                 }
             }
-            auxUser = new User(biografia,0,nome,nif,dataNascimento,fotoCapa,fotoPerfil,username,email,numSeguidores,numSeguir,numJogados,numFavoritos,numDesejados,favoritosPreview);
+            auxUser = new User(biografia,0,nome,nif,dataNascimento,fotoCapa,fotoPerfil,username,email,numSeguidores,numSeguir,numJogados,numFavoritos,numDesejados,favoritosPreview,numReviews,privacidadeSeguidores,privacidadeJogos,privacidadePerfil);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
