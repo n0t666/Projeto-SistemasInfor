@@ -28,7 +28,7 @@ class Faq extends \yii\db\ActiveRecord
     {
         return [
             [['pergunta', 'descricao'], 'required'],
-            [['descricao'], 'string'],
+            [['descricao'], 'string', 'max' => 2000],
             [['pergunta'], 'string', 'max' => 255],
         ];
     }

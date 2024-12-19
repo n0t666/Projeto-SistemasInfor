@@ -60,7 +60,8 @@ class Jogo extends \yii\db\ActiveRecord
             [['franquia_id', 'distribuidora_id', 'editora_id'], 'integer'],
             [['nome'], 'string', 'max' => 200],
             [['imagemCapa'], 'string', 'max' => 255,'skipOnEmpty' => true],
-            [['trailerLink'],'url','defaultScheme' => 'https'],
+            [['trailerLink'],'url','defaultScheme' => 'https'], // Verificar se o link é válido
+            [['nome'], 'unique'],
             [['editora_id'], 'exist', 'skipOnError' => true, 'targetClass' => Editora::class, 'targetAttribute' => ['editora_id' => 'id']],
             [['franquia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Franquia::class, 'targetAttribute' => ['franquia_id' => 'id']],
             [['distribuidora_id'], 'exist', 'skipOnError' => true, 'targetClass' => Distribuidora::class, 'targetAttribute' => ['distribuidora_id' => 'id']],

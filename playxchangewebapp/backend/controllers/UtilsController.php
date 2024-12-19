@@ -76,7 +76,7 @@ class UtilsController extends Controller
         $password = '';
         $client_id = 'phpMQTT-publisher';
 
-        $mqtt = new \Bluerhinos\phpMQTT($server, $port, $client_id);
+        $mqtt = new \Bluerhinos\phpMQTT($server, $port, $client_id); // Usar o do composer pq o local n estava a funcionar corretamente
 
         if ($mqtt->connect(true, NULL, $username, $password)) {
             $mqtt->publish($topic, $msg, 0);

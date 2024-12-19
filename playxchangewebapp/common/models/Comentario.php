@@ -38,7 +38,10 @@ class Comentario extends \yii\db\ActiveRecord
         return [
             [['utilizador_id', 'jogo_id', 'comentario'], 'required'],
             [['utilizador_id', 'jogo_id'], 'integer'],
-            [['comentario'], 'string'],
+            [['comentario'], 'string', 'max' => 1000],
+            [['utilizador_id', 'jogo_id'], 'unique', 'targetAttribute' => ['utilizador_id', 'jogo_id'], 'message' => 'Já fez um comentário para este jogo'],
+            [['jogo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Jogo::class, 'targetAttribute' => ['jogo_id' => 'id']],
+            [['utilizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userdata::class, 'targetAttribute' => ['utilizador_id' => 'id']],
             [['dataComentario'], 'safe'],
         ];
     }

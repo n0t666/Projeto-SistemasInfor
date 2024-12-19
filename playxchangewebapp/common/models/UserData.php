@@ -74,6 +74,7 @@ class Userdata extends \yii\db\ActiveRecord
             [['dataNascimento'], 'safe'],
             [['nome'], 'string', 'max' => 200],
             ['nif', 'string','min' => 9, 'max' => 9],
+            ['nif', 'match', 'pattern' => '/^\d{9}$/', 'message' => 'O NIF deve ser numérico e ter exatamente 9 dígitos.'],
             ['nif', 'unique', 'targetClass' => '\common\models\Userdata', 'message' => 'Este NIF já está associado a outra conta.'],
             [['biografia'], 'string', 'max' => 150],
             [['fotoCapa', 'fotoPerfil'], 'string', 'max' => 255],

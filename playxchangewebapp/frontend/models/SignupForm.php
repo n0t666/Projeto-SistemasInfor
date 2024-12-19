@@ -42,6 +42,7 @@ class SignupForm extends Model
 
             ['nif', 'string','min' => 9, 'max' => 9],
             ['nif', 'unique', 'targetClass' => '\common\models\Userdata', 'message' => 'Este NIF já está associado a outra conta.'],
+            ['nif', 'match', 'pattern' => '/^\d{9}$/', 'message' => 'O NIF deve ser numérico e ter exatamente 9 dígitos.'],
 
             ['nome', 'required'],
             ['nome', 'string', 'max' => 200],
