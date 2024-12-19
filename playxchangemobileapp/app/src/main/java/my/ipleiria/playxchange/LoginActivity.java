@@ -1,5 +1,8 @@
 package my.ipleiria.playxchange;
 
+import static my.ipleiria.playxchange.utils.Rules.isPasswordValid;
+import static my.ipleiria.playxchange.utils.Rules.isUsernameValid;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -73,17 +76,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         startActivity(intent);
     }
 
-    public boolean isUsernameValid(String username){
-        if(username==null)
-            return false;
-        return username.length() > 2;
-    }
-
-    public boolean isPasswordValid(String password){
-        if(password==null)
-            return false;
-        return password.length() > 4;
-    }
 
     public void login(String username, String password) {
         SingletonLoja.getInstance(getApplicationContext()).loginAPI(username, password, getApplicationContext());

@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -189,6 +190,45 @@ public class SingletonLoja {
             volleyQueue.add(req);
         }
     }
+
+    public void updateUser(final Context context, final String token, final JSONObject obj) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            JsonObjectRequest req = new JsonObjectRequest(
+                    Request.Method.PUT,
+                    Constants.IP_ADDRESS + "users/atualizar?access-token=" + token,
+                    obj,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (userListener != null) {
+                                userListener.onProfileUpdated();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            String body = "";
+                            if (error.networkResponse != null && error.networkResponse.data != null) {
+                                try {
+                                    body = new String(error.networkResponse.data, "UTF-8");
+                                    JSONObject jsonObject = new JSONObject(body);
+                                    if (jsonObject.has("message")) {
+                                        String errorMessage = jsonObject.getString("message");
+                                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (UnsupportedEncodingException | JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+            volleyQueue.add(req);
+        }
+    }
+
 
     //endregion
 

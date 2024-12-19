@@ -71,4 +71,10 @@
     <string name="txt_config_api">Definições API</string>
     <string name="txt_edit_per">Editar Perfil</string>
     <string name="txt_logout">Logout</string>
+    <string name="txt_hint_email">Email</string>
+    <string name="txt_hint_nome">Nome</string>
+    <string name="txt_hint_nif">NIF</string>
+    <string name="txt_hint_bio">Biografia</string>
+    <string name="txt_hint_nascimento">Data de nascimento</string>
+    <string name="txt_save">Guardar</string>
 </resources>

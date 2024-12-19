@@ -4,4 +4,5 @@ import my.ipleiria.playxchange.models.User;
 
 public interface UserListener {
     void onProfileLoaded(User user);
+    void onProfileUpdated();
 }
