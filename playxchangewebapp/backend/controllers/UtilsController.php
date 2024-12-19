@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use app\mosquitto\phpMQTT;
+use Yii;
 use yii\web\Controller;
 
 class UtilsController extends Controller
@@ -82,6 +83,19 @@ class UtilsController extends Controller
             $mqtt->publish($topic, $msg, 0);
             $mqtt->close();
         }
+    }
+
+    public static function uploadBase64($alias, $base64){
+        $imageData = base64_decode($base64);
+        $path = Yii::getAlias($alias);
+        $filename = Yii::$app->getSecurity()->generateRandomString() . '.jpeg';
+        $filePath = $path . DIRECTORY_SEPARATOR . $filename;
+
+        if (file_put_contents($filePath, $imageData)) {
+            return $filename;
+        }
+
+        return false;
     }
 
 

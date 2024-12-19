@@ -2,9 +2,11 @@
 
 namespace backend\modules\api\controllers;
 
+use backend\controllers\UtilsController;
 use common\models\Avaliacao;
 use common\models\Jogo;
 use common\models\LoginForm;
+use common\models\UploadForm;
 use common\models\User;
 use common\models\UtilizadorJogo;
 use Yii;
@@ -73,7 +75,7 @@ class UserController extends ActiveController
         throw new BadRequestHttpException('Dados incompletos');
     }
 
-    public function actionUpdate()
+    public function actionAtualizar()
     {
         $body = Yii::$app->request->getBodyParams();
         $user = Yii::$app->user->identity;
@@ -85,8 +87,8 @@ class UserController extends ActiveController
         if (isset($body['user'])) {
             $userData = $body['user'];
 
-            if (isset($userData['password']) && !$user->validatePassword($userData['password'])) {
-                throw new BadRequestHttpException('Password inválida.');
+            if (isset($userData['password']) && $userData['password'] != null) {
+                $user->validatePassword($userData['password']);
             }
 
             if (isset($userData['username'] )) {
@@ -113,6 +115,22 @@ class UserController extends ActiveController
         if (isset($body['profile'])) {
             $profileData = $body['profile'];
             $profile = $user->profile;
+
+            if(isset($profileData["imagemCapa"]) &&  $profileData["imagemCapa"]){
+
+                $base64ImageCapa = $profileData["imagemCapa"];
+
+                if (strpos($base64ImageCapa, 'base64,') !== false) {
+                    $base64ImageCapa = explode('base64,', $base64ImageCapa)[1];
+                }
+
+                $imgCapa = UtilsController::uploadBase64(Yii::getAlias('@perfilPath'),$base64ImageCapa);
+                if($imgCapa){
+                    $profile->fotoCapa = $imgCapa;
+                }else{
+                    throw new BadRequestHttpException('Ocorreu um erro ao fazer o upload da foto de capa');
+                }
+            }
 
             $profile->load($profileData, '');
             if (!$profile->validate()) {

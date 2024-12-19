@@ -84,8 +84,7 @@ class Userdata extends \yii\db\ActiveRecord
             ['privacidadePerfil', 'default', 'value' => self::STATUS_PUBLIC],
             ['privacidadePerfil', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC]],
             ['privacidadeJogos', 'default', 'value' => self::STATUS_PUBLIC],
-            ['privacidadeJogos', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],
-            ];
+            ['privacidadeJogos', 'in', 'range' => [self::STATUS_PRIVATE, self::STATUS_PUBLIC, self::STATUS_MUTUAL]],];
     }
 
     /**

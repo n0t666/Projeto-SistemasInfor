@@ -59,6 +59,7 @@ return [
                         'GET favoritos' => 'favoritos',
                         'POST interagir' => 'interagir',
                         'GET perfil' => 'profile',
+                        'PUT atualizar' => 'atualizar',
                     ]
                 ],
                 ['class' => 'yii\rest\UrlRule',
