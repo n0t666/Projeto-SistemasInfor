@@ -67,6 +67,9 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         }
 
         this.setTitle("Checkout");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         getCheckoutDetails();
     }
@@ -93,9 +96,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 tvDesconto.setVisibility(View.GONE);
             }
 
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
 
             tvTaxas.setVisibility(View.GONE);
 

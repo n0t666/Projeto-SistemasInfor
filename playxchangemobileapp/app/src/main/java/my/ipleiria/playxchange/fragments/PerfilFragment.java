@@ -52,11 +52,7 @@ public class PerfilFragment extends Fragment implements UserListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString(Constants.TOKEN, null);
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
-        SingletonLoja.getInstance(getContext()).setUserListener(this);
-        SingletonLoja.getInstance(getContext()).getProfileAPI(getContext(),token);
         ivCapa = view.findViewById(R.id.ivCapa);
         ivPfp = view.findViewById(R.id.ivPfp);
         tvUsername = view.findViewById(R.id.tvUsername);
@@ -153,5 +149,14 @@ public class PerfilFragment extends Fragment implements UserListener {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onResume() { // Sempre que o fragmento ficar visível, garantir que os dados do perfil estão atualizados sempre
+        super.onResume();
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(Constants.TOKEN, null);
+        SingletonLoja.getInstance(getContext()).setUserListener(this);
+        SingletonLoja.getInstance(getContext()).getProfileAPI(getContext(), token);
     }
 }

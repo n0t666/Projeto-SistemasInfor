@@ -66,10 +66,6 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         tfCodigoText = view.findViewById(R.id.tfCodigoText);
         clContent = view.findViewById(R.id.clContent);
         clCarrinhoVazio = view.findViewById(R.id.clCarrinhoVazio);
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString(Constants.TOKEN, null);
-        SingletonLoja.getInstance(getContext()).setCarrinhoListener(this);
-        SingletonLoja.getInstance(getContext()).getCarrinhoAPI(getContext(), token);
         return view;
     }
 
@@ -243,5 +239,14 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         }else{
             Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(Constants.TOKEN, null);
+        SingletonLoja.getInstance(getContext()).setCarrinhoListener(this);
+        SingletonLoja.getInstance(getContext()).getCarrinhoAPI(getContext(), token);
     }
 }

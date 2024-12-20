@@ -202,6 +202,7 @@ public class SingletonLoja {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            Log.d("API Response", response.toString());
                             if (userListener != null) {
                                 userListener.onProfileUpdated();
                             }

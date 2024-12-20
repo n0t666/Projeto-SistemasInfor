@@ -66,11 +66,22 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
         if (id == R.id.ac_save) {
             guardar();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -98,6 +109,9 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
         txtPassword = findViewById(R.id.txtPassword);
         txtConfirmPassword = findViewById(R.id.txtConfirmarPassword);
         this.setTitle("Editar Perfil");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -126,6 +140,8 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
 
     @Override
     public void onProfileUpdated() {
+        View current = getCurrentFocus();
+        if (current != null) current.clearFocus(); // Remover o foco no campo que o utilizador está a escrever
         Toast.makeText(this, "Perfil atualizado com sucesso", Toast.LENGTH_SHORT).show();
     }
 
@@ -138,10 +154,10 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
     }
 
     private void escolherImagem(int requestCode) {
-        Intent imagePickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        imagePickerIntent.setType("image/*");
-        imagePickerIntent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        startActivityForResult(imagePickerIntent, requestCode);
+        Intent imagePickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT); // Abrir o explorador de ficheiros de modo a evitar problemas com permissões
+        imagePickerIntent.setType("image/*"); // Apenas permitir a escolha de imagens
+        imagePickerIntent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()); // Definir o formato da imagem
+        startActivityForResult(imagePickerIntent, requestCode); // Iniciar a atividade de escolha de imagem com base no código que indica se é para a capa ou para a imagem de perfil
     }
 
     /*
@@ -151,32 +167,29 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_CAPA_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+        if (resultCode == RESULT_OK && data != null) {
             Uri filePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                Bitmap lastBitmap = null;
-                lastBitmap = bitmap;
-                capaImage = getStringImage(lastBitmap);
-                ivCapa.setImageBitmap(lastBitmap);
-
+                if (requestCode == PICK_CAPA_IMAGE_REQUEST) {
+                    updateVisualImage(bitmap, ivCapa, true);
+                } else if (requestCode == PICK_PFP_IMAGE_REQUEST) {
+                    updateVisualImage(bitmap, ivPfp, false);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        } else if (requestCode == PICK_PFP_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            Uri filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                Bitmap lastBitmap = null;
-                lastBitmap = bitmap;
-                pfpImage = getStringImage(lastBitmap);
-                ivPfp.setImageBitmap(lastBitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
         }
+    }
+
+    private void updateVisualImage(Bitmap bitmap, ImageView imageView, boolean isCapa) {
+        Bitmap bt = bitmap;
+        if (isCapa) {
+            capaImage = getStringImage(bitmap);
+        } else {
+            pfpImage = getStringImage(bitmap);
+        }
+        imageView.setImageBitmap(bt);
     }
 
     public String getStringImage(Bitmap bmp) {
@@ -200,10 +213,10 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
             @Override
             public void onPositiveButtonClick(Object selection) {
                 try {
-                    Long date = (Long) selection;
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    Long date = (Long) selection; // Obter a data selecionada
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")); // Obter a data atual
                     calendar.setTimeInMillis(date);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Formatar a data para o formato Dia-Mês-Ano
                     txtDataNascimento.setText(dateFormat.format(calendar.getTime()));
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), "Erro ao selecionar a data de nascimento", Toast.LENGTH_SHORT).show();
@@ -217,7 +230,6 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
             SharedPreferences sharedPreferences = getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
             String token = sharedPreferences.getString(Constants.TOKEN, null);
             SingletonLoja.getInstance(getApplicationContext()).setUserListener(this);
-            SingletonLoja.getInstance(getApplicationContext()).getProfileAPI(getApplicationContext(), token);
             try {
                 JSONObject mainObj = new JSONObject();
                 JSONObject userObj = new JSONObject();
@@ -241,8 +253,6 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-
-
         } else {
             Toast.makeText(this, "Erro ao guardar", Toast.LENGTH_SHORT).show();
         }

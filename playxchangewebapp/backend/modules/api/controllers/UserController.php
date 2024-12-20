@@ -88,7 +88,7 @@ class UserController extends ActiveController
             $userData = $body['user'];
 
             if (isset($userData['password']) && $userData['password'] != null) {
-                $user->validatePassword($userData['password']);
+                $user->setPassword($userData['password']);
             }
 
             if (isset($userData['username'] )) {
@@ -132,6 +132,22 @@ class UserController extends ActiveController
                 }
             }
 
+            if(isset($profileData["imagemPerfil"]) &&  $profileData["imagemPerfil"]){
+
+                $base64ImagePerfil = $profileData["imagemPerfil"];
+
+                if (strpos($base64ImagePerfil, 'base64,') !== false) {
+                    $base64ImagePerfil = explode('base64,', $base64ImagePerfil)[1];
+                }
+
+                $imgPerfil = UtilsController::uploadBase64(Yii::getAlias('@perfilPath'),$base64ImagePerfil);
+                if($imgPerfil){
+                    $profile->fotoPerfil = $imgPerfil;
+                }else{
+                    throw new BadRequestHttpException('Ocorreu um erro ao fazer o upload da foto de perfil');
+                }
+            }
+
             $profile->load($profileData, '');
             if (!$profile->validate()) {
                 throw new BadRequestHttpException('A validação do perfil falhou: ' . json_encode($profile->errors));
@@ -147,7 +163,7 @@ class UserController extends ActiveController
         }
 
         return [
-            $user->profile->attributes,
+            'profile' => $user->profile->attributes,
         ];
     }
 
