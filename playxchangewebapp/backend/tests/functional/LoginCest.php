@@ -10,13 +10,7 @@ use common\fixtures\UserFixture;
  */
 class LoginCest
 {
-    /**
-     * Load fixtures before db transaction begin
-     * Called in _before()
-     * @see \Codeception\Module\Yii2::_before()
-     * @see \Codeception\Module\Yii2::loadFixtures()
-     * @return array
-     */
+
     public function _fixtures()
     {
         return [
@@ -26,19 +20,25 @@ class LoginCest
             ]
         ];
     }
-    
-    /**
-     * @param FunctionalTester $I
-     */
-    public function loginUser(FunctionalTester $I)
-    {
-        $I->amOnRoute('/site/login');
-        $I->fillField('Username', 'erau');
-        $I->fillField('Password', 'password_0');
-        $I->click('login-button');
 
-        $I->see('Logout (erau)', 'form button[type=submit]');
-        $I->dontSeeLink('Login');
-        $I->dontSeeLink('Signup');
+    public function _before(FunctionalTester $I){
+        $I->amOnRoute('site/login');
     }
+
+    protected function formParams($login, $password)
+    {
+        return [
+            'LoginForm[username]' => $login,
+            'LoginForm[password]' => $password,
+        ];
+    }
+
+    public function tryLoginBackendUser(FunctionalTester $I)
+    {
+
+        $I->fillField('input[name="LoginForm[username]"]', 'leandro');
+        $I->fillField('input[name="LoginForm[password]"]', '12345678');
+        $I->click('entrar]');
+    }
+
 }

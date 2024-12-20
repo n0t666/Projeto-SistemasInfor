@@ -34,7 +34,8 @@ label:hover {
     width: 100px;
     height: 100px;
     background-color: var(--primary-color);
-
-
 }
 
+#cover-img-preview{
+    object-fit: cover;
+}

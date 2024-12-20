@@ -120,7 +120,7 @@ class UserController extends ActiveController
 
                 $base64ImageCapa = $profileData["imagemCapa"];
 
-                if (strpos($base64ImageCapa, 'base64,') !== false) {
+                if (strpos($base64ImageCapa, 'base64,') !== false) { // Remover a primeira parte caso
                     $base64ImageCapa = explode('base64,', $base64ImageCapa)[1];
                 }
 
@@ -180,12 +180,11 @@ class UserController extends ActiveController
 
         foreach ($desejados as $desejado) {
             $response[] = [
-                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $desejado->jogo->imagemCapa,
-                'jogo_id' => $desejado->jogo->id,
+                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $desejado->jogo->imagemCapa,
+                'id' => $desejado->jogo->id,
             ];
         }
 
-        $response['count'] = count($desejados);
 
         return $response;
     }
@@ -202,12 +201,11 @@ class UserController extends ActiveController
 
         foreach ($jogados as $jogado) {
             $response[] = [
-                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $jogado->jogo->imagemCapa,
-                'jogo_id' => $jogado->jogo->id,
+                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $jogado->jogo->imagemCapa,
+                'id' => $jogado->jogo->id,
             ];
         }
 
-        $response['count'] = count($jogados);
 
         return $response;
     }
@@ -221,16 +219,17 @@ class UserController extends ActiveController
         }
 
         $favoritos = $user->profile->getInteracoes()->where(['isFavorito' => 1])->all();
+
+
         $response = [];
 
         foreach ($favoritos as $favorito) {
             $response[] = [
-                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $favorito->jogo->imagemCapa,
-                'jogo_id' => $favorito->jogo->id,
+                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $favorito->jogo->imagemCapa,
+                'id' => $favorito->jogo->id,
             ];
         }
 
-        $response['count'] = count($favoritos);
 
         return $response;
     }
@@ -352,10 +351,7 @@ class UserController extends ActiveController
             'numSeguir' => $numSeguir,
             'previewFavoritos' => $imgsFavoritos
         ];
-
     }
-
-
 
 
 }

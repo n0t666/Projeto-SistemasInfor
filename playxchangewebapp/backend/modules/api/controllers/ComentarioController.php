@@ -52,17 +52,17 @@ class ComentarioController extends ActiveController
             throw new UnauthorizedHttpException('Access token inválido.');
         }
 
-        $comentarios = $user->comentarios;
+        $comentarios = $user->profile->comentarios;
 
         $response = [];
 
         foreach ($comentarios as $comentario) {
-            $numEstrelas = $user->profile->getAvaliacaos->where(['jogo_id' => $comentario->jogo->id])->one();
+            $numEstrelas = $user->profile->getAvaliacoes()->where(['jogo_id' => $comentario->jogo->id])->one();
             $response[] = [
                 'id' => $comentario->id,
                 'id_jogo' => $comentario->jogo_id,
                 'jogo' => $comentario->jogo->nome,
-                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $comentario->jogo->imagemCapa,
+                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $comentario->jogo->imagemCapa,
                 'comentario' => $comentario->comentario,
                 'numEstrelas' => $numEstrelas == null ? null : $numEstrelas->numEstrelas,
             ];
