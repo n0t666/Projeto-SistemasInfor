@@ -54,7 +54,8 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
     private String capaImage, pfpImage;
     TextInputEditText txtUsername, txtEmail, txtPassword, txtConfirmPassword, txtNome, txtNif, txtBiografia, txtDataNascimento;
 
-    private int PICK_CAPA_IMAGE_REQUEST = 1, PICK_PFP_IMAGE_REQUEST = 2;
+    private final int PICK_CAPA_IMAGE_REQUEST = 1;
+    private final int PICK_PFP_IMAGE_REQUEST = 2;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,6 +143,8 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
     public void onProfileUpdated() {
         View current = getCurrentFocus();
         if (current != null) current.clearFocus(); // Remover o foco no campo que o utilizador está a escrever
+        txtPassword.setText("");
+        txtConfirmPassword.setText("");
         Toast.makeText(this, "Perfil atualizado com sucesso", Toast.LENGTH_SHORT).show();
     }
 
@@ -249,6 +252,7 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
                 }
                 mainObj.put("profile", profileObj);
                 mainObj.put("user", userObj);
+                Log.d("JSON", mainObj.toString());
                 SingletonLoja.getInstance(getApplicationContext()).updateUser(getApplicationContext(),token, mainObj);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
@@ -293,8 +297,8 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
             }
             if(!txtPassword.getText().toString().equals(txtConfirmPassword.getText().toString())) {
                 txtConfirmPassword.setError("As passwords têm de ser iguais");
+                return false;
             }
-            return false;
         }
         return true;
     }

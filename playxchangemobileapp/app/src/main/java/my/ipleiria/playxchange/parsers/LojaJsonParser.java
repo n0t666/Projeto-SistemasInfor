@@ -15,6 +15,7 @@ import my.ipleiria.playxchange.models.Avaliacao;
 import my.ipleiria.playxchange.models.Carrinho;
 import my.ipleiria.playxchange.models.Checkout;
 import my.ipleiria.playxchange.models.CodigoPromocional;
+import my.ipleiria.playxchange.models.Comentario;
 import my.ipleiria.playxchange.models.Fatura;
 import my.ipleiria.playxchange.models.Jogo;
 import my.ipleiria.playxchange.models.LinhaCarrinho;
@@ -32,10 +33,10 @@ public class LojaJsonParser {
         for (int i = 0; i < response.length(); i++) {
             try {
                 JSONObject jsonJogo = response.getJSONObject(i);
-                int id = jsonJogo.getInt("id");
-                String nome = jsonJogo.getString("nome");
-                String dataLancamento = jsonJogo.getString("dataLancamento");
-                String capa = jsonJogo.getString("capa");
+                int id = jsonJogo.has("id") && !jsonJogo.isNull("id") ? jsonJogo.getInt("id") : 0;
+                String nome = jsonJogo.has("nome") && !jsonJogo.isNull("nome") ? jsonJogo.getString("nome") : "";
+                String dataLancamento = jsonJogo.has("dataLancamento") && !jsonJogo.isNull("dataLancamento") ? jsonJogo.getString("dataLancamento") : "N/A";
+                String capa = jsonJogo.has("capa") && !jsonJogo.isNull("capa") ? jsonJogo.getString("capa") : "";
 
                 Jogo auxJogo = new Jogo(
                         id,
@@ -454,9 +455,45 @@ public class LojaJsonParser {
             throw new RuntimeException(e);
         }
         return auxUser;
-
     }
 
+    public static ArrayList<Comentario> parserJsonComentarios(String response){
+        ArrayList<Comentario> comentarios = new ArrayList<>();
+        try {
+            JSONArray jsonComentarios = new JSONArray(response);
+            for (int i = 0; i < jsonComentarios.length(); i++) {
+                JSONObject jsonComentario = jsonComentarios.getJSONObject(i);
+                int id = jsonComentario.has("id") && !jsonComentario.isNull("id") ? jsonComentario.getInt("id") : 0;
+                int jogoId = jsonComentario.has("id_jogo") && !jsonComentario.isNull("id_jogo") ? jsonComentario.getInt("id_jogo") : 0;
+                String nomeJogo = jsonComentario.has("jogo") && !jsonComentario.isNull("jogo") ? jsonComentario.getString("jogo") : "";
+                String capa = jsonComentario.has("capa") && !jsonComentario.isNull("capa") ? jsonComentario.getString("capa") : "";
+                String comentario = jsonComentario.has("comentario") && !jsonComentario.isNull("comentario") ? jsonComentario.getString("comentario") : "";
+                Double numEstrelas = jsonComentario.has("numEstrelas") && !jsonComentario.isNull("numEstrelas") ? jsonComentario.getDouble("numEstrelas") : 0.0;
+                Comentario auxComentario = new Comentario(capa,id,jogoId,numEstrelas,comentario,nomeJogo);
+                comentarios.add(auxComentario);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return comentarios;
+    }
+
+    public Comentario parserJsonComentario(String response){
+        Comentario auxComentario = null;
+        try {
+            JSONObject jsonComentario = new JSONObject(response);
+            int id = jsonComentario.has("id") && !jsonComentario.isNull("id") ? jsonComentario.getInt("id") : 0;
+            int jogoId = jsonComentario.has("id_jogo") && !jsonComentario.isNull("id_jogo") ? jsonComentario.getInt("id_jogo") : 0;
+            String nomeJogo = jsonComentario.has("jogo") && !jsonComentario.isNull("jogo") ? jsonComentario.getString("jogo") : "";
+            String capa = jsonComentario.has("capa") && !jsonComentario.isNull("capa") ? jsonComentario.getString("capa") : "";
+            String comentario = jsonComentario.has("comentario") && !jsonComentario.isNull("comentario") ? jsonComentario.getString("comentario") : "";
+            Double numEstrelas = jsonComentario.has("numEstrelas") && !jsonComentario.isNull("numEstrelas") ? jsonComentario.getDouble("numEstrelas") : 0.0;
+            auxComentario = new  Comentario(capa,id,jogoId,numEstrelas,comentario,nomeJogo);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return auxComentario;
+    }
 
 
 

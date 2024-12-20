@@ -98,4 +98,19 @@ public class HomeFragment extends Fragment implements JogosListener {
         });
         rvPopular.setAdapter(popularCarouselAdapter);
     }
+
+    @Override
+    public void onRefreshListaJogosFavoritos(ArrayList<Jogo> jogos) {
+
+    }
+
+    @Override
+    public void onRefreshListaJogosJogados(ArrayList<Jogo> jogos) {
+
+    }
+
+    @Override
+    public void onRefreshListaJogosDesejados(ArrayList<Jogo> jogos) {
+
+    }
 }

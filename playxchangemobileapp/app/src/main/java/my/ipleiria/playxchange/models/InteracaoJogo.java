@@ -1,62 +1,38 @@
 package my.ipleiria.playxchange.models;
 
+import java.util.ArrayList;
+
 public class InteracaoJogo {
-    private int id,jogoId,utilizadorId,isJogado,isDesejado,isFavorito;
 
-    public InteracaoJogo(int id, int jogoId, int utilizadorId, int isJogado, int isDesejado, int isFavorito) {
-        this.id = id;
-        this.jogoId = jogoId;
-        this.utilizadorId = utilizadorId;
-        this.isJogado = isJogado;
-        this.isDesejado = isDesejado;
-        this.isFavorito = isFavorito;
+    private ArrayList<Jogo> desejados, jogados, favoritos;
+
+    public InteracaoJogo(ArrayList<Jogo> favoritos, ArrayList<Jogo> jogados, ArrayList<Jogo> desejados) {
+        this.favoritos = favoritos;
+        this.jogados = jogados;
+        this.desejados = desejados;
     }
 
-    public int getIsDesejado() {
-        return isDesejado;
+    public ArrayList<Jogo> getFavoritos() {
+        return favoritos;
     }
 
-    public void setIsDesejado(int isDesejado) {
-        this.isDesejado = isDesejado;
+    public void setFavoritos(ArrayList<Jogo> favoritos) {
+        this.favoritos = favoritos;
     }
 
-    public int getId() {
-        return id;
+    public ArrayList<Jogo> getJogados() {
+        return jogados;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setJogados(ArrayList<Jogo> jogados) {
+        this.jogados = jogados;
     }
 
-    public int getJogoId() {
-        return jogoId;
+    public ArrayList<Jogo> getDesejados() {
+        return desejados;
     }
 
-    public void setJogoId(int jogoId) {
-        this.jogoId = jogoId;
-    }
-
-    public int getUtilizadorId() {
-        return utilizadorId;
-    }
-
-    public void setUtilizadorId(int utilizadorId) {
-        this.utilizadorId = utilizadorId;
-    }
-
-    public int getIsJogado() {
-        return isJogado;
-    }
-
-    public void setIsJogado(int isJogado) {
-        this.isJogado = isJogado;
-    }
-
-    public int getIsFavorito() {
-        return isFavorito;
-    }
-
-    public void setIsFavorito(int isFavorito) {
-        this.isFavorito = isFavorito;
+    public void setDesejados(ArrayList<Jogo> desejados) {
+        this.desejados = desejados;
     }
 }

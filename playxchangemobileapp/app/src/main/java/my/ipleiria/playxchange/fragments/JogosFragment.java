@@ -69,6 +69,21 @@ public class JogosFragment extends Fragment implements JogosListener {
 
     }
 
+    @Override
+    public void onRefreshListaJogosFavoritos(ArrayList<Jogo> jogos) {
+
+    }
+
+    @Override
+    public void onRefreshListaJogosJogados(ArrayList<Jogo> jogos) {
+
+    }
+
+    @Override
+    public void onRefreshListaJogosDesejados(ArrayList<Jogo> jogos) {
+
+    }
+
     private void openGameDetails(int id) {
         Intent intent = new Intent(getContext(), GameDetailsActivity.class);
         intent.putExtra("ID_JOGO", id);

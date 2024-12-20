@@ -10,4 +10,10 @@ public interface JogosListener {
     void onRefreshListaJogosRecentes(ArrayList<Jogo> jogos);
 
     void onRefreshListaJogosPopulares(ArrayList<Jogo> jogos);
+
+    void onRefreshListaJogosFavoritos(ArrayList<Jogo> jogos);
+
+    void onRefreshListaJogosJogados(ArrayList<Jogo> jogos);
+
+    void onRefreshListaJogosDesejados(ArrayList<Jogo> jogos);
 }

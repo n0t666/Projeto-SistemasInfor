@@ -9,7 +9,8 @@
     android:layout_gravity="center"
     android:foreground="@drawable/ripple_effect_rounded"
     android:clipChildren="false"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:theme="@style/Theme.MaterialComponents.Bridge">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

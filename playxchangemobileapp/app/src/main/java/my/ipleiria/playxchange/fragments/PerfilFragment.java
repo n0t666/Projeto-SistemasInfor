@@ -22,6 +22,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
 import my.ipleiria.playxchange.EditProfileDetailsActivity;
+import my.ipleiria.playxchange.InteracaoJogosActivity;
 import my.ipleiria.playxchange.LoginActivity;
 import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.ServerActivity;
@@ -37,7 +38,9 @@ public class PerfilFragment extends Fragment implements UserListener {
 
     private ImageView ivCapa;
     private ShapeableImageView ivPfp;
-    MaterialTextView tvUsername,tvBio, tvSeguidoresNum, tvSeguidosNum, tvJogadosNum, tvFavoritosNum,tvReviewsNum,tvDesejadosNum;
+    MaterialTextView tvUsername,tvBio, tvSeguidoresNum, tvSeguidosNum, tvJogadosNum, tvFavoritosNum,tvReviewsNum,tvDesejadosNum,tvJogados,tvFavoritos,tvReviews,tvDesejados;
+
+
     ImageView[] ivFavoritos = {null, null, null, null};
 
     @Override
@@ -67,9 +70,44 @@ public class PerfilFragment extends Fragment implements UserListener {
         tvFavoritosNum = view.findViewById(R.id.tvFavoritosNumber);
         tvReviewsNum = view.findViewById(R.id.tvReviewsNumber);
         tvDesejadosNum = view.findViewById(R.id.tvDesejadosNumber);
-
+        tvDesejados = view.findViewById(R.id.tvDesejados);
+        tvFavoritos = view.findViewById(R.id.tvFavoritos);
+        tvJogados = view.findViewById(R.id.tvJogados);
+        tvReviews = view.findViewById(R.id.tvReviews);
+        setOnclicks();
         requireActivity().setTitle("");
         return view;
+    }
+
+    private void setOnclicks()
+    {
+        tvJogados.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadActivityInteracao(Constants.REQUEST_CODE_PLAYED);
+            }
+        });
+
+        tvFavoritos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadActivityInteracao(Constants.REQUEST_CODE_FAVORITES  );
+            }
+        });
+
+        tvReviews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        tvDesejados.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadActivityInteracao(Constants.REQUEST_CODE_WISHLIST);
+            }
+        });
     }
 
     @Override
@@ -126,8 +164,8 @@ public class PerfilFragment extends Fragment implements UserListener {
         if(getActivity() != null) {
             getActivity().finish();
         }
-
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
@@ -159,4 +197,12 @@ public class PerfilFragment extends Fragment implements UserListener {
         SingletonLoja.getInstance(getContext()).setUserListener(this);
         SingletonLoja.getInstance(getContext()).getProfileAPI(getContext(), token);
     }
+
+    private void loadActivityInteracao(final int code){
+        Intent intent = new Intent(getContext(), InteracaoJogosActivity.class);
+        intent.putExtra("request_code", code);
+        startActivity(intent);
+    }
+
+
 }

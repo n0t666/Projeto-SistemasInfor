@@ -26,7 +26,6 @@ public class Constants {
     //endregion
 
     //region - Validations
-
     public static final int MIN_USERNAME_LENGTH = 2;
     public static final int MIN_PASSWORD_LENGTH = 8;
     public static final int MAX_BIO_LENGTH = 150;
@@ -35,9 +34,14 @@ public class Constants {
     public static final int PRIVACY_PRIVATE = 2;
     public static final int MAX_NAME_LENGTH = 200;
     public static final int NIF_LENGTH = 9;
-
     //endregion
 
+    //region - Request Codes
+    public static final int REQUEST_CODE_WISHLIST = 1;
+    public static final int REQUEST_CODE_PLAYED = 2;
+    public static final int REQUEST_CODE_FAVORITES = 3;
+
+    //endregion
 
 
 }

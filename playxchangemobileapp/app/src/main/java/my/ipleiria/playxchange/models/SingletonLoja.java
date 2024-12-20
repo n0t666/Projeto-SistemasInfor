@@ -27,6 +27,7 @@ import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.listeners.CarrinhoListener;
 import my.ipleiria.playxchange.listeners.CheckoutListener;
 import my.ipleiria.playxchange.listeners.CodigoPromocionalListener;
+import my.ipleiria.playxchange.listeners.ComentariosListener;
 import my.ipleiria.playxchange.listeners.FaturaListener;
 import my.ipleiria.playxchange.listeners.FaturasListener;
 import my.ipleiria.playxchange.listeners.JogoListener;
@@ -56,6 +57,10 @@ public class SingletonLoja {
     private CheckoutListener checkoutListener;
 
     private UserListener userListener;
+
+    private ComentariosListener comentariosListener;
+
+    private ComentariosListener comentarioListener;
 
 
 
@@ -117,6 +122,15 @@ public class SingletonLoja {
     public void setUserListener(UserListener userListener){
         this.userListener = userListener;
     }
+
+    public void setComentariosListener(ComentariosListener comentariosListener){
+        this.comentariosListener = comentariosListener;
+    }
+
+    public void setComentarioListener(ComentariosListener comentarioListener){
+        this.comentarioListener = comentarioListener;
+    }
+
     //endregion
 
 
@@ -463,7 +477,6 @@ public class SingletonLoja {
     //endregion
 
     //region - User interaction with games API
-
     public void addAvaliacaoAPI(final Context context, final int jogoId, final float avaliacao, String token) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
@@ -580,6 +593,101 @@ public class SingletonLoja {
             volleyQueue.add(req);
         }
     }
+
+    public void getFavoritosAPI(final Context context, final String token ){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "user/favoritos?access-token=" + token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    ArrayList<Jogo> jogos = LojaJsonParser.parserJsonJogos(response);
+                    if(jogosListener != null){
+                        jogosListener.onRefreshListaJogosFavoritos(jogos);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getDesejadosAPI(final Context context,final String token){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "user/desejados?access-token=" + token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    ArrayList<Jogo> jogos = LojaJsonParser.parserJsonJogos(response);
+                    if(jogosListener != null){
+                        jogosListener.onRefreshListaJogosDesejados(jogos);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getJogadosAPI(final Context context,final String token){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "user/jogados?access-token=" + token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    ArrayList<Jogo> jogos = LojaJsonParser.parserJsonJogos(response);
+                    if(jogosListener != null){
+                        jogosListener.onRefreshListaJogosJogados(jogos);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getComentarios(final Context context,final String token){
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "comentarios?access-token=" + token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getComentario(final Context context, final String token){
+
+    }
+
+
     //endregion
 
     //region - Fatura related API
