@@ -62,7 +62,7 @@ class ComentarioController extends ActiveController
                 'id' => $comentario->id,
                 'id_jogo' => $comentario->jogo_id,
                 'jogo' => $comentario->jogo->nome,
-                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $comentario->jogo->imagemCapa,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $comentario->jogo->imagemCapa,
                 'comentario' => $comentario->comentario,
                 'numEstrelas' => $numEstrelas == null ? null : $numEstrelas->numEstrelas,
             ];

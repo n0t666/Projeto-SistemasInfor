@@ -180,7 +180,7 @@ class UserController extends ActiveController
 
         foreach ($desejados as $desejado) {
             $response[] = [
-                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $desejado->jogo->imagemCapa,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $desejado->jogo->imagemCapa,
                 'id' => $desejado->jogo->id,
             ];
         }
@@ -201,7 +201,7 @@ class UserController extends ActiveController
 
         foreach ($jogados as $jogado) {
             $response[] = [
-                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $jogado->jogo->imagemCapa,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $jogado->jogo->imagemCapa,
                 'id' => $jogado->jogo->id,
             ];
         }
@@ -225,7 +225,7 @@ class UserController extends ActiveController
 
         foreach ($favoritos as $favorito) {
             $response[] = [
-                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. $favorito->jogo->imagemCapa,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $favorito->jogo->imagemCapa,
                 'id' => $favorito->jogo->id,
             ];
         }
@@ -325,7 +325,7 @@ class UserController extends ActiveController
             $idJogo = $favorito->jogo->id;
             $imgsFavoritos[] =  [
                 'id' => $idJogo,
-                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/'. Jogo::findOne($idJogo)->imagemCapa
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. Jogo::findOne($idJogo)->imagemCapa
             ];
         }
 
@@ -337,8 +337,8 @@ class UserController extends ActiveController
             'nome' => $profile->nome,
             'dataNascimento' => $profile->dataNascimento,
             'biografia' => $profile->biografia,
-            'fotoCapa' => Yii::getAlias('@mobileIp') . $profile->getFotoCapa(),
-            'fotoPerfil' => Yii::getAlias('@mobileIp') . $profile->getFotoPerfil(),
+            'fotoCapa' => $profile->getFotoCapa(),
+            'fotoPerfil' =>  $profile->getFotoPerfil(),
             'nif' => $profile->nif,
             'privacidadeSeguidores' => $profile->privacidadeSeguidores,
             'privacidadePerfil' => $profile->privacidadePerfil,

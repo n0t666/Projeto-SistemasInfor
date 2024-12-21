@@ -59,7 +59,7 @@ class JogoController extends ActiveController
                 'id' => $jogo->id,
                 'nome' => $jogo->nome,
                 'dataLancamento' => $jogo->dataLancamento,
-                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
             ];
         }
         return $data;
@@ -119,7 +119,7 @@ class JogoController extends ActiveController
         $jogoScreenshots = $jogo->screenshots;
         $screenshots = [];
         foreach ($jogoScreenshots as $jogoScreenshot) {
-            $screenshots[] =  Yii::getAlias('@mobileIp')  . Yii::getAlias('@screenshotsJogoUrl') . '/' . $jogoScreenshot->filename;
+            $screenshots[] =  Yii::getAlias('@screenshotsJogoUrl') . '/' . $jogoScreenshot->filename;
         }
 
         $avaliacoes = $user->profile->getAvaliacoes()->where(['jogo_id' => $id])->all();
@@ -155,7 +155,7 @@ class JogoController extends ActiveController
             'nome' => $jogo->nome,
             'descricao' => $jogo->descricao,
             'dataLancamento' => $jogo->dataLancamento,
-            'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
+            'capa' => Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
             'distribuidora' => $jogo->distribuidora->nome,
             'franquia' => $jogo->franquia ? $jogo->franquia->nome : null,
             'editora' => $jogo->editora->nome,
@@ -209,7 +209,7 @@ class JogoController extends ActiveController
                 'id' => $jogo->id,
                 'nome' => $jogo->nome,
                 'dataLancamento' => $jogo->dataLancamento,
-                'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
             ];
         }
 

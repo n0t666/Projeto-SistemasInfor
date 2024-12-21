@@ -74,7 +74,7 @@ class FaturaController extends ActiveController
                    $jogo = $produto->jogo;
                    if (!in_array($jogo->id, $idsJogos)) { // Verificar se o jogo já foi adicionado anteriormente, se não, adicionar a esse mesmo
                        if(count($imagensJogos) < 4){ // Garantir que não passa o limite definid de 4 imagens de jogos diferentes
-                           $imagensJogos[] = Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa;
+                           $imagensJogos[] = Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa;
                            $idsJogos[] = $jogo->id;
                        }
                    }
@@ -132,7 +132,7 @@ class FaturaController extends ActiveController
             $produto = $linha->produto;
             if (!isset($linhasFatura[$produto->id])) {
                 $linhasFatura[$produto->id] = [
-                    'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $produto->jogo->imagemCapa,
+                    'capa' => Yii::getAlias('@capasJogoUrl') . '/' . $produto->jogo->imagemCapa,
                     'produtoId' => $produto->id,
                     'jogoId' => $produto->jogo->id,
                     'produtoNome' => $produto->jogo->nome,
@@ -401,7 +401,7 @@ class FaturaController extends ActiveController
             $metodosPagamento[] = [
                 'id' => $metodoPagamento->id,
                 'nome' => $metodoPagamento->nome,
-                'logotipo' => Yii::getAlias('@mobileIp') . Yii::getAlias('@utilsUrl') . '/' . $metodoPagamento->logotipo,
+                'logotipo' => Yii::getAlias('@utilsUrl') . '/' . $metodoPagamento->logotipo,
             ];
         }
 

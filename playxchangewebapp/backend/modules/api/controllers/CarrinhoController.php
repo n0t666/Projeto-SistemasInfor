@@ -74,7 +74,7 @@ class CarrinhoController extends ActiveController
                     'quantidade' => $linha->quantidade,
                     'preco' => $produto->preco,
                     'total' => $linha->quantidade * $produto->preco,
-                    'capa' => Yii::getAlias('@mobileIp') . Yii::getAlias('@capasJogoUrl') . '/' . $produto->jogo->imagemCapa,
+                    'capa' => Yii::getAlias('@capasJogoUrl') . '/' . $produto->jogo->imagemCapa,
                 ];
             }
         }
