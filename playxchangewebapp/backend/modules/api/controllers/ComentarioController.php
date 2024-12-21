@@ -59,12 +59,17 @@ class ComentarioController extends ActiveController
         foreach ($comentarios as $comentario) {
             $numEstrelas = $user->profile->getAvaliacoes()->where(['jogo_id' => $comentario->jogo->id])->one();
             $response[] = [
-                'id' => $comentario->id,
-                'id_jogo' => $comentario->jogo_id,
-                'jogo' => $comentario->jogo->nome,
-                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $comentario->jogo->imagemCapa,
-                'comentario' => $comentario->comentario,
-                'numEstrelas' => $numEstrelas == null ? null : $numEstrelas->numEstrelas,
+                'Comentario' => [
+                    'id' => $comentario->id,
+                    'comentario' => $comentario->comentario,
+                    'numEstrelas' => $numEstrelas ? $numEstrelas->numEstrelas : null, // Se não existir avaliação, não devolve nada
+                ],
+                'Jogo' => [
+                    'id' => $comentario->jogo->id,
+                    'nome' => $comentario->jogo->nome,
+                    'dataLancamento' => $comentario->jogo->dataLancamento,
+                    'imagem' => Yii::getAlias('@capasJogoUrl') . '/' . $comentario->jogo->imagemCapa,
+                ]
             ];
         }
 
@@ -85,7 +90,18 @@ class ComentarioController extends ActiveController
         if(!$model){
             throw new NotFoundHttpException('Comentario inexistente');
         }
-        return $model->attributes;
+        $numEstrelas = $user->profile->getAvaliacoes()->where(['jogo_id' => $model->jogo->id])->one();
+        return [
+            'id' => $model->id,
+            'comentario' => $model->comentario,
+            'numEstrelas' => $numEstrelas ? $numEstrelas->numEstrelas : null,
+            'jogo' => [
+                'id' => $model->jogo->id,
+                'nome' => $model->jogo->nome,
+                'dataLancamento' => $model->jogo->dataLancamento,
+                'imagem' => Yii::getAlias('@capasJogoUrl') . '/' . $model->jogo->imagemCapa,
+            ]
+        ];
     }
 
     public function actionCreate(){
