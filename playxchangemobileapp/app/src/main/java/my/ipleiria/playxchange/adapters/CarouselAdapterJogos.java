@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,13 @@ public class CarouselAdapterJogos extends RecyclerView.Adapter<CarouselAdapterJo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Jogo jogo = jogos.get(position);
-        Glide.with(context).load(jogo.getCapas()).into(holder.imageView);
+        Glide
+                .with(context)
+                .load(jogo.getCapas())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.placeholder_jogo)
+                .error(R.drawable.placeholder_jogo)
+                .into(holder.imageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

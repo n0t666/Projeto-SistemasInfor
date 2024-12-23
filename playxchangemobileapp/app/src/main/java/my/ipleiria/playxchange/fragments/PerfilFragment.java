@@ -21,6 +21,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
+import my.ipleiria.playxchange.ComentariosActivity;
 import my.ipleiria.playxchange.EditProfileDetailsActivity;
 import my.ipleiria.playxchange.InteracaoJogosActivity;
 import my.ipleiria.playxchange.LoginActivity;
@@ -98,7 +99,7 @@ public class PerfilFragment extends Fragment implements UserListener {
         tvReviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                loadActivityComentarios();
             }
         });
 
@@ -127,7 +128,12 @@ public class PerfilFragment extends Fragment implements UserListener {
         for(int i = 0; i < 4; i++) {
             if (i < user.getFavoritosPreview().size()) {
                 ivFavoritos[i].setVisibility(View.VISIBLE);
-                Glide.with(this).load(user.getFavoritosPreview().get(i).getCapas()).into(ivFavoritos[i]);
+                Glide.with(this)
+                        .load(user.getFavoritosPreview().get(i).getCapas())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.placeholder_jogo)
+                        .into(ivFavoritos[i]);
+
             } else {
                 ivFavoritos[i].setVisibility(View.GONE);
             }
@@ -201,6 +207,11 @@ public class PerfilFragment extends Fragment implements UserListener {
     private void loadActivityInteracao(final int code){
         Intent intent = new Intent(getContext(), InteracaoJogosActivity.class);
         intent.putExtra("request_code", code);
+        startActivity(intent);
+    }
+
+    private void loadActivityComentarios(){
+        Intent intent = new Intent(getContext(), ComentariosActivity.class);
         startActivity(intent);
     }
 

@@ -70,12 +70,12 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        }
-
-        if (id == R.id.ac_save) {
+        }else if (id == R.id.ac_save) {
             guardar();
             return true;
         }
+
+
         return super.onOptionsItemSelected(item);
     }
 

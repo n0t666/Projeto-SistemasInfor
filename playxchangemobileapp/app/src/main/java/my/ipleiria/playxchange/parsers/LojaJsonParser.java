@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.models.Avaliacao;
 import my.ipleiria.playxchange.models.Carrinho;
 import my.ipleiria.playxchange.models.Checkout;
@@ -57,7 +58,8 @@ public class LojaJsonParser {
                         new ArrayList<>(),
                         new ArrayList<>(),
                         new ArrayList<>(),
-                        new ArrayList<>()
+                        new ArrayList<>(),
+                        -1
                 );
 
                 jogos.add(auxJogo);
@@ -88,6 +90,7 @@ public class LojaJsonParser {
             int jogados = jogo.has("jogados") && !jogo.isNull("jogados") ? jogo.getInt("jogados") : 0;
             double media = jogo.has("media") && !jogo.isNull("media") ? jogo.getDouble("media") : 0.0;
             int reviews = jogo.has("reviews") && !jogo.isNull("reviews") ? jogo.getInt("reviews") : 0;
+            int reviewId = jogo.has("comentario") && !jogo.isNull("comentario") ? jogo.getInt("comentario") : -1;
 
             Avaliacao avaliacao = null;
             if (jogo.has("avaliacao") && !jogo.isNull("avaliacao")) {
@@ -169,7 +172,7 @@ public class LojaJsonParser {
                 }
             }
 
-            auxJogo = new Jogo(id, nome, descricao, dataLancamento, capas, distribuidora, editora, trailer, franquia, desejados, jogados, media, reviews, avaliacao, atividade, produtos, tags, generos, screenshots);
+            auxJogo = new Jogo(id, nome, descricao, dataLancamento, capas, distribuidora, editora, trailer, franquia, desejados, jogados, media, reviews, avaliacao, atividade, produtos, tags, generos, screenshots, reviewId);
 
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -446,7 +449,7 @@ public class LojaJsonParser {
                     JSONObject jsonFavorito = jsonFavoritosPreview.getJSONObject(i);
                     int id = jsonFavorito.has("id") && !jsonFavorito.isNull("id") ? jsonFavorito.getInt("id") : 0;
                     String capa = jsonFavorito.has("capa") && !jsonFavorito.isNull("capa") ? jsonFavorito.getString("capa") : "";
-                    Jogo jogo = new Jogo(id,null,null,null,capa,null,null,null,null,0,0,0.0,0,null,null,null,null,null,null);
+                    Jogo jogo = new Jogo(id,null,null,null,capa,null,null,null,null,0,0,0.0,0,null,null,null,null,null,null,-1);
                     favoritosPreview.add(jogo);
                 }
             }
@@ -457,19 +460,26 @@ public class LojaJsonParser {
         return auxUser;
     }
 
-    public static ArrayList<Comentario> parserJsonComentarios(String response){
+    public static ArrayList<Comentario> parserJsonComentarios(JSONArray response) {
         ArrayList<Comentario> comentarios = new ArrayList<>();
         try {
-            JSONArray jsonComentarios = new JSONArray(response);
-            for (int i = 0; i < jsonComentarios.length(); i++) {
-                JSONObject jsonComentario = jsonComentarios.getJSONObject(i);
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject jsonComentarios = response.getJSONObject(i);
+                
+                JSONObject jsonComentario = jsonComentarios.getJSONObject("Comentario");
+                JSONObject jsonJogo = jsonComentarios.getJSONObject("Jogo");
+
                 int id = jsonComentario.has("id") && !jsonComentario.isNull("id") ? jsonComentario.getInt("id") : 0;
-                int jogoId = jsonComentario.has("id_jogo") && !jsonComentario.isNull("id_jogo") ? jsonComentario.getInt("id_jogo") : 0;
-                String nomeJogo = jsonComentario.has("jogo") && !jsonComentario.isNull("jogo") ? jsonComentario.getString("jogo") : "";
-                String capa = jsonComentario.has("capa") && !jsonComentario.isNull("capa") ? jsonComentario.getString("capa") : "";
                 String comentario = jsonComentario.has("comentario") && !jsonComentario.isNull("comentario") ? jsonComentario.getString("comentario") : "";
-                Double numEstrelas = jsonComentario.has("numEstrelas") && !jsonComentario.isNull("numEstrelas") ? jsonComentario.getDouble("numEstrelas") : 0.0;
-                Comentario auxComentario = new Comentario(capa,id,jogoId,numEstrelas,comentario,nomeJogo);
+                double numEstrelas = jsonComentario.has("numEstrelas") && !jsonComentario.isNull("numEstrelas") ? jsonComentario.getDouble("numEstrelas") : 0.0;
+
+                int jogoId = jsonJogo.has("id") && !jsonComentario.isNull("id") ? jsonComentario.getInt("id") : 0;
+                String nomeJogo = jsonJogo.has("nome") && !jsonComentario.isNull("nome") ? jsonComentario.getString("nome") : "";
+                String capa = jsonJogo.has("imagem") && !jsonJogo.isNull("imagem") ? jsonJogo.getString("imagem") : "";
+                String dataLancamento = jsonJogo.has("dataLancamento") && !jsonJogo.isNull("dataLancamento") ? jsonJogo.getString("dataLancamento") : "N/A";
+
+                Jogo jogo = new Jogo(jogoId, nomeJogo, null, dataLancamento, capa, null, null, null, null, 0, 0, 0.0, 0, null, null, null, null, null, null,-1);
+                Comentario auxComentario = new Comentario(id, numEstrelas, comentario, jogo);
                 comentarios.add(auxComentario);
             }
         } catch (JSONException e) {
@@ -478,21 +488,40 @@ public class LojaJsonParser {
         return comentarios;
     }
 
-    public Comentario parserJsonComentario(String response){
+
+    public static Comentario parserJsonComentario(String response){
         Comentario auxComentario = null;
         try {
             JSONObject jsonComentario = new JSONObject(response);
             int id = jsonComentario.has("id") && !jsonComentario.isNull("id") ? jsonComentario.getInt("id") : 0;
             int jogoId = jsonComentario.has("id_jogo") && !jsonComentario.isNull("id_jogo") ? jsonComentario.getInt("id_jogo") : 0;
-            String nomeJogo = jsonComentario.has("jogo") && !jsonComentario.isNull("jogo") ? jsonComentario.getString("jogo") : "";
-            String capa = jsonComentario.has("capa") && !jsonComentario.isNull("capa") ? jsonComentario.getString("capa") : "";
+            double numEstrelas = jsonComentario.has("numEstrelas") && !jsonComentario.isNull("numEstrelas") ? jsonComentario.getDouble("numEstrelas") : 0.0;
             String comentario = jsonComentario.has("comentario") && !jsonComentario.isNull("comentario") ? jsonComentario.getString("comentario") : "";
-            Double numEstrelas = jsonComentario.has("numEstrelas") && !jsonComentario.isNull("numEstrelas") ? jsonComentario.getDouble("numEstrelas") : 0.0;
-            auxComentario = new  Comentario(capa,id,jogoId,numEstrelas,comentario,nomeJogo);
+            Jogo jogo = null;
+            if(jsonComentario.has("jogo") && !jsonComentario.isNull("jogo")){
+                JSONObject jsonJogo = jsonComentario.getJSONObject("jogo");
+                String nome = jsonJogo.has("nome") && !jsonJogo.isNull("nome") ? jsonJogo.getString("nome") : "";
+                String capa = jsonJogo.has("imagem") && !jsonJogo.isNull("imagem") ? jsonJogo.getString("imagem") : "";
+                String dataLancamento = jsonJogo.has("dataLancamento") && !jsonJogo.isNull("dataLancamento") ? jsonJogo.getString("dataLancamento") : "N/A";
+                jogo = new Jogo(jogoId, nome, null, dataLancamento, capa, null, null, null, null, 0, 0, 0.0, 0, null, null, null, null, null, null,-1);
+            }
+            auxComentario = new Comentario(id, numEstrelas, comentario, jogo);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
         return auxComentario;
+    }
+
+    public static String parserErrorMessage(String response, Context context){
+        String defaulErrorMessage = context.getString(R.string.txt_error_request);
+        String errorMessage;
+        try {
+            JSONObject jsonError = new JSONObject(response);
+            errorMessage = jsonError.has("message") && !jsonError.isNull("message") ? jsonError.getString("message") : defaulErrorMessage;
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return errorMessage;
     }
 
 

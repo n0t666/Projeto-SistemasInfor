@@ -27,6 +27,7 @@ import my.ipleiria.playxchange.R;
 import my.ipleiria.playxchange.listeners.CarrinhoListener;
 import my.ipleiria.playxchange.listeners.CheckoutListener;
 import my.ipleiria.playxchange.listeners.CodigoPromocionalListener;
+import my.ipleiria.playxchange.listeners.ComentarioListener;
 import my.ipleiria.playxchange.listeners.ComentariosListener;
 import my.ipleiria.playxchange.listeners.FaturaListener;
 import my.ipleiria.playxchange.listeners.FaturasListener;
@@ -60,7 +61,7 @@ public class SingletonLoja {
 
     private ComentariosListener comentariosListener;
 
-    private ComentariosListener comentarioListener;
+    private ComentarioListener comentarioListener;
 
 
 
@@ -70,11 +71,11 @@ public class SingletonLoja {
         String ip = sharedPreferences.getString(Constants.IP_ADDRESS, null);
 
         if (ip != null && !ip.equals(Constants.IP_ADDRESS)) {
-            //Constants.IP_ADDRESS =  Constants.PROTOCOL + ip + ":" + Constants.PORT + "/" + Constants.PROJECT;
-            Constants.IP_ADDRESS = Constants.PROTOCOL + ip + Constants.PROJECT;
+            Constants.IP_ADDRESS = ip;
         } else {
-            Constants.IP_ADDRESS = Constants.PROTOCOL + Constants.DEFAULT_IP + Constants.PROJECT;
-        }
+            Constants.IP_ADDRESS = "http://10.0.2.2" + Constants.PROJECT; // Dev environment remove on production
+            sharedPreferences.edit().putString(Constants.IP_ADDRESS, Constants.IP_ADDRESS).apply();
+         }
     }
 
     public static synchronized SingletonLoja getInstance(Context context) {
@@ -127,7 +128,7 @@ public class SingletonLoja {
         this.comentariosListener = comentariosListener;
     }
 
-    public void setComentarioListener(ComentariosListener comentarioListener){
+    public void setComentarioListener(ComentarioListener comentarioListener){
         this.comentarioListener = comentarioListener;
     }
 
@@ -142,7 +143,7 @@ public class SingletonLoja {
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
-            StringRequest request = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + Constants.LOGIN_ENDPOINT, new Response.Listener<String>() {
+            StringRequest request = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "users/login", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -551,12 +552,14 @@ public class SingletonLoja {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     String responseBody = null;
+                    String message = context.getString(R.string.txt_error_request);
                     try {
                         responseBody = new String(error.networkResponse.data, "utf-8");
+                         message = LojaJsonParser.parserErrorMessage(responseBody,context);
                     } catch (UnsupportedEncodingException e) {
                         throw new RuntimeException(e);
                     }
-                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                     Log.e("ERROR", error.toString());
 
                     Log.e("ERROR", responseBody);
@@ -663,13 +666,17 @@ public class SingletonLoja {
         }
     }
 
-    public void getComentarios(final Context context,final String token){
+    public void getComentariosAPI(final Context context,final String token){
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "comentarios?access-token=" + token, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    ArrayList<Comentario> comentarios = LojaJsonParser.parserJsonComentarios(response);
+                    if(comentariosListener != null) {
+                        comentariosListener.onRefreshComentarios(comentarios);
+                    }
 
                 }
             }, new Response.ErrorListener() {
@@ -683,8 +690,131 @@ public class SingletonLoja {
         }
     }
 
-    public void getComentario(final Context context, final String token){
+    public void getComentarioAPI(final Context context, final String token, final int id){
+        if(!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        }else{
+            StringRequest req = new StringRequest(Request.Method.GET, Constants.IP_ADDRESS + "comentarios/" + id + "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Comentario comentario = LojaJsonParser.parserJsonComentario(response);
+                    if(comentarioListener != null){
+                        comentarioListener.onRefreshComentario(comentario);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
 
+    public void addComentarioAPI(final Context context, final String token, final int jogoId, final String comentario){
+        if(!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        }else{
+            StringRequest req = new StringRequest(Request.Method.POST, Constants.IP_ADDRESS + "comentarios?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("API Response", response);
+                    if(comentarioListener != null){
+                        comentarioListener.onComentarioAdded();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+
+                    Log.e("ERROR", responseBody);
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("jogo_id", String.valueOf(jogoId));
+                    params.put("comentario", comentario);
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void updateComentarioAPI(final Context context,final String token,final int id, final String comentario){
+        if(!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        }else{
+            StringRequest req = new StringRequest(Request.Method.PUT, Constants.IP_ADDRESS + "comentarios/" + id + "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if(comentarioListener != null){
+                        comentarioListener.onComentarioUpdated();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+
+                    Log.e("ERROR", responseBody);
+                }
+            }){
+                protected Map<String, String> getParams(){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("comentario", comentario);
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void deleteComentarioAPI(final Context context,final String token, final int id){
+        if(!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+        }else{
+            StringRequest req = new StringRequest(Request.Method.DELETE, Constants.IP_ADDRESS + "comentarios/" + id + "?access-token=" + token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if(comentarioListener != null){
+                        comentarioListener.onComentarioRemoved();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String responseBody = null;
+                    try {
+                        responseBody = new String(error.networkResponse.data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
+                    Log.e("ERROR", error.toString());
+
+                    Log.e("ERROR", responseBody);
+                }
+            });
+            volleyQueue.add(req);
+        }
     }
 
 

@@ -111,7 +111,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                 if(!tfCodigoText.getText().toString().isEmpty()){
                     String codigo = tfCodigoText.getText().toString();
                     if(codigo.isEmpty()){
-                        Toast.makeText(getContext(), "Necessita de inserir um código promocional válido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.txt_cod_prom_valido, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
@@ -237,7 +237,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
             }
             startActivity(intent);
         }else{
-            Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.txt_emp_carrinho, Toast.LENGTH_SHORT).show();
         }
     }
 

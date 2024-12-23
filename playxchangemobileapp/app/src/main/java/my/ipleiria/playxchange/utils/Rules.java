@@ -43,4 +43,8 @@ public class Rules {
     public static boolean isPrivacidadeValid(int privacidade){
         return privacidade == Constants.PRIVACY_PUBLIC || privacidade == Constants.PRIVACY_FRIENDS || privacidade == Constants.PRIVACY_PRIVATE;
     }
+
+    public static boolean isComentarioValid(String comentario){
+        return comentario.length() <= Constants.MAX_COMMENT_LENGTH;
+    }
 }

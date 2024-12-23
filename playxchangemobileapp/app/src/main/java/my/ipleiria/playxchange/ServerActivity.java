@@ -3,6 +3,7 @@ package my.ipleiria.playxchange;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -34,14 +35,13 @@ public class ServerActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         etIp = findViewById(R.id.etIp);
         sharedPreferences = getApplicationContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         Constants.IP_ADDRESS = sharedPreferences.getString(Constants.IP_ADDRESS, "");
-        if(Constants.IP_ADDRESS.equals("IP_ADDRESS") || Constants.IP_ADDRESS.isEmpty()){
-            etIp.setText("");
-        }else{
-            etIp.setText(Constants.IP_ADDRESS);
-        }
+        etIp.setText(Constants.IP_ADDRESS);
         this.setTitle("Configuração do servidor");
     }
 
@@ -65,15 +65,18 @@ public class ServerActivity extends AppCompatActivity {
 
     private boolean isValidIp(String ip)
     {
-        Pattern ipPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}):(\\d{1,5})");
-        Matcher matcher = ipPattern.matcher(ip);
+        return ip != null && !ip.isEmpty();
+    }
 
-        if(matcher.find()){
-            return true;
-        }else{
-            Snackbar.make(findViewById(android.R.id.content), "O endereço ip deve seguir a estrutura 1.1.1.1:1", Snackbar.LENGTH_LONG).show();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Handle the back button (Up button)
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return false;
     }
 }

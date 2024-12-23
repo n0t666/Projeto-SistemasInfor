@@ -1,0 +1,101 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_comentario"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:layout_marginBottom="16dp"
+    app:strokeColor="@color/primary"
+    app:strokeWidth="2dp"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:backgroundTint="@color/background"
+        android:background="@color/background">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvJogoNome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text=""
+            android:paddingTop="8dp"
+            android:textSize="18sp"
+            android:textColor="@color/subtle_dark"
+            android:gravity="start" />
+
+        <RatingBar
+            android:id="@+id/rbEstrelas"
+            android:layout_width="wrap_content"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:isIndicator="true" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:weightSum="1"
+            android:gravity="start|center_vertical">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivCapa"
+                android:layout_width="120dp"
+                android:layout_height="200dp"
+                android:src="@drawable/placeholder_jogo"
+                android:layout_marginEnd="16dp"
+                android:contentDescription=""
+                android:scaleType="fitCenter"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.rounded"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="12dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvComentario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:ellipsize="end"
+                    android:maxLines="4"
+                    android:textColor="@color/text"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="4dp"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/txt_v_mais"
+                    android:textColor="@color/primary"
+                    android:background="@android:color/transparent"
+                    android:textAlignment="gravity"
+                    android:layout_gravity="start"
+                    android:paddingStart="0dp"
+                    android:layout_marginStart="0dp"
+                android:layout_marginBottom="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

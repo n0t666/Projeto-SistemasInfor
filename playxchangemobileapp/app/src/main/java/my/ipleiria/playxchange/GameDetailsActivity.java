@@ -83,7 +83,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
             int id = extras.getInt("ID_JOGO");
             getJogo(id);
         }else {
-            Toast.makeText(this, "Não foi possível encontrar o jogo especificado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.txt_error_find_jogo, Toast.LENGTH_SHORT).show();
         }
         tvTitle = findViewById(R.id.tvTitle);
         tvReleaseDate = findViewById(R.id.tvReleaseDate);
@@ -164,13 +164,13 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     public void btnCartOnClick(View view){
         int quantity = Integer.parseInt(tvQuantity.getText().toString());
         if(selectedProdutoId == -1){
-            Toast.makeText(this, "Selecione uma plataforma antes de adicionar ao carrinho", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.txt_select_one_plat_error, Toast.LENGTH_SHORT).show();
             return;
         }
         if(quantity >= MIN_QUANTITY && quantity <= MAX_QUANTITY ) {
             saveCart(selectedProdutoId, quantity);
         }else {
-            Toast.makeText(this, "Quantidade inválida", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.txt_quant_inval, Toast.LENGTH_SHORT).show();
             return;
         }
     }
@@ -284,10 +284,19 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
             }
 
             if (btnComment != null && token != null) {
+                int codeR = -1;
+                if(lJogo.getReviewId() > 0){
+                    btnComment.setText(R.string.txt_edit_com);
+                    codeR = Constants.REQUEST_CODE_EDIT_COMMENT;
+                }else{
+                    btnComment.setText(R.string.txt_add_com);
+                    codeR = Constants.REQUEST_CODE_ADD_COMMENT;
+                }
+                int finalCodeR = codeR;
                 btnComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        openComentarioActivity(lJogo.getReviewId(), finalCodeR);
                     }
                 });
             }
@@ -302,15 +311,20 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                                     lJogo.setAvaliacao(new Avaliacao(lJogo.getId(),-1,rating,null)); // É preciso criar uma nova , se no caso for apagado senão irá dar erro
                                     SingletonLoja.getInstance(getApplicationContext()).addAvaliacaoAPI(getApplicationContext(), lJogo.getId(), rating, token);
                                 }else {
-                                    Toast.makeText(getApplicationContext(), "Avaliação inválida (create)", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.txt_aval_invalida   , Toast.LENGTH_SHORT).show();
                                 }
                             } else if (lJogo.getAvaliacao().getNumEstrelas() != rating){
                                 if(rating > 0 && rating <= 5) {
                                     SingletonLoja.getInstance(getApplicationContext()).updateAvaliacaoAPI(getApplicationContext(), lJogo.getId(), rating, token);
                                 }else if (rating == 0){
-                                    SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
+                                    if(lJogo.getReviewId() > 0){
+                                        SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), R.string.txt_aval_busy, Toast.LENGTH_SHORT).show();
+                                    }
+
                                 }else {
-                                    Toast.makeText(getApplicationContext(), "Avaliação inválida", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.txt_aval_inv, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -323,17 +337,22 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                     btnClearRating.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            bottomSheet.dismiss();
-                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(GameDetailsActivity.this, R.style.CustomMaterialAlertDialog);
-                            builder.setTitle("Remover Avaliação")
-                                    .setMessage("Tem a certeza que deseja remover a sua avaliação?")
-                                    .setPositiveButton("Sim", (dialog, which) -> {
-                                        SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
-                                    })
-                                    .setNegativeButton("Não", (dialog, which) -> {
-                                        dialog.dismiss();
-                                    })
-                                    .show();
+                            if(lJogo.getReviewId() > 0){
+                                bottomSheet.dismiss();
+                                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(GameDetailsActivity.this, R.style.CustomMaterialAlertDialog);
+                                builder.setTitle(R.string.txt_remover_aval)
+                                        .setMessage(R.string.txt_remover_aval_conf)
+                                        .setPositiveButton("Sim", (dialog, which) -> {
+                                            SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
+                                        })
+                                        .setNegativeButton("Não", (dialog, which) -> {
+                                            dialog.dismiss();
+                                        })
+                                        .show();
+                            }else{
+                                Toast.makeText(getApplicationContext(), R.string.txt_aval_busy, Toast.LENGTH_SHORT).show();
+                            }
+
 
                         }
                     });
@@ -434,6 +453,15 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     public boolean onSupportNavigateUp(){
         finish();
         return true;
+    }
+
+
+    private void openComentarioActivity(int reviewId, int requestCode){
+        Intent intent = new Intent(this, ComentarioDetailsActivity.class);
+        intent.putExtra("ID_JOGO", lJogo.getId());
+        intent.putExtra("REQUEST_CODE", requestCode);
+        intent.putExtra("ID_COMENTARIO", reviewId);
+        startActivity(intent);
     }
 
 

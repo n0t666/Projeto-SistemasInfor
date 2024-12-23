@@ -27,6 +27,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ComentarioCreate"
+            android:exported="false" />
+        <activity
+            android:name=".ComentarioDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ComentariosActivity"
+            android:exported="false" />
+        <activity
             android:name=".InteracaoJogosActivity"
             android:exported="false" />
         <activity
@@ -48,7 +57,6 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:noHistory="true"
             android:theme="@style/AppThemeNoAction">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

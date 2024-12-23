@@ -1,0 +1,82 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:id="@+id/main">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivCapa"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:src="@drawable/placeholder_jogo"
+                android:layout_marginBottom="16dp"
+                android:scaleType="fitCenter"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.rounded"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvJogoNome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="@color/text"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvDataLancamento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/subtle_dark"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tfComentario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                style="@style/CustomTextInputLayout"
+                android:enabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtComentario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/text"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:maxLength="2000"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_save"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/primary"
+                app:cornerRadius="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"
+                android:onClick="onGuardarClick"/>
+
+        </LinearLayout>
+    </FrameLayout>
+</ScrollView>

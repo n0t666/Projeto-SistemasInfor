@@ -16,6 +16,7 @@ public class Constants {
     public static final String TOKEN = "TOKEN";
 
     public static final String PROTOCOL = "http://";
+
     public static String IP_ADDRESS = "IP_ADDRESS";
 
     public static final String DEFAULT_IP = "10.0.2.2";
@@ -34,6 +35,7 @@ public class Constants {
     public static final int PRIVACY_PRIVATE = 2;
     public static final int MAX_NAME_LENGTH = 200;
     public static final int NIF_LENGTH = 9;
+    public static final int MAX_COMMENT_LENGTH = 2000 ;
     //endregion
 
     //region - Request Codes
@@ -41,6 +43,8 @@ public class Constants {
     public static final int REQUEST_CODE_PLAYED = 2;
     public static final int REQUEST_CODE_FAVORITES = 3;
 
+    public static final int REQUEST_CODE_ADD_COMMENT = 4;
+    public static final int REQUEST_CODE_EDIT_COMMENT = 5;
     //endregion
 
 

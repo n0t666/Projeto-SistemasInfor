@@ -3,19 +3,9 @@ package my.ipleiria.playxchange.models;
 import java.util.List;
 
 public class Jogo {
-    private int id;
-    private String nome;
-    private String descricao;
-    private String dataLancamento;
-    private String capas;
-    private String distribuidora;
-    private String editora;
-    private String trailer;
-    private String franquia;
-    private int desejados;
-    private int jogados;
+    private String nome, descricao,dataLancamento ,capas , distribuidora,editora ,trailer ,franquia;
+    private int desejados,reviews,jogados,id,reviewId;
     private double media;
-    private int reviews;
     private Avaliacao avaliacao;
     private Atividade atividade;
     private List<Produto> produtos;
@@ -24,7 +14,8 @@ public class Jogo {
     private List<String> screenshots;
 
 
-    public Jogo(int id, String nome, String descricao, String dataLancamento, String capas, String distribuidora, String editora, String trailer, String franquia, int desejados, int jogados, double media, int reviews, Avaliacao avaliacao, Atividade atividade, List<Produto> produtos, List<Tag> tags, List<Genero> generos, List<String> screenshots) {
+
+    public Jogo(int id, String nome, String descricao, String dataLancamento, String capas, String distribuidora, String editora, String trailer, String franquia, int desejados, int jogados, double media, int reviews, Avaliacao avaliacao, Atividade atividade, List<Produto> produtos, List<Tag> tags, List<Genero> generos, List<String> screenshots, int reviewId) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -44,6 +35,7 @@ public class Jogo {
         this.tags = tags;
         this.generos = generos;
         this.screenshots = screenshots;
+        this.reviewId = reviewId;
     }
 
     public Atividade getAtividade() {
@@ -196,6 +188,14 @@ public class Jogo {
 
     public void setScreenshots(List<String> screenshots) {
         this.screenshots = screenshots;
+    }
+
+    public int getReviewId() {
+        return reviewId;
+    }
+
+    public void setReviewId(int reviewId) {
+        this.reviewId = reviewId;
     }
 
     public static class Atividade {

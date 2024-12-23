@@ -54,6 +54,10 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="CardvViewsActivity">
+        <item name="backgroundTint">#ff00ab</item>
+    </style>
+
 
 
 
