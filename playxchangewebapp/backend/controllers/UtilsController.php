@@ -71,16 +71,22 @@ class UtilsController extends Controller
             return;
         }
 
+
+        /* Mosquitto broker */
+        /*
         $server = 'test.mosquitto.org';
         $port = 1884;
+        */
+
+        /* Localhost */
+        $server = 'localhost';
+        $port = 1883;
+
         $username = '';
         $password = '';
         $client_id = 'phpMQTT-publisher';
 
-
         $mqtt = new \Bluerhinos\phpMQTT($server, $port, $client_id);
-
-
         try {
             if ($mqtt->connect(true, NULL, $username, $password)) {
                 $mqtt->publish($topic, $msg, );
