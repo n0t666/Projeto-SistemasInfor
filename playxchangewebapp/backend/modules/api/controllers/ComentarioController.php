@@ -7,7 +7,6 @@ use common\models\CodigoPromocional;
 use common\models\Comentario;
 use common\models\Jogo;
 use common\models\User;
-use MongoDB\Driver\Exception\InvalidArgumentException;
 use Yii;
 use yii\db\Exception;
 use yii\filters\auth\QueryParamAuth;
@@ -55,6 +54,7 @@ class ComentarioController extends ActiveController
         $comentarios = $user->profile->comentarios;
 
         $response = [];
+
 
         foreach ($comentarios as $comentario) {
             $numEstrelas = $user->profile->getAvaliacoes()->where(['jogo_id' => $comentario->jogo->id])->one();
@@ -113,24 +113,19 @@ class ComentarioController extends ActiveController
 
         $body = Yii::$app->getRequest()->getBodyParams();
 
-        $utilizadorId = $body['utilizador_id'] ?? null;
         $jogoId = $body['jogo_id'] ?? null;
         $comentario = $body['comentario'] ?? null;
 
 
-        if(!$utilizadorId || !$jogoId || !$comentario){
-            throw new \Exception('Para fazer um comentário é necessário passar um utilizador,jogo e comentário');
-        }
-
-        if($utilizadorId != $user->id){
-            throw new UnauthorizedHttpException('Apenas pode fazer comentários na sua própia conta');
+        if(!$jogoId || !$comentario){
+            throw new \Exception('Para fazer um comentário é necessário passar um jogo e comentário');
         }
 
         if(!Jogo::find()->where(['id' => $jogoId])->exists()){
             throw new NotFoundHttpException('Jogo inexistente');
         }
 
-        if (!$user->profile->getAvaliacaos()->where(['jogo_id' => $jogoId])->exists()) {
+        if (!$user->profile->getAvaliacaos()->where(['id' => $jogoId])->exists()) {
             throw new \Exception('É necessário de avaliar um jogo antes de comentar.');
         }
 
@@ -141,7 +136,7 @@ class ComentarioController extends ActiveController
 
 
         $model = new Comentario();
-        $model->utilizador_id = $utilizadorId;
+        $model->utilizador_id = $user->id;
         $model->jogo_id = $jogoId;
         $model->comentario = $comentario;
         if($model->save()){
@@ -151,7 +146,7 @@ class ComentarioController extends ActiveController
         }
         }
 
-    public function actionUpdate()
+    public function actionUpdate($id)
     {
         $user = Yii::$app->user->identity;
 
@@ -161,16 +156,11 @@ class ComentarioController extends ActiveController
 
         $body = Yii::$app->getRequest()->getBodyParams();
 
-        $utilizadorId = $body['utilizador_id'] ?? null;
         $comentario = $body['comentario'] ?? null;
-        $comentarioId = $body['comentario_id'] ?? null;
+        $comentarioId = $id ?? null;
 
-        if(!$utilizadorId || !$comentario || !$comentarioId){
-            throw new InvalidArgumentException('Para editar um comentário é necessário passar um utilizador,jogo e comentário');
-        }
-
-        if($utilizadorId != $user->id){
-            throw new UnauthorizedHttpException('Apenas pode editar comentários da sua própia conta');
+        if(!$comentario || !$comentarioId){
+            throw new \Exception('Para editar um comentário é necessário passar um jogo e um comentário');
         }
 
         $model = $user->profile->getComentarios()->where(['id' => $comentarioId])->one();
@@ -198,7 +188,7 @@ class ComentarioController extends ActiveController
         $comentarioId = $id ?? null;
 
         if(!$comentarioId){
-            throw new InvalidArgumentException('É necessário do id para apagar um comentario');
+            throw new \Exception('É necessário do id para apagar um comentario');
         }
 
         $model = $user->profile->getComentarios()->where(['id' => $comentarioId])->one();

@@ -1759,23 +1759,10 @@ figure img {
 
     .game-grid .sidebar {
         border-radius: 8px;
-        position: sticky;
         border: 1px solid var(--border-color);
     }
 
-    @media (min-width: 992px) {
-        .game-grid .sidebar {
-            position: sticky;
-            top: 20px;
-        }
-    }
 
-    @media (min-width: 992px) {
-        .game-grid .sidebar {
-            position: sticky;
-            top: 20px;
-        }
-    }
 
     .game-grid .form-select {
         border-radius: 0.5rem;
@@ -1812,3 +1799,5 @@ figure img {
         font-size: 14px;
         padding: 8px;
     }
+
+

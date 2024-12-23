@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use common\models\Fatura;
+use common\models\Genero;
 use common\models\Jogo;
+use common\models\LinhaFatura;
 use common\models\LoginForm;
 use common\models\Produto;
 use common\models\User;
@@ -90,6 +92,37 @@ class SiteController extends Controller
             ],
         ]);
 
+        $generosCount = [];
+        $linhasFaturas = LinhaFatura::find()->all();
+
+        foreach ($linhasFaturas as $linhaFatura) {
+            $produto = $linhaFatura->produto;
+            if ($produto) {
+                $jogo = $produto->jogo;
+                if ($jogo) {
+                    foreach($jogo->generos as $genero){
+                        if(isset($generosCount[$genero->id])){ // Se este genero já está presente na contagem incrementa
+                            $generosCount[$genero->id]++;
+                        }else{ // Caso contrário inicializa a contagem para esse genero
+                            $generosCount[$genero->id] = 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        $generosMaisVendidos = [];
+        foreach ($generosCount as $generoId => $count) {
+            $genero = Genero::findOne($generoId); // Query para obter os dados associados a cada genero de jogo que foi vendido
+            $generosMaisVendidos[] = [
+                'genero' => $genero->nome,
+                'count' => $count,
+            ];
+        }
+
+
+
+
         return $this->render('index', [
             'ultimosUtilizadores' => $ultimosUtilizadores,
             'totalVendas' => $totalVendas,
@@ -98,6 +131,7 @@ class SiteController extends Controller
             'progressoVendas' => $progressoVendas,
             'progressoJogos' => $progressoJogos,
             'dataProviderProdutos' => $dataProviderProdutos,
+            'generosMaisVendidos' => $generosMaisVendidos
         ]);
     }
 

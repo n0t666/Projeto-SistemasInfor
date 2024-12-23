@@ -193,5 +193,64 @@ class Fatura extends \yii\db\ActiveRecord
         }
     }
 
+    public function adicionarLinhaFatura($produtoId, $precoUnitario,$chaveId = null)
+    {
+        $linhaFatura = new LinhaFatura();
+        $linhaFatura->fatura_id = $this->id;
+        $linhaFatura->produto_id = $produtoId;
+        $linhaFatura->precoUnitario = $precoUnitario;
+        if($chaveId != null){
+            $linhaFatura->chave_id = $chaveId;
+        }
+        if (!$linhaFatura->save()) {
+            var_dump($linhaFatura->errors);
+            die();
+            throw new \Exception('Erro ao adicionar linha de fatura');
+        }
+        return $linhaFatura;
+    }
+
+    public function getLinhasFaturaGroup()
+    {
+        $linhasFatura = [];
+        foreach ($this->linhasfaturas as $linha) {
+            $produto = $linha->produto_id;
+            if(!isset($linhasFatura[$produto])){
+                $linhasFatura[$produto] = [
+                    'produto' => $linha->produto,
+                    'precoUnitario' => $linha->precoUnitario,
+                    'quantidade' => 0,
+                    'subtotal' => 0,
+                    'chaves' => []
+                ];
+            }
+            $linhasFatura[$produto]['quantidade'] += 1;
+            $linhasFatura[$produto]['subtotal'] += $linha->precoUnitario;
+            if($linha->chave_id != null){
+                $linhasFatura[$produto]['chaves'][] = $linha->chave;
+            }
+        }
+        return $linhasFatura;
+    }
+
+    public function getTotalSemDesconto()
+    {
+        $total = 0;
+        foreach ($this->linhasfaturas as $linha) {
+            $total += $linha->precoUnitario;
+        }
+        return $total;
+    }
+
+    public function getDesconto($totalSemDesconto)
+    {
+        $quantidadeDesconto = 0;
+        if($this->codigo){
+            $quantidadeDesconto = $this->codigo->aplicarDesconto($totalSemDesconto);
+        }
+        return $quantidadeDesconto;
+    }
+
+
 
 }

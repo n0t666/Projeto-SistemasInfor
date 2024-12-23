@@ -303,7 +303,7 @@ class UserController extends ActiveController
         }
 
         $profile = $user->profile;
-        $numReviews = count($profile->getAvaliacoes()->all());
+        $numReviews = count($profile->getComentarios()->all());
         $numJogos = count($profile->getInteracoes()->where(['isJogado' => 1])->all());
         $numFavoritos = count($profile->getInteracoes()->where(['isFavorito' => 1])->all());
         $numDesejados = count($profile->getInteracoes()->where(['isDesejado' => 1])->all());

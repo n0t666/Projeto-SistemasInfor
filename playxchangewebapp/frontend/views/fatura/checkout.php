@@ -85,7 +85,7 @@ $this->registerCssFile('@web/css/checkout.css', ['depends' => [\yii\bootstrap5\B
                     <?php endif; ?>
                     <hr class="section-divider">
                     <div class="d-flex justify-content-between mb-4 small">
-                        <span>TOTAL</span> <strong class="total-amount"><?= $total ?>€</strong>
+                        <span>TOTAL (Com IVA)</span> <strong class="total-amount"><?= $total ?>€</strong>
                     </div>
                     <button class="custom-btn-order btn w-100 mt-2" type="submit" form="payment-form">Completar compra</button>
                 </div>

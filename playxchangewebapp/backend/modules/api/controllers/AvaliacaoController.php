@@ -86,11 +86,11 @@ class AvaliacaoController extends ActiveController
        $avaliacao = $user->profile->getAvaliacoes()->where(['jogo_id' => $jogoId])->one();
 
         if($avaliacao){
-            throw new Exception('Não é possível fazer mais do que uma avaliação para cada jogo');
+            throw new \Exception('Não é possível fazer mais do que uma avaliação para cada jogo');
         }
 
         if (!$numEstrelas || $numEstrelas < 0.5) {
-            throw new Exception('O número de estrelas não é valido');
+            throw new \Exception('O número de estrelas não é valido');
         }
 
         $avaliacao = new Avaliacao();

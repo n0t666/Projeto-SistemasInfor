@@ -51,7 +51,6 @@ class FaturaController extends Controller
             throw new NotFoundHttpException();
         }
 
-
         $dataProvider = new ActiveDataProvider([
             'query' => $user->getFaturas(),
             'pagination' => [
@@ -78,48 +77,24 @@ class FaturaController extends Controller
             $codigo = Yii::$app->request->post('codigo');
             $codigoModel = null;
 
-            if ($codigo != null && $codigo != '') {
+            if (!empty($codigo)) {
                 $codigoModel = CodigoPromocional::find()->where(['codigo' => $codigo, 'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
 
-                if (!$codigoModel) {
-                    Yii::$app->session->setFlash('error', 'Não é possível utilizar o código promocional inserido.');
-                    return $this->redirect(['/carrinho']);
-                }
-
-
-                /*
-                $isCodigoUsed = !empty(array_filter($user->codigos, function($codigo) use ($codigoModel) {
-                    return $codigo->id == $codigoModel->id;
-                }));
-                */
-
-                $isCodigoUsed = $user->getCodigos()
-                    ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id']) // Fazer join com a tabela pivot
-                    ->andWhere(['codigosPromocionais.id' => $codigoModel->id])
-                    ->exists(); // Devolve true or false dependendo se o utilizador já utilizou o código promocional
-
-                if ($isCodigoUsed) {
-                    Yii::$app->session->setFlash('error', 'Já utilizou este código promocional.');
+                if (!$codigoModel ||  $codigoModel->isUsedByUser($user)) {
+                    Yii::$app->session->setFlash('error', !$codigoModel ? 'Não é possível utilizar o código promocional inserido.' : 'Já utilizou este código promocional.');
                     return $this->redirect(['/carrinho']);
                 }
             }
-            $total = 0;
-            foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
-                $produto = $linhaCarrinho->produtos;
-                $subtotal = $linhaCarrinho->quantidade * $linhaCarrinho->produtos->preco;
-                $total += $subtotal;
-            }
 
+            $carrinho->refresh();
+            $carrinho->recalculateTotal();
+            $total = $carrinho->total;
             $totalSemDesconto = $total;
             $valorDescontado = null;
             $codigoArray = null;
 
             if ($codigoModel) {
-                $desconto = $codigoModel->desconto;
-                $valorDescontado = ($total * ($desconto / 100));
-                if ($valorDescontado > $total) {
-                    $valorDescontado = $total;
-                }
+                $valorDescontado = $codigoModel->aplicarDesconto($total);
                 $total -= $valorDescontado;
                 $codigoArray = [
                     'codigo_id' => $codigoModel->id,
@@ -203,20 +178,16 @@ class FaturaController extends Controller
                         Yii::$app->session->setFlash('error', 'Não é possível utilizar o código promocional inserido.');
                         return $this->redirect(['/carrinho']);
                     }
-                    $isCodigoUsed = $user->getCodigos()
-                        ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id'])
-                        ->andWhere(['codigosPromocionais.id' => $codigo->id])
-                        ->exists();
+                    $isCodigoUsed = $codigo->isUsedByUser($user);
                     if ($isCodigoUsed) {
                         Yii::$app->session->setFlash('error', 'Já utilizou este código promocional.');
                         return $this->redirect(['/carrinho']);
                     }
                 }
 
+
                 $transaction = Yii::$app->db->beginTransaction();
                 $total = 0;
-
-
                 $model = new Fatura();
                 $model->utilizador_id = $user->id;
                 $model->pagamento_id = $pagamentoId;
@@ -236,39 +207,27 @@ class FaturaController extends Controller
                     if(strtolower($model->envio->nome) == 'entrega online'){
                         foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
                             $produto = $linhaCarrinho->produtos;
-                            $chavesDisponiveis = $produto->getChaves()->where(['isUsada' => 0])->count();
-                            if ($chavesDisponiveis < $linhaCarrinho->quantidade) {
+                            if (!$produto->hasSuficienteChaves($linhaCarrinho->quantidade)) {
                                 Yii::$app->session->setFlash('error', 'Não há chaves suficientes para o produto: ' . $produto->jogo->nome);
                                 return $this->redirect(['/carrinho']);
                             }
-                            $chavesReservar = $produto->getChaves()
-                                ->where(['isUsada' => 0])
-                                ->limit($linhaCarrinho->quantidade)
-                                ->all();
+                            $chavesReservar = $produto->reservarChaves($linhaCarrinho->quantidade);
                             $subtotal = $linhaCarrinho->quantidade * $produto->preco;
                             $total += $subtotal;
+
                             foreach ($chavesReservar as $chave) {
                                 $chave->isUsada = 1;
                                 if (!$chave->save()) {
                                     throw new \Exception('Erro ao finalizar o pedido.');
                                 }
-                                $linhaFatura = new LinhaFatura();
-                                $linhaFatura->fatura_id = $model->id;
-                                $linhaFatura->chave_id = $chave->id;
-                                $linhaFatura->produto_id = $produto->id;
-                                $linhaFatura->precoUnitario = $produto->preco;
-
-                                if (!$linhaFatura->save()) {
-                                    throw new \Exception('Erro ao guardar as linhas da fatura.');
-                                }
+                                $model->adicionarLinhaFatura($produto->id,$produto->preco,$chave->id);
                             }
                         }
                     }elseif (strtolower($model->envio->nome) == 'entrega em loja'){
                         foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
                             $produto = $linhaCarrinho->produtos;
-                            $produtosDisponiveis = $produto->quantidade;
 
-                            if ($produtosDisponiveis < $linhaCarrinho->quantidade) {
+                            if (!$produto->hasSuficienteQuantidade($linhaCarrinho->quantidade)) {
                                 Yii::$app->session->setFlash('error', 'Não há stock suficiente para o produto: ' . $produto->jogo->nome);
                                 return $this->redirect(['/carrinho']);
                             }
@@ -278,23 +237,8 @@ class FaturaController extends Controller
                                 if (!$produto->save()) {
                                     throw new \Exception('Erro ao atualizar o stock do produto.');
                                 }
-                                $linhaFatura = new LinhaFatura();
-                                $linhaFatura->fatura_id = $model->id;
-                                $linhaFatura->produto_id = $produto->id;
-                                $linhaFatura->precoUnitario = $produto->preco;
-                                $linhaFatura->chave_id = null;
-
-                                if (!$produto->save()) {
-                                    throw new \Exception('Erro ao atualizar o stock do produto.');
-                                }
-
-                                if (!$linhaFatura->save()) {
-                                    Yii::$app->session->setFlash('error', 'Erro ao guardar as linhas da fatura para o produto: ' . $produto->jogo->nome);
-                                    return $this->redirect(['/carrinho']);
-                                }
-
+                                $model->adicionarLinhaFatura($produto->id,$produto->preco);
                                 $total += $produto->preco;
-
                             }
                         }
                     }else{
@@ -308,12 +252,7 @@ class FaturaController extends Controller
                 }
 
                 if ($codigo != null && !$isCodigoUsed) {
-                    $desconto = $codigo->desconto;
-                    $valorDescontado = ($total * ($desconto / 100));
-                    $total -= $valorDescontado;
-                    if ($total < 0) {
-                        $total = 0;
-                    }
+                    $total =  $codigo->aplicarDesconto($total);
                 }
 
                 $model->total = $total;
@@ -322,11 +261,7 @@ class FaturaController extends Controller
                 }
 
                 $transaction->commit();
-                LinhaCarrinho::deleteAll(['carrinhos_id' => $carrinho->id]);
-                $carrinho->total = 0;
-                $carrinho->count = 0;
-                $carrinho->save();
-
+                $carrinho->limpar();
                 Yii::$app->session->setFlash('success', 'Fatura criada com sucesso.');
                 return $this->redirect(['/site']);
             } catch (\Exception $e) {
@@ -354,38 +289,9 @@ class FaturaController extends Controller
            throw new NotFoundHttpException();
         }
 
-        $linhasFatura = [];
-        $totalSemDesconto = 0;
-
-        foreach ($fatura->linhasfaturas as $linha){
-            $produto = $linha->produto_id;
-            if (!isset($linhasFatura[$produto])) {
-                $linhasFatura[$produto] = [
-                    'produto' => $linha->produto,
-                    'precoUnitario' => $linha->precoUnitario,
-                    'quantidade' => 0,
-                    'subtotal' => 0,
-                    'chaves' => []
-                ];
-            }
-
-            $linhasFatura[$produto]['quantidade'] += 1;
-            $linhasFatura[$produto]['subtotal'] += $linha->precoUnitario;
-            if($linha->chave != null){
-                $linhasFatura[$produto]['chaves'][] = $linha->chave;
-            }
-
-
-            $totalSemDesconto += $linha->precoUnitario;
-        }
-
-        $quantidadeDesconto = 0;
-
-        if ($fatura->codigo) {
-            $desconto = $fatura->codigo->desconto;
-            $quantidadeDesconto = ($totalSemDesconto * $desconto) / 100;
-        }
-
+        $linhasFatura = $fatura->getLinhasFaturaGroup();
+        $totalSemDesconto = $fatura->getTotalSemDesconto();
+        $quantidadeDesconto = $fatura->getDesconto($totalSemDesconto);
 
         return $this->render('view', [
             'fatura' => $fatura,

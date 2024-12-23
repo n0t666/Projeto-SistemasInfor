@@ -76,4 +76,19 @@ class CodigoPromocional extends \yii\db\ActiveRecord
         return $this->hasMany(UserData::class, ['id' => 'utilizador_id'])->viaTable('utilizacaocodigos', ['codigo_id' => 'id']);
     }
 
+
+    public function aplicarDesconto($total)
+    {
+        $valorDescontado = ($total * $this->desconto / 100);
+        return min($valorDescontado, $total); // Retorna o menor valor entre o desconto e o total sendo no caso se o desconto for maior que o total, retorna o total
+    }
+
+    public function isUsedByUser($user)
+    {
+        return $user->getCodigos()
+            ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id'])
+            ->andWhere(['codigosPromocionais.id' => $this->id])
+            ->exists();
+    }
+
 }

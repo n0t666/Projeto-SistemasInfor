@@ -81,6 +81,7 @@ if (!empty($this->fotoPerfil) && file_exists(Yii::$app->user->identity->profile-
                             ['label' => 'Chaves', 'icon' => 'key', 'url' => ['/chave'], 'active' => Yii::$app->controller->id === 'chave'],
                             ['label' => 'Métodos de Pagamento', 'icon' => 'credit-card', 'url' => ['/metodo-pagamento'], 'active' => Yii::$app->controller->id === 'metodo-pagamento'],
                             ['label' => 'Métodos de Envio', 'icon' => 'truck', 'url' => ['/metodo-envio'], 'active' => Yii::$app->controller->id === 'metodo-envio'],
+                            ['label' => 'Ivas', 'icon' => 'percent', 'url' => ['/iva'], 'active' => Yii::$app->controller->id === 'iva'],
                         ],
                     ],
                 ],

@@ -301,6 +301,15 @@ class RbacController extends Controller
         $adicionarUtilizadores = $auth->createPermission('adicionarUtilizadores');
         $auth->add($adicionarUtilizadores);
 
+        $adicionarIvas = $auth->createPermission('adicionarIvas');
+        $removerIvas = $auth->createPermission('removerIvas');
+        $editarIvas = $auth->createPermission('editarIvas');
+        $verDetalhesIvas = $auth->createPermission('verDetalhesIvas');
+        $auth->add($adicionarIvas);
+        $auth->add($removerIvas);
+        $auth->add($editarIvas);
+        $auth->add($verDetalhesIvas);
+
         $cliente = $auth->createRole('cliente');
         $auth->add($cliente);
         $auth->addChild($cliente, $usarCodigosProm);
@@ -464,6 +473,11 @@ class RbacController extends Controller
         $auth->addChild($admin,$verDetalhesUtilizadores);
         $auth->addChild($admin,$adicionarUtilizadores);
         $auth->addChild($admin,$removerMetodosEnvio);
+
+        $auth->addChild($admin,$verDetalhesIvas);
+        $auth->addChild($admin,$adicionarIvas);
+        $auth->addChild($admin,$removerIvas);
+        $auth->addChild($admin,$editarIvas);
 
         $auth->assign($admin, 1);
         $auth->assign($moderador, 2);

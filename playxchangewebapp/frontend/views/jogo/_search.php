@@ -13,7 +13,7 @@ $this->registerCssFile('@web/css/jogoSearch.css', ['depends' => [\yii\bootstrap5
 
 ?>
 
-<div class="mb-4 jogo-search">
+<div class="jogo-search">
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
@@ -57,14 +57,6 @@ $this->registerCssFile('@web/css/jogoSearch.css', ['depends' => [\yii\bootstrap5
             ['prompt' => 'Franquia', 'class' => 'form-select']
         )->label(false) ?>
     </div>
-
-    <div class="col-md-12">
-        <?= $form->field($searchModel, 'plataforma_id')->dropDownList(
-            ArrayHelper::map(Plataforma::find()->all(), 'id', 'nome'),
-            ['prompt' => 'Plataforma', 'class' => 'form-select']
-        )->label(false) ?>
-    </div>
-
 
     <div class="col-md-12">
         <?= $form->field($searchModel, 'plataforma_id')->dropDownList(

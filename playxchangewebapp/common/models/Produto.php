@@ -179,4 +179,29 @@ class Produto extends \yii\db\ActiveRecord
             }
         }
     }
+
+    public function hasSuficienteChaves($quantidade)
+    {
+        $chavesDisponiveis = $this->getChaves()->where(['isUsada' => 0])->count();
+        return $chavesDisponiveis >= $quantidade;
+    }
+
+    public function hasSuficienteQuantidade($quantidade)
+    {
+        return $this->quantidade >= $quantidade;
+    }
+
+    public function reservarChaves($quantidade)
+    {
+        return $this->getChaves()->where(['isUsada' => 0])->limit($quantidade)->all();
+    }
+
+    public function atualizarStock($quantidade)
+    {
+        $this->quantidade -= $quantidade;
+        if (!$this->save()) {
+            throw new \Exception('Erro ao atualizar o stock do produto');
+        }
+    }
+
 }

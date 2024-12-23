@@ -31,6 +31,7 @@ $this->title = $model->nome;
 
 ?>
 
+
 <div class="container my-5 view-game">
     <div class="row">
         <div class="col-md-4 d-flex flex-column align-items-center">
@@ -355,7 +356,6 @@ $this->title = $model->nome;
                         </div>
                         <div class="col-12 d-flex justify-content-center gap-3 py-2">
                             <?= Html::submitButton('Guardar Avaliação', ['class' => 'btn btn-primary']) ?>
-                            <?= Html::button('Escrever Comentário', ['class' => 'btn btn-secondary reviewButton']) ?>
                         </div>
 
                         <?php ActiveForm::end(); ?>
@@ -469,6 +469,10 @@ if ((!yii::$app->user->isGuest)) {
     echo "</div>";
     Modal::end();
 }
-
 ?>
+<a href="#" class="btn btn-primary rounded-circle floating-btn reviewButton">
+    <i class="fas fa-comment"></i>
+</a>
+
+
 

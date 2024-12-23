@@ -139,6 +139,7 @@ class JogoController extends ActiveController
         $atividade = null;
         $avaliacao = null;
         if ($user) {
+            $comentarioAvaliacao = $user->profile->getComentarios()->where(['jogo_id' => $id])->one();
             $userActivity = $user->profile->getInteracoes()->where(['jogo_id' => $id])->one();
             $userAvaliacao = $user->profile->getAvaliacoes()->where(['utilizador_id' => $user->id, 'jogo_id' => $id])->one();
             if ($userAvaliacao) {
@@ -148,8 +149,6 @@ class JogoController extends ActiveController
                 $atividade = $userActivity->attributes;
             }
         }
-
-
         return [
             'id' => $jogo->id,
             'nome' => $jogo->nome,
@@ -170,6 +169,7 @@ class JogoController extends ActiveController
             'tags' => $tags,
             'generos' => $generos,
             'screenshots' => $screenshots,
+            'comentario' => $comentarioAvaliacao ? $comentarioAvaliacao->id : -1,
         ];
     }
 

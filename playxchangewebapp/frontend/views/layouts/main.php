@@ -46,12 +46,18 @@ $this->registerJsFile(
     <header>
         <?php
         NavBar::begin([
-            'brandLabel' => Yii::$app->name,
             'brandUrl' => Yii::$app->homeUrl,
             'options' => [
                 'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top justify-content-center py-2',
             ],
         ]);
+
+        echo Html::a(
+            Html::img('@web/images/logo.png', ['alt' => 'Your Logo', 'class' => 'navbar-brand', 'style' => 'width: 50px;']),
+            Yii::$app->homeUrl,
+            ['class' => 'navbar-brand']
+        );
+
         $menuItems = [
             [
                 'label' => 'Jogos',

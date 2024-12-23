@@ -105,16 +105,45 @@ class Carrinho extends \yii\db\ActiveRecord
         $total = 0;
         $totalProdutos = 0;
         $linhascarrinho = $this->linhascarrinhos;
+
+        $ivaNormal = Iva::findOne(['nome' => 'Normal']);
+        $percentagemIva = $ivaNormal ? $ivaNormal->percentagem : 0;
+
         foreach ($linhascarrinho as $linhaCarrinho) {
             $totalProdutos += $linhaCarrinho->quantidade;
             $total += $linhaCarrinho->produtos->preco * $linhaCarrinho->quantidade;
         }
-        $this->total = $total;
+
+        $quantidadeIva = ($total * $percentagemIva) / 100;
+        $totalComIva = $total + $quantidadeIva;
+
+        $this->total = $totalComIva;
         $this->count = $totalProdutos;
 
         if (!$this->save()) {
-            throw new \Exception('Erro ao salvar o carrinho após recalcular o total');
+            throw new \Exception('Erro ao guardar o carrinho após recalcular o total');
         }
     }
+
+    public function limpar(){
+        $this->refresh();
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            LinhaCarrinho::deleteAll(['carrinhos_id' => $this->id]);
+
+            $this->total = 0;
+            $this->count = 0;
+
+            if (!$this->save()) {
+                throw new \Exception('Erro ao guardar o carrinho.');
+            }
+
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw new \Exception('Erro ao limpar o carrinho');
+        }
+    }
+
 
 }

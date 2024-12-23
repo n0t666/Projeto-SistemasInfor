@@ -144,7 +144,7 @@ class Userdata extends \yii\db\ActiveRecord
      */
     public function getComentarios()
     {
-        return $this->hasMany(Comentario::class, ['id' => 'comentario_id'])->viaTable('gostoscomentarios', ['utilizador_id' => 'id']);
+        return $this->hasMany(Comentario::class, ['utilizador_id' => 'id']);
     }
 
     /**

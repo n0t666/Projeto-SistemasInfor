@@ -1,5 +1,6 @@
 <?php
 
+use onmotion\apexcharts\ApexchartsWidget;
 use yii\grid\GridView;
 
 $this->title = 'Página inicial';
@@ -55,53 +56,98 @@ $this->title = 'Página inicial';
             ]) ?>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="card-title"><i class="fas fa-cogs"></i> Últimos Produtos</h5>
-            </div>
-            <div class="card-body p-0">
-                <?= GridView::widget([
-                    'dataProvider' => $dataProviderProdutos,
-                    'summary' => '',
-                    'columns' => [
-                        [
-                            'label' => 'Nome',
-                            'attribute' => 'jogo_id',
-                            'value' => function ($model) {
-                                return $model->jogo->nome;
-                            },
-                            'headerOptions' => ['class' => 'text-center'],
-                            'contentOptions' => ['class' => 'text-center'],
+
+    <div class="row">
+        <div class="col-md-6 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title"><i class="fas fa-cogs"></i> Últimos Produtos</h5>
+                </div>
+                <div class="card-body p-0">
+                    <?= GridView::widget([
+                        'dataProvider' => $dataProviderProdutos,
+                        'summary' => '',
+                        'columns' => [
+                            [
+                                'label' => 'Nome',
+                                'attribute' => 'jogo_id',
+                                'value' => function ($model) {
+                                    return $model->jogo->nome;
+                                },
+                                'headerOptions' => ['class' => 'text-center'],
+                                'contentOptions' => ['class' => 'text-center'],
+                            ],
+                            [
+                                'label' => 'Quantidade',
+                                'attribute' => 'quantidade',
+                                'headerOptions' => ['class' => 'text-center'],
+                                'contentOptions' => ['class' => 'text-center'],
+                            ],
+                            [
+                                'label' => 'Plataforma',
+                                'attribute' => 'plataforma_id',
+                                'value' => function ($model) {
+                                    return $model->plataforma->nome;
+                                },
+                                'headerOptions' => ['class' => 'text-center'],
+                                'contentOptions' => ['class' => 'text-center'],
+                            ],
+                            [
+                                'label' => 'Preço',
+                                'attribute' => 'preco',
+                                'format' => ['currency','EUR'],
+                                'headerOptions' => ['class' => 'text-center'],
+                                'contentOptions' => ['class' => 'text-right'],
+                            ],
                         ],
-                        [
-                            'label' => 'Quantidade',
-                            'attribute' => 'quantidade',
-                            'headerOptions' => ['class' => 'text-center'],
-                            'contentOptions' => ['class' => 'text-center'],
-                        ],
-                        [
-                            'label' => 'Plataforma',
-                            'attribute' => 'plataforma_id',
-                            'value' => function ($model) {
-                                return $model->plataforma->nome;
-                            },
-                            'headerOptions' => ['class' => 'text-center'],
-                            'contentOptions' => ['class' => 'text-center'],
-                        ],
-                        [
-                            'label' => 'Preço',
-                            'attribute' => 'preco',
-                            'format' => ['currency','EUR'],
-                            'headerOptions' => ['class' => 'text-center'],
-                            'contentOptions' => ['class' => 'text-right'],
-                        ],
-                    ],
-                    'tableOptions' => ['class' => 'table table-sm table-striped table-bordered m-0'],
-                ]); ?>
+                        'tableOptions' => ['class' => 'table table-sm table-striped table-bordered m-0'],
+                    ]); ?>
+                </div>
             </div>
         </div>
+
+
+        <div class="col-md-6 d-flex">
+            <div class="card flex-fill">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title"><i class="fas fa-chart-pie"></i> Género Mais Vendidos</h5>
+                </div>
+                <div class="card-body">
+                    <?= \onmotion\apexcharts\ApexChartsWidget::widget([
+                        'type' => 'donut',
+                        'height' => 300,
+                        'width' => '100%',
+                        'chartOptions' => [
+                            'chart' => [
+                                'type' => 'pie',
+                                'height' => 350,
+                            ],
+                            'labels' => array_map(function($item) {
+                                return $item['genero'];
+                            }, $generosMaisVendidos),
+                            'legend' => [
+                                'position' => 'bottom',
+                            ],
+                            'tooltip' => [
+                                'y' => [
+                                    'formatter' => 'function(val) { return val + " compras"; }',
+                                ],
+                            ],
+                        ],
+                        'series' => array_map(function($item) {
+                            return $item['count'];
+                        }, $generosMaisVendidos),
+                    ]); ?>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
     </div>
+
 
 
 </div>

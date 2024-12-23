@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -17,7 +18,18 @@ $this->registerJsFile(
 
 
 ?>
-
+<?php if (empty($model->linhascarrinhos)): ?>
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10 mt-5 text-center">
+            <img src="<?= Yii::getAlias('@web') . '/images/empty_cart' ?>" alt="Cart Empty" class="img-fluid mb-4" height="300" width="300" />
+            <h3 class="text-muted">O seu carrinho está vazio!</h3>
+            <a href="<?= Url::to(['/jogo/index']) ?>" class="btn btn-primary mt-3 px-4 py-2">
+                Ir para a loja
+            </a>
+        </div>
+    </div>
+    </div>
+<?php else: ?>
 <section class="shopping-cart spad">
     <div class="container">
         <div class="row">
@@ -120,7 +132,7 @@ $this->registerJsFile(
                     <?php if ($model->total != null && $model->total > 0): ?>
                     <h6>Total</h6>
                     <ul>
-                        <li>Total <span><?= number_format($model->total, 2) ?>€</span></li>
+                        <li>Total (Com IVA) <span><?= number_format($model->total, 2) ?>€</span></li>
                     </ul>
                     <?php endif;?>
                     <button type="submit" class="primary-btn text-decoration-none btn" form="checkout-form">Checkout</button>
@@ -129,3 +141,4 @@ $this->registerJsFile(
         </div>
     </div>
 </section>
+<?php endif; ?>
