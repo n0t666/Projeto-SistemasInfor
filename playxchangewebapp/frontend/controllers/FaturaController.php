@@ -187,7 +187,9 @@ class FaturaController extends Controller
 
 
                 $transaction = Yii::$app->db->beginTransaction();
-                $total = 0;
+                $carrinho->refresh();
+                $carrinho->recalculateTotal();
+                $total = $carrinho->total;
                 $model = new Fatura();
                 $model->utilizador_id = $user->id;
                 $model->pagamento_id = $pagamentoId;
@@ -212,8 +214,6 @@ class FaturaController extends Controller
                                 return $this->redirect(['/carrinho']);
                             }
                             $chavesReservar = $produto->reservarChaves($linhaCarrinho->quantidade);
-                            $subtotal = $linhaCarrinho->quantidade * $produto->preco;
-                            $total += $subtotal;
 
                             foreach ($chavesReservar as $chave) {
                                 $chave->isUsada = 1;
@@ -238,7 +238,6 @@ class FaturaController extends Controller
                                     throw new \Exception('Erro ao atualizar o stock do produto.');
                                 }
                                 $model->adicionarLinhaFatura($produto->id,$produto->preco);
-                                $total += $produto->preco;
                             }
                         }
                     }else{

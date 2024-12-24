@@ -130,11 +130,6 @@ class JogoController extends ActiveController
         }, $avaliacoes);
 
 
-        $numEstrelas = array_filter($numEstrelas);
-        $avg = null;
-        if (count($numEstrelas) > 0) {
-            $avg = array_sum($numEstrelas) / count($numEstrelas);
-        }
 
         $atividade = null;
         $avaliacao = null;
@@ -161,7 +156,8 @@ class JogoController extends ActiveController
             'trailer' => $jogo->trailerLink,
             'desejados' => $jogo->getNumDesejados(),
             'jogados' => $jogo->getNumJogados(),
-            'media' => $avg,
+            'favoritos' => $jogo->getNumFavoritos(),
+            'media' => $jogo->getMediaEstrelas(),
             'reviews' => count($jogo->comentarios),
             'avaliacao' => $avaliacao,
             'atividade' => $atividade,

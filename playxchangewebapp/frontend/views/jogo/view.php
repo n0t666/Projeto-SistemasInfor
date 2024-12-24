@@ -44,7 +44,7 @@ $this->title = $model->nome;
             <div class="mb-2">
                 <span class="h3" id="product-price"></span>
             </div>
-            <?php if (Yii::$app->user->can('adicionarItensCarrinho')): ?>
+            <?php if (Yii::$app->user->can('adicionarItensCarrinho') && count($model->produtos)): ?>
                 <div class="platform-dropdown mb-3 w-100">
                     <?php $form = ActiveForm::begin(['id' => 'jogo-carrinho', 'action' => ['linha-carrinho/create']]); ?>
                     <?= $form->field($itemCarrinho, 'produtos_id')->dropDownList(

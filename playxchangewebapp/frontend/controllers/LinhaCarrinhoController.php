@@ -162,7 +162,6 @@ class LinhaCarrinhoController extends Controller
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
-                //$linhaCarrinho = LinhaCarrinho::findOne(['carrinhos_id' => $carrinho->id, 'produtos_id' => $produtoId]);
                 $linhaCarrinho = $carrinho->getLinhascarrinhos()->where(['produtos_id' => $produtoId])->one();
                 if ($linhaCarrinho !== null) {
                     $linhaCarrinho->delete();

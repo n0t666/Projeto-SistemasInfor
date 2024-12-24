@@ -218,6 +218,11 @@ class Jogo extends \yii\db\ActiveRecord
         return $this->getUtilizadoresjogos()->where(['isFavorito' => 1])->count();
     }
 
+    public function getMediaEstrelas()
+    {
+        return number_format((float) $this->getAvaliacoes()->average('numEstrelas'), 1, '.', '');
+    }
+
     public function behaviors()
     {
         return [

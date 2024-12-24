@@ -179,9 +179,54 @@ class UserController extends ActiveController
         $response = [];
 
         foreach ($desejados as $desejado) {
+            $jogo = $desejado->jogo;
+            $produtos = [];
+            foreach ($jogo->produtos as $produto) {
+                $produtos[] = [
+                    'id' => $produto->id,
+                    'plataformaNome' => $produto->plataforma->nome,
+                    'plataformaId' => $produto->plataforma->id,
+                    'preco' => $produto->preco,
+                    'quantidade' => $produto->quantidade,
+                ];
+            }
+            $tags = [];
+            foreach ($jogo->tags as $tag) {
+                $tags[] = [
+                    'id' => $tag->id,
+                    'nome' => $tag->nome,
+                ];
+            }
+            $generos = [];
+            foreach ($jogo->generos as $genero) {
+                $generos[] = [
+                    'id' => $genero->id,
+                    'nome' => $genero->nome,
+                ];
+            }
+            $screenshots = [];
+            foreach ($jogo->screenshots as $screenshot) {
+                $screenshots[] = Yii::getAlias('@screenshotsJogoUrl') . '/' . $screenshot->filename;
+            }
             $response[] = [
-                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. $desejado->jogo->imagemCapa,
-                'id' => $desejado->jogo->id,
+                'id' => $jogo->id,
+                'nome' => $jogo->nome,
+                'descricao' => $jogo->descricao,
+                'dataLancamento' => $jogo->dataLancamento,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa,
+                'distribuidora' => $jogo->distribuidora->nome,
+                'franquia' => $jogo->franquia ? $jogo->franquia->nome : null,
+                'editora' => $jogo->editora->nome,
+                'trailer' => $jogo->trailerLink,
+                'desejados' => $jogo->getNumDesejados(),
+                'jogados' => $jogo->getNumJogados(),
+                'favoritos' => $jogo->getNumFavoritos(),
+                'media' => $jogo->getMediaEstrelas(),
+                'reviews' => count($jogo->comentarios),
+                'produtos' => $produtos,
+                'tags' => $tags,
+                'generos' => $generos,
+                'screenshots' => $screenshots,
             ];
         }
 

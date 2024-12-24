@@ -203,8 +203,6 @@ class Fatura extends \yii\db\ActiveRecord
             $linhaFatura->chave_id = $chaveId;
         }
         if (!$linhaFatura->save()) {
-            var_dump($linhaFatura->errors);
-            die();
             throw new \Exception('Erro ao adicionar linha de fatura');
         }
         return $linhaFatura;
