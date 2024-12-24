@@ -78,13 +78,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            int id = extras.getInt("ID_JOGO");
-            getJogo(id);
-        }else {
-            Toast.makeText(this, R.string.txt_error_find_jogo, Toast.LENGTH_SHORT).show();
-        }
+
         tvTitle = findViewById(R.id.tvTitle);
         tvReleaseDate = findViewById(R.id.tvReleaseDate);
         tvPrice = findViewById(R.id.tvPrice);
@@ -106,6 +100,13 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int id = extras.getInt("ID_JOGO");
+            getJogo(id);
+        }else {
+            Toast.makeText(this, R.string.txt_error_find_jogo, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getJogo(int id) {
@@ -209,7 +210,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     }
 
     private void setScreenshots(){
-        if(lJogo != null){
+        if(lJogo != null && lJogo.getScreenshots() != null){
             if(!lJogo.getScreenshots().isEmpty()){
                 carouselAdapterScreenshots = new CarouselAdapterScreenshots(getApplicationContext(), lJogo.getScreenshots());
                 rvScreenshots.setAdapter(carouselAdapterScreenshots);

@@ -1,65 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/srlHome"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="@color/background"
     android:padding="16dp"
     tools:context=".MainActivity">
-
-    <TextView
-        android:id="@+id/tvPopular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_populares"
-        android:textColor="@color/text"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:paddingBottom="16dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPopular"
-        android:layout_width="match_parent"
-        android:layout_height="200sp"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
-        />
-
-    <Button
-        android:id="@+id/btnCatalgo"
-        style="@style/Widget.Material3.Button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/txt_ver_catalogo"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/accent"
-        android:drawableStart="@drawable/ic_arrow_right_alt_24"
-        android:drawablePadding="8dp"
-        android:textSize="15sp"
-        android:layout_marginTop="16dp" />
+        android:orientation="vertical"
+        android:background="@color/background"
+        android:padding="16dp"
+        tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tvLast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_last_releases"
-        android:textColor="@color/text"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:paddingTop="32dp"
-        android:paddingBottom="16dp" />
+        <TextView
+            android:id="@+id/tvPopular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_populares"
+            android:textColor="@color/text"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvRecent"
-        android:layout_width="match_parent"
-        android:layout_height="200sp"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
-        />
-</LinearLayout>
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/piPopular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorColor="@color/primary"
+            app:indicatorSize="48dp"
+            android:visibility="gone"
+            android:indeterminate="true"
+            android:layout_gravity="center" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPopular"
+            android:layout_width="match_parent"
+            android:layout_height="200sp"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+            />
+
+        <Button
+            android:id="@+id/btnCatalgo"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_ver_catalogo"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/accent"
+            android:drawableStart="@drawable/ic_arrow_right_alt_24"
+            android:drawablePadding="8dp"
+            android:textSize="15sp"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvLast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_last_releases"
+            android:textColor="@color/text"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingTop="32dp"
+            android:paddingBottom="16dp" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/piRecent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorColor="@color/primary"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_gravity="center" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRecent"
+            android:layout_width="match_parent"
+            android:layout_height="200sp"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+            />
+    </LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

@@ -13,8 +13,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Response;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.ArrayList;
 
@@ -31,8 +33,11 @@ public class HomeFragment extends Fragment implements JogosListener {
 
     private CarouselAdapterJogos popularCarouselAdapter,recentCarouselAdapter;
 
+    private CircularProgressIndicator progressBarPopular, progressBarRecent;
+
     private ArrayList<Jogo> popularJogos = new ArrayList<>();
     private ArrayList<Jogo> recentJogos = new ArrayList<>();
+    private SwipeRefreshLayout srlHome;
 
 
     public HomeFragment() {
@@ -47,12 +52,29 @@ public class HomeFragment extends Fragment implements JogosListener {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         rvPopular = view.findViewById(R.id.rvPopular);
         rvRecent = view.findViewById(R.id.rvRecent);
+        rvPopular.setVisibility(View.GONE);
+        rvRecent.setVisibility(View.GONE);
         popularCarouselAdapter = new CarouselAdapterJogos(getContext(), popularJogos);
         recentCarouselAdapter = new CarouselAdapterJogos(getContext(), recentJogos);
+        progressBarPopular = view.findViewById(R.id.piPopular);
+        progressBarRecent = view.findViewById(R.id.piRecent);
+        srlHome = view.findViewById(R.id.srlHome);
+
+        progressBarPopular.setVisibility(View.VISIBLE);
+        progressBarRecent.setVisibility(View.VISIBLE);
+
 
         SingletonLoja.getInstance(getContext()).setJogosListener(this);
         SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(),"populares");
         SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(),"recentes");
+
+        srlHome.setOnRefreshListener(() -> {
+            SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(),"populares");
+            SingletonLoja.getInstance(getContext()).getJogosByCategoriaAPI(getContext(),"recentes");
+            srlHome.setRefreshing(false);
+        });
+
+
 
 
         return view;
@@ -83,6 +105,8 @@ public class HomeFragment extends Fragment implements JogosListener {
             }
         });
         rvRecent.setAdapter(recentCarouselAdapter);
+        progressBarRecent.setVisibility(View.GONE);
+        rvRecent.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -97,6 +121,8 @@ public class HomeFragment extends Fragment implements JogosListener {
             }
         });
         rvPopular.setAdapter(popularCarouselAdapter);
+        progressBarPopular.setVisibility(View.GONE);
+        rvPopular.setVisibility(View.VISIBLE);
     }
 
     @Override

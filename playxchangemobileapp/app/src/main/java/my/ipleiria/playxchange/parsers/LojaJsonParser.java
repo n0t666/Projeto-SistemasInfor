@@ -67,9 +67,22 @@ public class LojaJsonParser {
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-
         }
+        return jogos;
+    }
 
+    public static ArrayList<Jogo> parserJsonDesejados(JSONArray response) {
+        ArrayList<Jogo> jogos = new ArrayList<>();
+        for (int i = 0; i < response.length(); i++) {
+            Jogo auxJogo = null;
+            try {
+                JSONObject jsonJogo = response.getJSONObject(i);
+                auxJogo = parserJsonJogo(jsonJogo.toString());
+                jogos.add(auxJogo);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return jogos;
     }
 
@@ -204,7 +217,7 @@ public class LojaJsonParser {
             double preco = jsonProduto.getDouble("preco");
             int quantidade = jsonProduto.getInt("quantidade");
 
-            return new Jogo.Produto(id, plataformaNome, plataformaId, preco, quantidade);
+            return new Jogo.Produto(id, plataformaNome, plataformaId, preco, quantidade,-1);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

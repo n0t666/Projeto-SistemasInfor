@@ -43,25 +43,18 @@ public class SingletonLoja {
     private static SingletonLoja instance = null;
     private static RequestQueue volleyQueue = null;
     private JogosListener jogosListener;
-
     private JogoListener jogoListener;
-
     private CarrinhoListener carrinhoListener;
     private FaturasListener faturasListener;
-
     private FaturaListener faturaListener;
-
     private LoginListener loginListener;
-
     private CodigoPromocionalListener codigoPromocionalListener;
-
     private CheckoutListener checkoutListener;
-
     private UserListener userListener;
-
     private ComentariosListener comentariosListener;
-
     private ComentarioListener comentarioListener;
+    private LojaBDHelper jogosDB = null;
+    private ArrayList<Jogo> jogosFavoritos;
 
 
 
@@ -69,7 +62,7 @@ public class SingletonLoja {
         volleyQueue = Volley.newRequestQueue(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         String ip = sharedPreferences.getString(Constants.IP_ADDRESS, null);
-
+        jogosDB = new LojaBDHelper(context);
         if (ip != null && !ip.equals(Constants.IP_ADDRESS)) {
             Constants.IP_ADDRESS = ip;
         } else {
@@ -134,10 +127,21 @@ public class SingletonLoja {
 
     //endregion
 
+    // region - LOCAL DB
+    public ArrayList<Jogo> getJogosDesejadosDB() {
+        jogosFavoritos = jogosDB.getJogosDesejadosBD();
+        return new ArrayList<>(jogosFavoritos);
+    }
+
+    public void adicionarJogosDesejados(ArrayList<Jogo> jogos) {
+        jogosDB.removerTabelasBD();
+        jogosDB.adicionarJogosDesejadosBD(jogos);
+    }
+    // endregion
+
 
 
     //region - API
-
     //region - Account related API
     public void loginAPI(final String username, final String password, final Context context) {
         if (!LojaJsonParser.isConnectionInternet(context)) {
@@ -272,44 +276,6 @@ public class SingletonLoja {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
-                }
-            });
-            volleyQueue.add(req);
-        }
-    }
-
-    public void findJogoByIdAPI(final Context context, final int id,final String token) {
-        if (!LojaJsonParser.isConnectionInternet(context)) {
-            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
-        } else {
-
-            String url = Constants.IP_ADDRESS + "jogos/" + id;
-
-            if (token != null) {
-                url += "?access-token=" + token;
-            }
-
-            StringRequest req = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.d("API Response", response);
-
-                    Jogo jogo = LojaJsonParser.parserJsonJogo(response);
-                    if(jogoListener != null){
-                        jogoListener.onRefreshJogo(jogo);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    try {
-                        String responseBody = new String(error.networkResponse.data, "utf-8");
-                        JSONObject data = new JSONObject(responseBody);
-                        String message = data.optString("msg");
-                    } catch (JSONException e) {
-                    } catch (UnsupportedEncodingException errorr) {
-                    }
                     Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
                 }
             });
@@ -600,6 +566,7 @@ public class SingletonLoja {
     public void getFavoritosAPI(final Context context, final String token ){
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "user/favoritos?access-token=" + token, null, new Response.Listener<JSONArray>() {
                 @Override
@@ -608,6 +575,7 @@ public class SingletonLoja {
                     if(jogosListener != null){
                         jogosListener.onRefreshListaJogosFavoritos(jogos);
                     }
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -623,11 +591,16 @@ public class SingletonLoja {
     public void getDesejadosAPI(final Context context,final String token){
         if (!LojaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+            ArrayList<Jogo> jogos = jogosDB.getJogosDesejadosBD();
+            if(jogosListener != null){
+                jogosListener.onRefreshListaJogosDesejados(jogos);
+            }
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, Constants.IP_ADDRESS + "user/desejados?access-token=" + token, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-                    ArrayList<Jogo> jogos = LojaJsonParser.parserJsonJogos(response);
+                    ArrayList<Jogo> jogos = LojaJsonParser.parserJsonDesejados(response);
+                    adicionarJogosDesejados(jogos);
                     if(jogosListener != null){
                         jogosListener.onRefreshListaJogosDesejados(jogos);
                     }
@@ -970,6 +943,47 @@ public class SingletonLoja {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
                     Log.e("ERROR", error.toString());
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void findJogoByIdAPI(final Context context, final int id,final String token) {
+        if (!LojaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.txt_error_con, Toast.LENGTH_LONG).show();
+            Jogo jogo = jogosDB.getJogoDesejadosBD(id);
+            if(jogoListener != null && jogo != null){
+                jogoListener.onRefreshJogo(jogo);
+            }
+        } else {
+
+            String url = Constants.IP_ADDRESS + "jogos/" + id;
+
+            if (token != null) {
+                url += "?access-token=" + token;
+            }
+
+            StringRequest req = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("API Response", response);
+                    Jogo jogo = LojaJsonParser.parserJsonJogo(response);
+                    if(jogoListener != null){
+                        jogoListener.onRefreshJogo(jogo);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        String responseBody = new String(error.networkResponse.data, "utf-8");
+                        JSONObject data = new JSONObject(responseBody);
+                        String message = data.optString("msg");
+                    } catch (JSONException e) {
+                    } catch (UnsupportedEncodingException errorr) {
+                    }
+                    Toast.makeText(context, R.string.txt_error_request, Toast.LENGTH_LONG).show();
                 }
             });
             volleyQueue.add(req);

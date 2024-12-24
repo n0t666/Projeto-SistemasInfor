@@ -266,20 +266,21 @@ public class Jogo {
 
     public static class Produto {
         private int id;
+        private int jogoId;
         private String plataformaNome;
         private int plataformaId;
         private double preco;
         private int quantidade;
 
-        public Produto(int id, String plataformaNome, int plataformaId, double preco, int quantidade) {
+        public Produto(int id, String plataformaNome, int plataformaId, double preco, int quantidade, int jogoId) {
             this.id = id;
             this.plataformaNome = plataformaNome;
             this.plataformaId = plataformaId;
             this.preco = preco;
             this.quantidade = quantidade;
+            this.jogoId = jogoId;
         }
 
-        // Getters and Setters
         public int getId() {
             return id;
         }
@@ -319,6 +320,14 @@ public class Jogo {
         public void setQuantidade(int quantidade) {
             this.quantidade = quantidade;
         }
+
+        public int getJogoId() {
+            return jogoId;
+        }
+
+        public void setJogoId(int jogoId) {
+            this.jogoId = jogoId;
+        }
     }
 
     public static class Tag {
@@ -330,7 +339,6 @@ public class Jogo {
             this.nome = nome;
         }
 
-        // Getters and Setters
         public int getId() {
             return id;
         }
@@ -346,6 +354,12 @@ public class Jogo {
         public void setNome(String nome) {
             this.nome = nome;
         }
+
+        @Override
+        public String toString() {
+            return nome;
+        }
+
     }
 
     public static class Genero {
@@ -371,6 +385,11 @@ public class Jogo {
 
         public void setNome(String nome) {
             this.nome = nome;
+        }
+
+        @Override
+        public String toString() {
+            return nome;
         }
     }
 
