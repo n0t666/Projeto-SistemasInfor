@@ -161,13 +161,13 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         int selectedPagamento = rgMetodosPagamento.getCheckedRadioButtonId();
         int selectedEnvio = rgMetodosEnvio.getCheckedRadioButtonId();
         if(selectedPagamento == -1){
-            Toast.makeText(this,"Selecione um método de pagamento",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.txt_metodo_p,Toast.LENGTH_LONG).show();
             tvPagamentoError.setVisibility(View.VISIBLE);
             return;
         }
 
         if(selectedEnvio == -1){
-            Toast.makeText(this,"Selecione um método de envio",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.txt_metodo_e,Toast.LENGTH_LONG).show();
             tvEnvioError.setVisibility(View.VISIBLE);
             return;
         }

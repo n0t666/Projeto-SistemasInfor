@@ -97,8 +97,13 @@ $this->title = $user->username;
 
                                             <?php ActiveForm::end(); ?>
                                         </li>
-                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                               data-bs-target="#modal-report">Denunciar</a></li>
+                                        <li>
+                                            <?php if((!yii::$app->user->isGuest && $denuncia!=null && $denuncia->isNewRecord)) :?>
+                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#modal-report">Denunciar
+                                            </a>
+                                            <?php endif;?>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -178,7 +183,7 @@ $this->title = $user->username;
 
 <?php
 
-if ((!yii::$app->user->isGuest && $denuncia->isNewRecord)) {
+if ((!yii::$app->user->isGuest && $denuncia!=null && $denuncia->isNewRecord)) {
     Modal::begin([
         'title' => 'Fazer denúncia',
         'id' => 'modal-report',

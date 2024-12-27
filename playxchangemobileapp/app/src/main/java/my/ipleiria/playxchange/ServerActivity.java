@@ -42,7 +42,7 @@ public class ServerActivity extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
         Constants.IP_ADDRESS = sharedPreferences.getString(Constants.IP_ADDRESS, "");
         etIp.setText(Constants.IP_ADDRESS);
-        this.setTitle("Configuração do servidor");
+        this.setTitle(getString(R.string.txt_config_server_title));
     }
 
     public void onClickServidor(View view){
@@ -53,9 +53,9 @@ public class ServerActivity extends AppCompatActivity {
             Constants.IP_ADDRESS = newIp;
             editor.putString(Constants.IP_ADDRESS, newIp);
             editor.apply();
-            Snackbar.make(view, "IP alterado com sucesso", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, R.string.txt_ip_change_sucess, Snackbar.LENGTH_LONG).show();
         }else {
-            Snackbar.make(view, "IP inválido", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, R.string.txt_error_ip, Snackbar.LENGTH_LONG).show();
         }
     }
 

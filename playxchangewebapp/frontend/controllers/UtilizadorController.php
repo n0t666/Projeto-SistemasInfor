@@ -135,11 +135,10 @@ class UtilizadorController extends Controller
                 ->andWhere(['b.id' => Yii::$app->user->identity->id])
                 ->exists();
 
-            $isFollowing = $user->profile
-                ->find()
-                ->joinWith(['seguidores s'])
-                ->andWhere(['s.id' => Yii::$app->user->identity->id])
+            $isFollowing = $user->profile->getSeguidores()
+                ->andWhere(['id' => Yii::$app->user->identity->id])
                 ->exists();
+
         }
 
 
@@ -300,16 +299,15 @@ class UtilizadorController extends Controller
             if (!$target) {
                 throw new NotFoundHttpException();
             }
+
             if (Yii::$app->user->isGuest) {
                 throw new NotFoundHttpException();
             }
             if ($target->id == Yii::$app->user->identity->id) {
                 throw new NotFoundHttpException();
             }
-            $followExistente = $target->profile
-                ->find()
-                ->joinWith(['seguidores s'])
-                ->andWhere(['s.id' => Yii::$app->user->identity->id])
+            $followExistente = $target->profile->getSeguidores()
+                ->andWhere(['id' => Yii::$app->user->identity->id])
                 ->exists();
 
             if (!$followExistente) {
@@ -348,6 +346,7 @@ class UtilizadorController extends Controller
                 ->joinWith(['seguidores s'])
                 ->andWhere(['s.id' => Yii::$app->user->identity->id])
                 ->exists();
+
             if ($followExistente) {
                 Yii::$app->user->identity->profile->unlink('seguidos', $target, true);
                 Yii::$app->session->setFlash('success', 'Utilizador deixado de seguir com sucesso');

@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +41,7 @@ public class PerfilFragment extends Fragment implements UserListener {
     private ImageView ivCapa;
     private ShapeableImageView ivPfp;
     MaterialTextView tvUsername,tvBio, tvSeguidoresNum, tvSeguidosNum, tvJogadosNum, tvFavoritosNum,tvReviewsNum,tvDesejadosNum,tvJogados,tvFavoritos,tvReviews,tvDesejados;
+    private SwipeRefreshLayout swipeProfile;
 
 
     ImageView[] ivFavoritos = {null, null, null, null};
@@ -75,6 +77,7 @@ public class PerfilFragment extends Fragment implements UserListener {
         tvFavoritos = view.findViewById(R.id.tvFavoritos);
         tvJogados = view.findViewById(R.id.tvJogados);
         tvReviews = view.findViewById(R.id.tvReviews);
+        swipeProfile = view.findViewById(R.id.srlProfile);
         setOnclicks();
         requireActivity().setTitle("");
         return view;
@@ -107,6 +110,17 @@ public class PerfilFragment extends Fragment implements UserListener {
             @Override
             public void onClick(View v) {
                 loadActivityInteracao(Constants.REQUEST_CODE_WISHLIST);
+            }
+        });
+
+        swipeProfile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+                String token = sharedPreferences.getString(Constants.TOKEN, null);
+                SingletonLoja.getInstance(getContext()).setUserListener(PerfilFragment.this);
+                SingletonLoja.getInstance(getContext()).getProfileAPI(getContext(), token);
+                swipeProfile.setRefreshing(false);
             }
         });
     }

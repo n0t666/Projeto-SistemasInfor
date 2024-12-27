@@ -157,7 +157,6 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('error', 'Não tem permissões para aceder ao backend.');
                 return $this->redirect(['login']);
             }
-
         }
 
         $model->password = '';

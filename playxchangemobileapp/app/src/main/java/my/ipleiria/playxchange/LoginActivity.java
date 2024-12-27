@@ -55,14 +55,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         String password = txtPassword.getText().toString();
 
         if(!isUsernameValid(username)){
-            tvUsername.setError("O username deve ter mais de 2 caracteres");
+            tvUsername.setError(getString(R.string.txt_error_user_length));
             return;
         }else {
             tvUsername.setError(null);
         }
 
         if(!isPasswordValid(password)){
-            tvPassword.setError("A password deve ter mais de 4 caracteres");
+            tvPassword.setError(getString(R.string.txt_error_pass_length));
             return;
         }else{
             tvPassword.setError(null);

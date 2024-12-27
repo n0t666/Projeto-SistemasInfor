@@ -109,7 +109,7 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
         txtDataNascimento = findViewById(R.id.txtDataNascimento);
         txtPassword = findViewById(R.id.txtPassword);
         txtConfirmPassword = findViewById(R.id.txtConfirmarPassword);
-        this.setTitle("Editar Perfil");
+        this.setTitle(getString(R.string.txt_edit_profile_title));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -145,7 +145,7 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
         if (current != null) current.clearFocus(); // Remover o foco no campo que o utilizador está a escrever
         txtPassword.setText("");
         txtConfirmPassword.setText("");
-        Toast.makeText(this, "Perfil atualizado com sucesso", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.txt_sucess_edit_profile, Toast.LENGTH_SHORT).show();
     }
 
     public void onUploadCapaButtonClick(View view) {
@@ -207,7 +207,7 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
         MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
                 .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                .setTitleText("Selecione a data de nascimento")
+                .setTitleText(R.string.txt_data_nasc_label)
                 .build();
         datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
         datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
@@ -222,7 +222,7 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Formatar a data para o formato Dia-Mês-Ano
                     txtDataNascimento.setText(dateFormat.format(calendar.getTime()));
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Erro ao selecionar a data de nascimento", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.txt_data_nasc_error, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -264,39 +264,39 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
 
     private boolean validateInputs(){
         if(!Rules.isUsernameValid(txtUsername.getText().toString())){
-            txtUsername.setError("O username tem de ter pelo menos " + Constants.MIN_USERNAME_LENGTH + " caracteres");
+            txtUsername.setError(getString(R.string.txt_username_val_error) + Constants.MIN_USERNAME_LENGTH + getString(R.string.txt_characters));
             return false;
         }
         if(txtNome.getText().toString().isEmpty()){
-            txtNome.setError("O nome não pode estar vazio");
+            txtNome.setError(getString(R.string.txt_nome_val_error));
             return false;
         }else if (!Rules.isNomeValid(txtNome.getText().toString())){
-            txtNome.setError("O nome não pode ter mais de " + Constants.MAX_NAME_LENGTH + " caracteres");
+            txtNome.setError(getString(R.string.txt_nome_val_error_charac) + Constants.MAX_NAME_LENGTH + getString(R.string.txt_characters));
             return false;
         }
 
         if(!Rules.isEmailValid(txtEmail.getText().toString())){
-            txtEmail.setError("Email inválido");
+            txtEmail.setError(getString(R.string.txt_email_val_error));
             return false;
         }
 
         if(!Rules.isNifValid(txtNif.getText().toString())){
-            txtNif.setError("O NIF tem de ter " + Constants.NIF_LENGTH + " dígitos numéricos");
+            txtNif.setError(getString(R.string.txt_nif_val_error) + Constants.NIF_LENGTH + getString(R.string.txt_numeric_digits));
             return false;
         }
 
         if(!Rules.isBiografiaValid(txtBiografia.getText().toString())){
-            txtBiografia.setError("A biografia não pode ter mais de " + Constants.MAX_BIO_LENGTH + " caracteres");
+            txtBiografia.setError(getString(R.string.txt_bio_val_error) + Constants.MAX_BIO_LENGTH + getString(R.string.txt_characters));
             return false;
         }
 
         if(!txtPassword.getText().toString().isEmpty()) {
             if (!Rules.isPasswordValid(txtPassword.getText().toString())) {
-                txtPassword.setError("A password tem de ter pelo menos " + Constants.MIN_PASSWORD_LENGTH + " caracteres");
+                txtPassword.setError(getString(R.string.txt_pass_length_error) + Constants.MIN_PASSWORD_LENGTH + getString(R.string.txt_characters));
                 return false;
             }
             if(!txtPassword.getText().toString().equals(txtConfirmPassword.getText().toString())) {
-                txtConfirmPassword.setError("As passwords têm de ser iguais");
+                txtConfirmPassword.setError(getString(R.string.txt_pass_match_error));
                 return false;
             }
         }

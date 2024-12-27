@@ -45,7 +45,7 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
             int id = extras.getInt("ID_FATURA");
             getFatura(id);
         }else {
-            Toast.makeText(this, "Não foi possível encontrar a fatura especificada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.txt_fatura_empty, Toast.LENGTH_SHORT).show();
         }
         lvLinhas = findViewById(R.id.lvLinhas);
         tvDesconto = findViewById(R.id.tvDesconto);
@@ -54,7 +54,7 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
         tvPagamento = findViewById(R.id.tvPagamento);
         tvEnvio = findViewById(R.id.tvEnvio);
         tvData = findViewById(R.id.tvData);
-        this.setTitle("Detalhes da Fatura");
+        this.setTitle(getString(R.string.txt_details_fatura_title));
     }
 
     private void getFatura(int id) {
@@ -75,7 +75,7 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
             tvEnvio.append(" " + auxFatura.getEnvio());
             tvData.append(" " + auxFatura.getDataPagamento());
         }else {
-            Toast.makeText(this, "Não foi possível encontrar a fatura especificada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.txt_fatura_empty, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -101,6 +101,7 @@ public class ComentariosAdapter extends BaseAdapter {
                     int id = comentario.getJogo().getId();
                     Intent intent = new Intent(context, ComentarioDetailsActivity.class);
                     intent.putExtra("ID_COMENTARIO", id);
+                    intent.putExtra("REQUEST_CODE", Constants.REQUEST_CODE_EDIT_COMMENT);
                     context.startActivity(intent);
                 }
             });

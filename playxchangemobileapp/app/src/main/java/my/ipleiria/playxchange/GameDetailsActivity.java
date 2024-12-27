@@ -343,10 +343,10 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(GameDetailsActivity.this, R.style.CustomMaterialAlertDialog);
                                 builder.setTitle(R.string.txt_remover_aval)
                                         .setMessage(R.string.txt_remover_aval_conf)
-                                        .setPositiveButton("Sim", (dialog, which) -> {
+                                        .setPositiveButton(R.string.txt_yes, (dialog, which) -> {
                                             SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
                                         })
-                                        .setNegativeButton("Não", (dialog, which) -> {
+                                        .setNegativeButton(R.string.txt_no, (dialog, which) -> {
                                             dialog.dismiss();
                                         })
                                         .show();
@@ -364,7 +364,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
             bottomSheet.show();
         }else{
-            Toast.makeText(this, "Não foi possível encontrar o jogo especificado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.txt_error_find_jogo, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -392,7 +392,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
         if (token != null && lJogo != null) {
             SingletonLoja.getInstance(getApplicationContext()).interactJogoAPI(getApplicationContext(), lJogo.getId(), token, action);
         }else {
-            Toast.makeText(this, "Não foi possível efetuar o pedido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.txt_error_make_req, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -407,7 +407,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
     @Override
     public void onAddCarrinho() {
-        Toast.makeText(this, "Produto adicionado ao carrinho", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.txt_sucess_prod_add, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -426,20 +426,20 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                 bottomSheet.dismiss();
                 break;
             default:
-                Toast.makeText(this, "Ação inválida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.txt_invalid_act, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onRatingCreated(double numEstrelas) {
         lJogo.getAvaliacao().setNumEstrelas(numEstrelas);
-        Toast.makeText(getApplicationContext(), "Avaliação adicionada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.txt_aval_sucess, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRatingChanged(double numEstrelas) {
         lJogo.getAvaliacao().setNumEstrelas(numEstrelas);
-        Toast.makeText(getApplicationContext(), "Avaliação atualizada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.txt_aval_edit_sucess, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -447,7 +447,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     public void onRatingDeleted() {
         lJogo.setAvaliacao(null);
         rbStars.setRating(0);
-        Toast.makeText(getApplicationContext(), "Avaliação removida", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.txt_aval_remove_sucess, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -84,19 +84,19 @@ public class InteracaoJogosActivity extends AppCompatActivity implements JogosLi
 
     @Override
     public void onRefreshListaJogosFavoritos(ArrayList<Jogo> jogos) {
-        this.setTitle("Favoritos");
+        this.setTitle(getString(R.string.txt_favoritos_title));
         setAdapter(jogos);
     }
 
     @Override
     public void onRefreshListaJogosJogados(ArrayList<Jogo> jogos) {
-        this.setTitle("Jogados");
+        this.setTitle(getString(R.string.txt_jogados_title));
         setAdapter(jogos);
     }
 
     @Override
     public void onRefreshListaJogosDesejados(ArrayList<Jogo> jogos) {
-        this.setTitle("Desejados");
+        this.setTitle(getString(R.string.txt_desejados_title));
         setAdapter(jogos);
     }
 

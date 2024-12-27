@@ -288,6 +288,7 @@ public class LojaBDHelper extends SQLiteOpenHelper
         this.db.delete(TABLE_JOGOS,null,null);
         this.db.delete(TABLE_DESEJADOS,null,null);
         this.db.delete(TABLE_PRODUTOS,null,null);
+        this.db.delete(TABLE_SCREENSHOTS,null,null);
     }
 
 

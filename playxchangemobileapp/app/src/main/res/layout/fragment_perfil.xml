@@ -1,347 +1,352 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:id="@+id/srlProfile"
     tools:context=".GameDetailsActivity">
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ProfileActivity">
+        android:layout_height="fill_parent"
+        >
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ProfileActivity">
 
-            <ImageView
-                android:id="@+id/ivCapa"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/placeholder_jogo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_percent="0.25"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="1" />
+                <ImageView
+                    android:id="@+id/ivCapa"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder_jogo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.25"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="1" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ivPfp"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="-60dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/placeholder_jogo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivCapa"
-                app:shapeAppearanceOverlay="@style/Circular" />
-
-            <LinearLayout
-                android:id="@+id/llUsernameBio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivPfp">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvUsername"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="a"
-                    android:textColor="@color/text"
-                    android:textSize="18sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvBio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="a"
-                    android:textColor="@color/text"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/llStats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/ivPfp"
-                app:layout_constraintTop_toBottomOf="@id/ivCapa">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivPfp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="-60dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder_jogo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ivCapa"
+                    app:shapeAppearanceOverlay="@style/Circular" />
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/llUsernameBio"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ivPfp">
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvSeguidoresNum"
+                        android:id="@+id/tvUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
+                        android:text="a"
                         android:textColor="@color/text"
                         android:textSize="18sp" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvSeguidores"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvBio"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/txt_followers"
-                        android:textColor="@color/subtle_dark"
+                        android:layout_marginTop="4dp"
+                        android:text="a"
+                        android:textColor="@color/text"
                         android:textSize="14sp" />
                 </LinearLayout>
 
+
                 <LinearLayout
+                    android:id="@+id/llStats"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvSeguidosNum"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text=""
-                        android:textColor="@color/text"
-                        android:textSize="18sp" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvSeguidos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/txt_following"
-                        android:textColor="@color/subtle_dark"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                app:dividerColor="@color/border"
-                app:layout_constraintTop_toBottomOf="@id/llUsernameBio" />
-
-            <LinearLayout
-                android:id="@+id/llFavoritos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toStartOf="@+id/llUsernameBio"
-                app:layout_constraintTop_toBottomOf="@id/llUsernameBio">
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvFavoritosLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="Favoritos"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:textColor="@color/subtle_dark"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal"
-                    android:weightSum="4">
-
-                    <ImageView
-                        android:id="@+id/ivFavorito1"
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/placeholder_jogo"
-                        />
-
-                    <ImageView
-                        android:id="@+id/ivFavorito2"
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/placeholder_jogo" />
-
-                    <ImageView
-                        android:id="@+id/ivFavorito3"
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/placeholder_jogo" />
-
-                    <ImageView
-                        android:id="@+id/ivFavorito4"
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_weight="1"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/placeholder_jogo" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/dividerRecentes"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                app:dividerColor="@color/border"
-                app:layout_constraintTop_toBottomOf="@id/llFavoritos" />
-
-
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/dividerStats"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                app:dividerColor="@color/border"
-                app:layout_constraintTop_toBottomOf="@id/llFavoritos" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="5dp"
-                app:strokeColor="@color/primary"
-                app:layout_constraintTop_toBottomOf="@+id/dividerStats"
-                app:strokeWidth="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:divider="?attr/dividerVertical"
-                    android:background="@color/background">
+                    android:weightSum="3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ivPfp"
+                    app:layout_constraintTop_toBottomOf="@id/ivCapa">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="1.5"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvJogados"
+                            android:id="@+id/tvSeguidoresNum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:text="@string/txt_jogados"
-                            app:drawableTint="@color/subtle_dark"
-                            android:drawablePadding="5dp"
-                            android:drawableStart="@drawable/ic_videogame_asset_24"
-                            android:textColor="@color/subtle_dark" />
+                            android:gravity="center"
+                            android:textColor="@color/text"
+                            android:textSize="18sp" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvDesejados"
-
+                            android:id="@+id/tvSeguidores"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:text="@string/txt_desejados"
-                            android:drawablePadding="5dp"
-                            android:drawableStart="@drawable/ic_bookmark"
-                            app:drawableTint="@color/subtle_dark"
-                            android:textColor="@color/subtle_dark" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvFavoritos"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:text="@string/txt_favoritos"
-                            android:drawablePadding="5dp"
-                            android:drawableStart="@drawable/ic_favorite_filled"
-                            app:drawableTint="@color/subtle_dark"
-                            android:textColor="@color/subtle_dark" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvReviews"
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:text="@string/txt_reviews"
-                            android:drawableStart="@drawable/ic_reviews_24"
-                            android:drawablePadding="5dp"
-                            app:drawableTint="@color/subtle_dark"
-                            android:textColor="@color/subtle_dark" />
+                            android:gravity="center"
+                            android:text="@string/txt_followers"
+                            android:textColor="@color/subtle_dark"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
+                        android:layout_weight="1.5"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvJogadosNumber"
+                            android:id="@+id/tvSeguidosNum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
+                            android:gravity="center"
+                            android:text=""
                             android:textColor="@color/text"
-                            android:textStyle="bold" />
+                            android:textSize="18sp" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvDesejadosNumber"
+                            android:id="@+id/tvSeguidos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/text"
-                            android:textStyle="bold" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvFavoritosNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/text"
-                            android:textStyle="bold" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvReviewsNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/text"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:text="@string/txt_following"
+                            android:textColor="@color/subtle_dark"
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    app:dividerColor="@color/border"
+                    app:layout_constraintTop_toBottomOf="@id/llUsernameBio" />
+
+                <LinearLayout
+                    android:id="@+id/llFavoritos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toStartOf="@+id/llUsernameBio"
+                    app:layout_constraintTop_toBottomOf="@id/llUsernameBio">
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvFavoritosLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Favoritos"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                        android:textColor="@color/subtle_dark"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <ImageView
+                            android:id="@+id/ivFavorito1"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/placeholder_jogo"
+                            />
+
+                        <ImageView
+                            android:id="@+id/ivFavorito2"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/placeholder_jogo" />
+
+                        <ImageView
+                            android:id="@+id/ivFavorito3"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/placeholder_jogo" />
+
+                        <ImageView
+                            android:id="@+id/ivFavorito4"
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/placeholder_jogo" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/dividerRecentes"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    app:dividerColor="@color/border"
+                    app:layout_constraintTop_toBottomOf="@id/llFavoritos" />
+
+
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/dividerStats"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    app:dividerColor="@color/border"
+                    app:layout_constraintTop_toBottomOf="@id/llFavoritos" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="5dp"
+                    app:strokeColor="@color/primary"
+                    app:layout_constraintTop_toBottomOf="@+id/dividerStats"
+                    app:strokeWidth="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical"
+                        android:divider="?attr/dividerVertical"
+                        android:background="@color/background">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvJogados"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:text="@string/txt_jogados"
+                                app:drawableTint="@color/subtle_dark"
+                                android:drawablePadding="5dp"
+                                android:drawableStart="@drawable/ic_videogame_asset_24"
+                                android:textColor="@color/subtle_dark" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvDesejados"
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:text="@string/txt_desejados"
+                                android:drawablePadding="5dp"
+                                android:drawableStart="@drawable/ic_bookmark"
+                                app:drawableTint="@color/subtle_dark"
+                                android:textColor="@color/subtle_dark" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvFavoritos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:text="@string/txt_favoritos"
+                                android:drawablePadding="5dp"
+                                android:drawableStart="@drawable/ic_favorite_filled"
+                                app:drawableTint="@color/subtle_dark"
+                                android:textColor="@color/subtle_dark" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvReviews"
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:text="@string/txt_reviews"
+                                android:drawableStart="@drawable/ic_reviews_24"
+                                android:drawablePadding="5dp"
+                                app:drawableTint="@color/subtle_dark"
+                                android:textColor="@color/subtle_dark" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="end">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvJogadosNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:textColor="@color/text"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvDesejadosNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:textColor="@color/text"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvFavoritosNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:textColor="@color/text"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tvReviewsNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.Material3.BodyLarge"
+                                android:textColor="@color/text"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
 
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

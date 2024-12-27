@@ -119,7 +119,7 @@ public class CarrinhoAdapter extends BaseAdapter {
                             public void onResponse(String response) {
                                 linhas.remove(linha);
                                 notifyDataSetChanged();
-                                Toast.makeText(context, "Produto removido do carrinho", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.txt_produto_removed_sucess, Toast.LENGTH_SHORT).show();
                                 listener.onLinhaCarrinhoChanged();
                             }
                         });
