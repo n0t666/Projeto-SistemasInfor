@@ -70,26 +70,17 @@ class DenunciaController extends Controller
 
     }
 
-    /**
-     * Creates a new Denuncia model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
+    public function actionView($denunciante_id, $denunciado_id)
     {
-
-        if (Yii::$app->user->can('denunciarUtilizador')) {
-            $model = new Denuncia();
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'denunciante_id' => $model->denunciante_id, 'denunciado_id' => $model->denunciado_id]);
-            }
-            return $this->render('create', [
-                'model' => $model,
+        if(Yii::$app->user->can('verDetalhesDenuncias')) {
+            return $this->render('view', [
+                'model' => $this->findModel($denunciante_id, $denunciado_id),
             ]);
         }else{
             return $this->goHome();
         }
     }
+
 
     /**
      * Updates an existing Denuncia model.
