@@ -51,7 +51,7 @@ $this->registerJsFile(
                         </thead>
                         <tbody>
                         <?php foreach ($model->linhascarrinhos as $linha): ?>
-                            <tr>
+                            <tr id="<?= 'jogo_' . $linha->produtos->jogo->id ?>">
                                 <td class="product__cart__item">
                                     <div class="product__cart__item__pic">
                                         <img src="<?=  Yii::getAlias('@capasJogoUrl') . '/'. $linha->produtos->jogo->imagemCapa; ?>" height="100px" width="100px" alt="" class="img-fluid">
@@ -88,6 +88,7 @@ $this->registerJsFile(
                                             'method' => 'post',
                                         ],
                                         'class' => 'text-danger',
+                                        'id' => 'delete_' . $linha->produtos->jogo->id,
                                     ]) ?>
                                 </td>
                             </tr>

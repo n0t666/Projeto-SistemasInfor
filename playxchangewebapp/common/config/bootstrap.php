@@ -24,21 +24,20 @@
     Yii::setAlias('@screenshotsJogoUrl', 'http://172.22.21.219:8081/uploads/jogos/screenshots');
     */
 
-    /* Desenvolvimento
+    /* Desenvolvimento */
     Yii::setAlias('@utilsUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/utils');
     Yii::setAlias('@capasJogoUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/jogos/capas');
     Yii::setAlias('@imagesUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/images/');
     Yii::setAlias('@perfilUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/users/perfil');
     Yii::setAlias('@screenshotsJogoUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/jogos/screenshots');
-    */
 
-    /* Desenvolvimento android */
+    /* Desenvolvimento android
     Yii::setAlias('@utilsUrl', 'http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/utils');
     Yii::setAlias('@capasJogoUrl', 'http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/jogos/capas');
     Yii::setAlias('@imagesUrl', 'http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/images/');
     Yii::setAlias('@perfilUrl', 'http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/users/perfil');
     Yii::setAlias('@screenshotsJogoUrl', 'http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/jogos/screenshots');
-
+    */
 
 
     Yii::setAlias('@mobileIp' , 'http://10.0.2.2');

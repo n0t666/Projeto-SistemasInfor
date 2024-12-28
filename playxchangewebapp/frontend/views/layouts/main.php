@@ -130,6 +130,7 @@ $this->registerJsFile(
                 echo Html::beginTag('li', ['class' => 'nav-item dropdown me-2']);
                 echo Html::beginTag('a', [
                     'class' => 'btn btn-outline-light d-none d-md-block ms-2',
+                    'id' => 'carrinho-btn',
                     'href' =>  Url::toRoute('carrinho/')
                 ]);
                 $carrinho = Yii::$app->user->identity->profile->carrinho;
@@ -142,7 +143,7 @@ $this->registerJsFile(
                     $total = 0;
                 }
                 echo '<i class="fas fa-shopping-basket"></i>';
-                echo '  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark mt-1"> ' . $total .
+                echo '  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark mt-1" id="quant-nav"> ' . $total .
                     '<span class="visually-hidden">número itens carrinho</span>
             </span>';
                 echo Html::endTag('a');

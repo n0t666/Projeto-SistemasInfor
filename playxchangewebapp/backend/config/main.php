@@ -60,7 +60,12 @@ return [
                         'POST interagir' => 'interagir',
                         'GET perfil' => 'profile',
                         'PUT atualizar' => 'atualizar',
-                    ]
+                        'GET perfil/{username}' => 'public-profile',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                        '{username}' => '<username:[\\w\\s]+>',
+                    ],
                 ],
                 ['class' => 'yii\rest\UrlRule',
                     'controller' => 'api/metodo-pagamento',
@@ -74,8 +79,6 @@ return [
                     'controller' => 'api/codigo-promocional',
                     'extraPatterns' => [
                         'POST aplicar' => 'check-valid',
-
-
                         ],
                     'pluralize' => false
                 ],

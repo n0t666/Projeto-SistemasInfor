@@ -245,6 +245,9 @@ class CarrinhoController extends ActiveController
         $carrinho->total = null;
         $carrinho->count = 0;
         $carrinho->save();
+        return [
+            'message' => 'Carrinho limpo com sucesso',
+        ];
     }
 
     public function actionApagarLinha($idproduto)

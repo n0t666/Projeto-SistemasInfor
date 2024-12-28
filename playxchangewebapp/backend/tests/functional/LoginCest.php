@@ -4,6 +4,7 @@ namespace backend\tests\functional;
 
 use backend\tests\FunctionalTester;
 use common\fixtures\UserFixture;
+use yii\helpers\Url;
 
 /**
  * Class LoginCest
@@ -22,7 +23,7 @@ class LoginCest
     }
 
     public function _before(FunctionalTester $I){
-        $I->amOnRoute('/site/login');
+        $I->amOnPage(Url::toRoute('/site/login'));
     }
 
     protected function formParams($login, $password)

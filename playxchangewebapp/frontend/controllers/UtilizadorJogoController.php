@@ -77,7 +77,7 @@ class UtilizadorJogoController extends Controller
                         break;
                     default:
                         Yii::$app->session->setFlash('error', 'Ação inválida.');
-                        return $this->redirect(['jogo/view', 'id' => $jogo->id]);
+                        return $this->goBack(Yii::$app->request->referrer);
                 }
 
                 if ($userJogo->save()) {
@@ -91,7 +91,7 @@ class UtilizadorJogoController extends Controller
             }
         }
 
-        return $this->redirect(['jogo/index']);
+        return $this->goBack(Yii::$app->request->referrer);
     }
 
 

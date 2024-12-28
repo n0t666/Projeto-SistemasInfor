@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use backend\controllers\UtilsController;
 use Yii;
 
 /**
@@ -89,6 +90,20 @@ class CodigoPromocional extends \yii\db\ActiveRecord
             ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id'])
             ->andWhere(['codigosPromocionais.id' => $this->id])
             ->exists();
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($insert && $this->isAtivo == self::STATUS_ACTIVATED) {
+            $msg = "Aproveite o código \"{$this->codigo}\" e ganhe {$this->desconto}% de desconto no seu próximo pedido!";
+            $obj = new \stdClass();
+            $obj->msg = $msg;
+            $obj->codigo = $this->attributes;
+            $json = json_encode($obj);
+            UtilsController::publishMosquitto("NEW-PROMO", $json);
+        }
+
     }
 
 }

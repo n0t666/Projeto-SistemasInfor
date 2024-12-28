@@ -1,0 +1,14 @@
+suite_namespace: frontend\tests\acceptance
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: http://localhost/Projeto-SistemasInfor/playxchangewebapp/frontend/web/
+            browser: chrome
+        - Yii2:
+            part: [orm, fixtures,init]
+            cleanup: false
+            entryScript: index-test.php
+            maximizeWindow: true
+    Db:
+        dsn: 'mysql:host=localhost;dbname=dbproject_test'

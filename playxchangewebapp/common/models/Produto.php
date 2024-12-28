@@ -157,10 +157,12 @@ class Produto extends \yii\db\ActiveRecord
         if (!$insert && array_key_exists('quantidade', $changedAttributes)) {
             if ($changedAttributes['quantidade'] != $this->quantidade)
             {
-                if ($this->quantidade == 0) {
+                if ($changedAttributes['quantidade'] == 0 && $this->quantidade > 0) { // Se o número de unidades passou de 0 para mais de 0
+                    $msg = "O jogo " . $this->jogo->nome . " voltou a estar em stock";
+                } elseif ($this->quantidade == 0) {
                     $msg = "O jogo " . $this->jogo->nome . " está esgotado";
                 } elseif ($this->quantidade < 10) {
-                    $msg = "O jogo " . $this->jogo->nome .  " na plataforma " . $this->plataforma->nome . " está com poucas unidades em stock";
+                    $msg = "O jogo " . $this->jogo->nome . " na plataforma " . $this->plataforma->nome . " está com poucas unidades em stock";
                 } else {
                     return;
                 }

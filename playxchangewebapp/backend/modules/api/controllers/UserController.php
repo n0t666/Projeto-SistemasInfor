@@ -3,6 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use backend\controllers\UtilsController;
+use backend\modules\api\components\CustomAuth;
 use common\models\Avaliacao;
 use common\models\Jogo;
 use common\models\LoginForm;
@@ -34,19 +35,55 @@ class UserController extends ActiveController
     {
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::className(),
+            'class' => CustomAuth::className(),
+            'auth' => [$this, 'authCustom'],
             'except' => ['login'],
         ];
         return $behaviors;
     }
 
-    public function auth($username, $password)
+    public function authCustom($token)
     {
-        $user = User::findByUsername($username);
-        if ($user && $user->validatePassword($password)) {
-            return $user;
+        $user_ = User::findIdentityByAccessToken($token);
+        if ($user_) {
+            $this->user = $user_;
+            return $user_;
         }
-        throw new \yii\web\ForbiddenHttpException('No authentication');
+        throw new ForbiddenHttpException('No authentication');
+    }
+
+    public function checkAccess($action, $model = null, $params = [])
+    {
+        switch ($action) {
+            case 'public-profile':
+                $targetProfile = User::findByUsername($params['username']);
+
+                if(!$targetProfile){
+                    throw new NotFoundHttpException('Perfil não encontrado');
+                }
+
+                if($targetProfile->id === $this->user->id){
+                    throw new ForbiddenHttpException('Não pode aceder ao seu próprio perfil através desta rota');
+                }
+
+                if($targetProfile->profile->privacidadePerfil === 1){
+                    throw new ForbiddenHttpException('Perfil privado');
+                }
+
+                $isBlockedByCurrentUser = $targetProfile
+                    ->profile
+                    ->find()
+                    ->joinWith(['utilizadorBloqueados b'])
+                    ->andWhere(['b.id' => $this->user->id])
+                    ->exists();
+
+                if($isBlockedByCurrentUser){
+                    throw new NotFoundHttpException('Perfil não encontrado');
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public function actionLogin()
@@ -57,17 +94,11 @@ class UserController extends ActiveController
             $user = User::findByUsername($login->username);
             if($user && $user->validatePassword($login->password))
             {
-                $auth = Yii::$app->authManager;
-
-                if ($auth->checkAccess($user->id, 'cliente')) {
                     return [
                         'id' => $user->id,
                         'username' => $user->username,
                         'token' => $user->auth_key
                     ];
-                }else{
-                    throw new ForbiddenHttpException('Não possui permissões suficientes para fazer o login');
-                }
             }else{
                 throw new UnauthorizedHttpException('Não foi possível verificar as credenciais');
             }
@@ -333,7 +364,7 @@ class UserController extends ActiveController
         }
 
         if ($userJogo->save()) {
-            return 'Interação registrada com sucesso';
+            return ["message" => "Interação registrada com sucesso'"];
         } else {
             throw new \Exception('Falha ao Guardar o estado do jogo.');
         }
@@ -396,6 +427,65 @@ class UserController extends ActiveController
             'numSeguir' => $numSeguir,
             'previewFavoritos' => $imgsFavoritos
         ];
+    }
+
+    public function actionPublicProfile($username){
+
+        $user = User::findByUsername($username);
+
+        $this->checkAccess('public-profile', null, ['username' => $username]);
+
+        if(!$user){
+            throw new NotFoundHttpException('Perfil não encontrado');
+        }
+
+        $profile = $user->profile;
+        $numReviews = count($profile->getComentarios()->all());
+        $numJogos = count($profile->getInteracoes()->where(['isJogado' => 1])->all());
+        $numFavoritos = count($profile->getInteracoes()->where(['isFavorito' => 1])->all());
+        $numDesejados = count($profile->getInteracoes()->where(['isDesejado' => 1])->all());
+        $numSeguidores = count($profile->getSeguidores()->all());
+        $numSeguir = count($profile->getSeguidos()->all());
+
+        $previewFavoritos = $profile
+            ->getInteracoes()
+            ->where(['isFavorito' => 1])
+            ->orderBy(new Expression('rand()'))
+            ->limit(4)
+            ->all();
+
+        $imgsFavoritos = [];
+
+        foreach ($previewFavoritos as $favorito) {
+            $idJogo = $favorito->jogo->id;
+            $imgsFavoritos[] =  [
+                'id' => $idJogo,
+                'capa' => Yii::getAlias('@capasJogoUrl') . '/'. Jogo::findOne($idJogo)->imagemCapa
+            ];
+        }
+
+        return[
+            'username' => $user->username,
+            'nome' => $profile->nome,
+            'dataNascimento' => $profile->dataNascimento,
+            'biografia' => $profile->biografia,
+            'fotoCapa' => $profile->getFotoCapa(),
+            'fotoPerfil' =>  $profile->getFotoPerfil(),
+            'nif' => $profile->nif,
+            'privacidadeSeguidores' => $profile->privacidadeSeguidores,
+            'privacidadePerfil' => $profile->privacidadePerfil,
+            'privacidadeJogos' =>  $profile->privacidadeJogos,
+            'numReviews' => $numReviews,
+            'numJogados' => $numJogos,
+            'numFavoritos' => $numFavoritos,
+            'numDesejados' => $numDesejados,
+            'numSeguidores' => $numSeguidores,
+            'numSeguir' => $numSeguir,
+            'previewFavoritos' => $imgsFavoritos
+        ];
+
+
+
     }
 
 

@@ -199,7 +199,7 @@ class ComentarioController extends ActiveController
 
         if($model->delete()){
             Yii::$app->response->statusCode = 200;
-            return 'Comentário apagado com sucesso';
+            return ['message' => 'Comentario apagado com sucesso'];
         }else{
             return $model->errors;
         }
