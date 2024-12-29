@@ -220,7 +220,7 @@ class FaturaController extends Controller
                                 if (!$chave->save()) {
                                     throw new \Exception('Erro ao finalizar o pedido.');
                                 }
-                                $model->adicionarLinhaFatura($produto->id,$produto->preco,$chave->id);
+                                $model->adicionarLinhaFatura($produto,$chave->id);
                             }
                         }
                     }elseif (strtolower($model->envio->nome) == 'entrega em loja'){
@@ -237,7 +237,7 @@ class FaturaController extends Controller
                                 if (!$produto->save()) {
                                     throw new \Exception('Erro ao atualizar o stock do produto.');
                                 }
-                                $model->adicionarLinhaFatura($produto->id,$produto->preco);
+                                $model->adicionarLinhaFatura($produto);
                             }
                         }
                     }else{

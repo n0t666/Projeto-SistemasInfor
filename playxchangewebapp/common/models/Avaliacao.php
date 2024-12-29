@@ -57,7 +57,6 @@ class Avaliacao extends \yii\db\ActiveRecord
         ];
     }
 
-
     public function behaviors()
     {
         return [

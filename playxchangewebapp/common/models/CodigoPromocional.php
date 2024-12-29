@@ -35,7 +35,7 @@ class CodigoPromocional extends \yii\db\ActiveRecord
     {
         return [
             [['codigo', 'desconto', 'isAtivo'], 'required'],
-            [['desconto'], 'integer','max'=>100],
+            [['desconto'], 'integer','min' => 0,'max'=>100],
             [['isAtivo'], 'integer'],
             [['codigo'], 'string', 'max' => 50],
             [['codigo'], 'unique'],

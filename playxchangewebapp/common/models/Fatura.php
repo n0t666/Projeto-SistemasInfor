@@ -38,6 +38,8 @@ class Fatura extends \yii\db\ActiveRecord
     const ESTADO_REFUNDED = 7;
 
 
+
+
     /**
      * {@inheritdoc}
      */
@@ -55,8 +57,17 @@ class Fatura extends \yii\db\ActiveRecord
             [['utilizador_id', 'pagamento_id', 'envio_id', 'total', 'estado'], 'required'],
             [['utilizador_id', 'pagamento_id', 'envio_id', 'codigo_id', 'estado'], 'integer'],
             [['dataEncomenda'], 'safe'],
-            [['total'], 'number'],
+            [['total'], 'number', 'min' => 0],
+            [['estado'], 'in', 'range' => [
+                self::ESTADO_PENDING,
+                self::ESTADO_PAID,
+                self::ESTADO_SHIPPED,
+                self::ESTADO_DELIVERED,
+                self::ESTADO_COMPLETED,
+                self::ESTADO_CANCELLED,
+                self::ESTADO_REFUNDED]],
             [['codigo_id'], 'exist', 'skipOnError' => true, 'targetClass' => CodigoPromocional::class, 'targetAttribute' => ['codigo_id' => 'id']],
+            [['estado'], 'default', 'value' => self::ESTADO_PENDING],
             [['pagamento_id'], 'exist', 'skipOnError' => true, 'targetClass' => MetodoPagamento::class, 'targetAttribute' => ['pagamento_id' => 'id']],
             [['envio_id'], 'exist', 'skipOnError' => true, 'targetClass' => MetodoEnvio::class, 'targetAttribute' => ['envio_id' => 'id']],
             [['utilizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userdata::class, 'targetAttribute' => ['utilizador_id' => 'id']],
@@ -193,16 +204,32 @@ class Fatura extends \yii\db\ActiveRecord
         }
     }
 
-    public function adicionarLinhaFatura($produtoId, $precoUnitario,$chaveId = null)
+    public function adicionarLinhaFatura($produto,$chaveId = null)
     {
+        if($produto == null && Produto::findOne($produto) == null){
+            throw new \Exception('Produto não existe');
+        }
+
+        if ($chaveId != null) {
+            $chave = Chave::findOne($chaveId);
+            if ($chave == null || $chave->isUsada == 1 || $chave->produto_id != $produto->id) {
+                throw new \Exception('Chave não existe');
+            }
+        }
+
+        if($this->id == null){
+            throw new \Exception('Fatura não existe');
+        }
+
         $linhaFatura = new LinhaFatura();
         $linhaFatura->fatura_id = $this->id;
-        $linhaFatura->produto_id = $produtoId;
-        $linhaFatura->precoUnitario = $precoUnitario;
+        $linhaFatura->produto_id = $produto->id;
+        $linhaFatura->precoUnitario = $produto->preco;
         if($chaveId != null){
             $linhaFatura->chave_id = $chaveId;
         }
         if (!$linhaFatura->save()) {
+            var_dump($linhaFatura->errors);
             throw new \Exception('Erro ao adicionar linha de fatura');
         }
         return $linhaFatura;
@@ -248,6 +275,8 @@ class Fatura extends \yii\db\ActiveRecord
         }
         return $quantidadeDesconto;
     }
+
+
 
 
 
