@@ -41,6 +41,7 @@ class SignupForm extends Model
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
 
             ['nif', 'string','min' => 9, 'max' => 9],
+            ['nif', 'required'],
             ['nif', 'unique', 'targetClass' => '\common\models\Userdata', 'message' => 'Este NIF já está associado a outra conta.'],
             ['nif', 'match', 'pattern' => '/^\d{9}$/', 'message' => 'O NIF deve ser numérico e ter exatamente 9 dígitos.'],
 

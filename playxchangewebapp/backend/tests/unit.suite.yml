@@ -1,2 +1,14 @@
-suite_namespace: backend\tests\unit
+suite_namespace: frontend\tests\unit
 actor: UnitTester
+modules:
+  enabled:
+    - Yii2:
+        part: [orm, email, fixtures]
+    - Asserts
+    - Db:
+        dsn: 'mysql:host=localhost;dbname=dbprojeto_test'
+        user: 'root'
+        password: ''
+        cleanup: true
+        populate: true
+        dump: 'tests/_data/dump.sql'

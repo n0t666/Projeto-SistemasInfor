@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int $utilizador_id
  * @property float|null $total
+ * @property int|null $count
  *
  * @property LinhaCarrinho[] $linhascarrinhos
  * @property Produto[] $produtos
@@ -33,7 +34,7 @@ class Carrinho extends \yii\db\ActiveRecord
         return [
             [['utilizador_id'], 'required'],
             [['utilizador_id','count'], 'integer'],
-            [['total'], 'number'],
+            [['total','count'], 'number', 'min' => 0],
             [['utilizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userdata::class, 'targetAttribute' => ['utilizador_id' => 'id']],
         ];
     }

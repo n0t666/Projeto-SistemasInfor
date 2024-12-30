@@ -54,13 +54,13 @@ class Jogo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nome', 'dataLancamento', 'trailerLink', 'distribuidora_id', 'editora_id'], 'required'],
+            [['nome', 'dataLancamento', 'trailerLink', 'distribuidora_id', 'editora_id','imagemCapa'], 'required'],
             [['dataLancamento'], 'date', 'format' => 'php:d-m-Y'],
             [['descricao'], 'string'],
             [['franquia_id', 'distribuidora_id', 'editora_id'], 'integer'],
             [['nome'], 'string', 'max' => 200],
             [['imagemCapa'], 'string', 'max' => 255,'skipOnEmpty' => true],
-            [['trailerLink'],'url','defaultScheme' => 'https'], // Verificar se o link é válido
+            [['trailerLink'],'url','validSchemes' => ['https','http']], // Verificar se o link é válido
             [['nome'], 'unique'],
             [['editora_id'], 'exist', 'skipOnError' => true, 'targetClass' => Editora::class, 'targetAttribute' => ['editora_id' => 'id']],
             [['franquia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Franquia::class, 'targetAttribute' => ['franquia_id' => 'id']],

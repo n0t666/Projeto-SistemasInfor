@@ -76,9 +76,6 @@ class AvaliacaoTest extends \Codeception\Test\Unit
         $avaliacao->numEstrelas = 3;
         $this->assertTrue($avaliacao->validate(['numEstrelas'],"O número de estrelas não pode ser menor que 0.5"));
 
-
-
-
     }
 
 

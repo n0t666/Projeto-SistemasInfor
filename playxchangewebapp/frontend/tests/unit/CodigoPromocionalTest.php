@@ -88,11 +88,11 @@ class CodigoPromocionalTest extends \Codeception\Test\Unit
 
         // Testar um valor inválido para isAtivo
         $codigo->isAtivo = 2;
-        $this->assertFalse($codigo->validate(['isAtivo']), 'isAtivo só pode ser 0 ou 1');
+        $this->assertFalse($codigo->validate(['isAtivo']), 'só pode ser 0 ou 1');
 
         // Testar isAtivo válido
         $codigo->isAtivo = 1;
-        $this->assertTrue($codigo->validate(['isAtivo']), 'isAtivo válido');
+        $this->assertTrue($codigo->validate(['isAtivo']));
 
         // Testar unique para o código
         $codigo->codigo = "SEMIVA";
@@ -114,12 +114,12 @@ class CodigoPromocionalTest extends \Codeception\Test\Unit
         $codigo->save();
         $user = $this->tester->grabRecord('common\models\Userdata', ['id' => 1]);
         $this->assertCount(0, $codigo->utilizadores, 'O código promocional não deve estar associado a nenhum utilizador');
-        $this->assertFalse($codigo->isUsedByUser($user), 'Código não foi usado por nenhum utilizador');
+        $this->assertFalse($codigo->isUsedByUser($user), 'Código não foi utilizado por nenhum utilizador');
         $codigo->link('utilizadores', $user);
         $codigo->refresh();
         $this->assertCount(1, $codigo->utilizadores, 'O código promocional deve estar associado a 1 utilizador');
         $this->assertEquals($user->id, $codigo->utilizadores[0]->id, 'O utilizador associado ao código promocional é o utilizador correto');
-        $this->assertTrue($codigo->isUsedByUser($user), 'Código foi usado por um utilizador');
+        $this->assertTrue($codigo->isUsedByUser($user), 'Código foi utilizado por um utilizador');
     }
 
 
