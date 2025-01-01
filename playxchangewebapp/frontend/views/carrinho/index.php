@@ -136,7 +136,7 @@ $this->registerJsFile(
                         <li>Total (Com IVA) <span><?= number_format($model->total, 2) ?>€</span></li>
                     </ul>
                     <?php endif;?>
-                    <button type="submit" class="primary-btn text-decoration-none btn" form="checkout-form">Checkout</button>
+                    <button id="checkout-btn" type="submit" class="primary-btn text-decoration-none btn" form="checkout-form">Checkout</button>
                 </div>
             </div>
         </div>

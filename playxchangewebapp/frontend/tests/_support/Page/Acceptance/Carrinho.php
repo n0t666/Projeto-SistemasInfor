@@ -25,11 +25,26 @@ class Carrinho
 
     public $plataforma = 'tr#jogo_19 .cart__plataforma';
 
+    public $preco = 'tr#jogo_19 .cart__price';
+
+    public $quantidadeMenos = '.dec.qtybtn';
+
+    public $quantidadeMais = '.inc.qtybtn';
+
     public $atualizarButton = '#quantitySub';
 
     public $codigoDescontoInput = '#coupon-code';
 
     public $aplicarDescontoButton = '#apply-coupon';
+
+    public $checkoutButton = '#checkout-btn';
+
+    public $submitOrderButton = '.custom-btn-order';
+
+    public $envio = 'input[name="Fatura[envio_id]"][value="2"]';
+
+    public $metodoPagamento = 'input[name="Fatura[pagamento_id]"][value="1"]';
+
 
 
 

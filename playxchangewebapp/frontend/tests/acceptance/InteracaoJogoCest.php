@@ -28,7 +28,7 @@ class InteracaoJogoCest  // Utilizado a página do jogo 19 (Grand Theft Auto V)
         $I->see(' Estado do jogo atualizado com sucesso.');
         $I->wait(5);
         $I->executeJS('document.getElementById("success-toast").style.display = "none";');
-        $perfilPage->simulateUserDropdown();
+        $perfilPage->simulateUserDropdownProfile();
         $I->wait(2);
         $perfilPage->enterFavoritos();
         $I->wait(2);
@@ -53,7 +53,7 @@ class InteracaoJogoCest  // Utilizado a página do jogo 19 (Grand Theft Auto V)
             $I->see(' Estado do jogo atualizado com sucesso.');
             $I->wait(5);
             $I->executeJS('document.getElementById("success-toast").style.display = "none";');
-            $perfilPage->simulateUserDropdown();
+            $perfilPage->simulateUserDropdownProfile();
             $I->wait(2);
             $perfilPage->enterJogados();
             $I->wait(2);
@@ -78,7 +78,7 @@ class InteracaoJogoCest  // Utilizado a página do jogo 19 (Grand Theft Auto V)
         $I->see(' Estado do jogo atualizado com sucesso.');
         $I->wait(5);
         $I->executeJS('document.getElementById("success-toast").style.display = "none";');
-        $perfilPage->simulateUserDropdown();
+        $perfilPage->simulateUserDropdownProfile();
         $I->wait(2);
         $perfilPage->enterDesejados();
         $I->wait(2);

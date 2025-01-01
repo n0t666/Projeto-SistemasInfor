@@ -42,12 +42,21 @@ class Perfil
         $I->wait(2);
     }
 
-    public function simulateUserDropdown()
+    public function simulateUserDropdownProfile()
     {
         $I = $this->acceptanceTester;
         $I->wait(5);
         $I->click('#userDropdown');
         $I->click('a[href="/Projeto-SistemasInfor/playxchangewebapp/frontend/web/utilizador/profile?username=pedro"]');
+        $I->wait(2);
+    }
+
+    public function simulateUserDropdownEncomendas()
+    {
+        $I = $this->acceptanceTester;
+        $I->wait(5);
+        $I->click('#userDropdown');
+        $I->click('a[href="/Projeto-SistemasInfor/playxchangewebapp/frontend/web/fatura/index"]');
         $I->wait(2);
     }
 
@@ -62,6 +71,12 @@ class Perfil
     {
         $I = $this->acceptanceTester;
         $I->click($this->seguidosLink);
+    }
+
+    public function enterCompras()
+    {
+        $I = $this->acceptanceTester;
+        $this->click('Compras');
     }
 
     public function enterFavoritos()

@@ -224,8 +224,14 @@ class UserController extends Controller
     {
         if(Yii::$app->user->can('banirUtilizador')){
             $user = $this->findModel($id);
-            if($user){
-                $user->status = 0;
+            if($user) {
+                if($user->status == User::STATUS_DELETED){
+                    Yii::$app->session->setFlash('error', 'Utilizador já se encontra apagado.');
+                    return $this->goBack(Yii::$app->request->referrer);
+                }
+                $user->status = User::STATUS_DELETED;
+                $user->save(false);
+                Yii::$app->session->setFlash('success', 'Utilizador apagado com sucesso.');
             }
             return $this->redirect(['index']);
         }else{
