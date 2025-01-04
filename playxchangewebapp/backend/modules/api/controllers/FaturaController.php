@@ -361,13 +361,13 @@ class FaturaController extends ActiveController
 
         $codigo = $body['codigo'] ?? null;
 
-        $total = 0;
+        $total = $carrinho->total;
 
         $carrinho->refresh();
         $carrinho->recalculateTotal();
 
 
-        $totalSemDesconto = $carrinho->total;
+        $totalSemDesconto = $total;
         $valorDescontado = null;
         $codigoArray = null;
 
