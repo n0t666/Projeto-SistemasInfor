@@ -8,10 +8,12 @@ class HomeCest
 {
     public function checkOpen(FunctionalTester $I)
     {
-        $I->amOnRoute(\Yii::$app->homeUrl);
-        $I->see('My Application');
-        $I->seeLink('About');
-        $I->click('About');
-        $I->see('This is the About page.');
+        $I->amOnRoute('site/index');
+        $I->see('Gestão e Compra de Videojogos Facilitada');
+        $I->seeLink('Acerca');
+        $I->seeLink('FAQs');
+        $I->seeLink('Jogos');
+        $I->seeLink('Login');
+        $I->seeLink('Register');
     }
 }

@@ -20,11 +20,11 @@ class CarrinhoTest extends \Codeception\Test\Unit
     public function testGuardar()
     {
        $carrinho = new Carrinho();
-       $carrinho->utilizador_id = 1;
+       $carrinho->utilizador_id = 2;
        $carrinho->total = 0;
        $carrinho->count = 0;
        $this->assertTrue($carrinho->save(), 'Falha ao guardar carrinho');
-       $this->tester->seeRecord('common\models\Carrinho', ['utilizador_id' => 1, 'total' => 0, 'count' => 0]);
+       $this->tester->seeRecord('common\models\Carrinho', ['utilizador_id' => 2, 'total' => 0, 'count' => 0]);
     }
 
     public function testEditar(){
@@ -96,7 +96,7 @@ class CarrinhoTest extends \Codeception\Test\Unit
         $this->assertFalse($carrinho->validate(['utilizador_id']), 'Carrinho não pode ser guardado com um id de utilizador que não seja inteiro');
         $this->assertFalse($carrinho->validate(['count']), 'Carrinho não pode ser guardado com um count que não seja inteiro');
 
-        $carrinho->utilizador_id = 1;
+        $carrinho->utilizador_id = 2;
         $carrinho->count = 1;
         $this->assertTrue($carrinho->validate(['utilizador_id']), 'Carrinho válido');
         $this->assertTrue($carrinho->validate(['count']), 'Carrinho válido');

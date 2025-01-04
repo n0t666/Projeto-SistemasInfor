@@ -36,6 +36,12 @@ class Jogo // Utilizado a página do jogo 19 (Grand Theft Auto V)
 
     public $interactionCardDiv = '.card.game-card:first-child .center-links';
 
+    public $filledStar = '.filled-stars';
+
+    public $inputAvaliacao = '#avaliacao-numestrelas';
+
+    public $removeAvaliacaoButton = '//div[@class="clear-rating" and @title="Clear"]';
+
 
 
 
@@ -126,42 +132,10 @@ class Jogo // Utilizado a página do jogo 19 (Grand Theft Auto V)
     }
 
 
-    /* Não é possível testar a avaliação de um jogo, pois o click no número de estrelas é interceptado pelo plugin (sendo assim impossível de testar)
-    public function addAvaliacao()
-    {
-        $I = $this->acceptanceTester;
-        $I->amOnPage(self::$URL);
 
-        $I->waitForElementVisible($this->estrelas, 10);
-        $I->waitForElementClickable($this->estrelas, 10);
 
-        $I->scrollTo($this->estrelas);
 
-        $I->click($this->estrelas);
 
-        // Wait for and click the save button
-        $I->waitForElementClickable($this->guardarAvaliacaoButton, 10);
-        $I->click($this->guardarAvaliacaoButton);
-    }
-
-    public function editAvaliacao()
-    {
-        $I = $this->acceptanceTester;
-        $I->amOnPage(self::$URL);
-        $I->moveMouseOver($this->tresEstrelas);
-        $I->wait(2);
-        $I->click($this->tresEstrelas);
-        $I->wait(2);
-        $I->click($this->guardarAvaliacaoButton);
-    }
-
-    public function removeAvaliacao()
-    {
-        $I = $this->acceptanceTester;
-        $I->amOnPage(self::$URL);
-        $I->click($this->apagarEstrelas);
-    }
-   */
 
 
 

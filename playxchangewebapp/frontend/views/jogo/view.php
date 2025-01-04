@@ -89,7 +89,7 @@ $this->title = $model->nome;
                 </div>
 
                 <div class="mb-3 w-100">
-                    <button class="cart-button w-100">
+                    <button class="cart-button w-100" type="submit" form="jogo-carrinho">
                         <span class="add-to-cart">Adicionar ao carrinho</span>
                         <span class="added">Adicionado</span>
                         <i class="fas fa-shopping-cart"></i>

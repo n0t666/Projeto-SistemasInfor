@@ -403,6 +403,7 @@ class RbacController extends Controller
         $auth->addChild($admin,$adicionarFranquias);
         $auth->addChild($admin,$removerFranquias);
         $auth->addChild($admin,$editarFranquias);
+        $auth->addChild($admin,$acederBackend);
 
         $auth->addChild($admin,$adicionarEditoras);
         $auth->addChild($admin,$removerEditoras );

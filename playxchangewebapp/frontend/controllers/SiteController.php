@@ -319,6 +319,11 @@ class SiteController extends Controller
             return $this->goBack();
         }
 
+        $authManager = Yii::$app->authManager;
+        $permission = 'acederBackend';
+        $backendUsers = User::getBackendUsers();
+
+
         // Colocar os dados num ActiveDataProvider para facilitar a paginação
         switch ($category) {
             case 'games':
@@ -327,17 +332,19 @@ class SiteController extends Controller
                     'pagination' => ['pageSize' => 10],
                 ]);
                 break;
-
             case 'users':
                 $dataProvider = new ActiveDataProvider([
-                    'query' => User::find()->where(['like', 'username', $query])->andWhere(['status' => 10]),
+                    'query' => User::find()->where(['like', 'username', $query])->andWhere(['status' => 10])->andWhere(['not in', 'id', $backendUsers]),
                     'pagination' => ['pageSize' => 10],
                 ]);
                 break;
 
             case 'all':
                 $jogos = Jogo::find()->where(['like', 'nome', $query])->all();
-                $users = User::find()->where(['like', 'username', $query])->andWhere(['status' => 10])->all();
+                $users = User::find()->where(['like', 'username', $query])
+                    ->andWhere(['status' => 10])
+                    ->andWhere(['not in', 'id', $backendUsers])
+                    ->all();
 
 
                 // Visto que são dois modelos distintos é preciso juntar em dois arrays para depois permitir Utilizar o arrayDataProvider visto que o activedataprovider só permite 1 modelo

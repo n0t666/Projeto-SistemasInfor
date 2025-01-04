@@ -25,10 +25,8 @@ class SignupTest extends \Codeception\Test\Unit
         $signup->password = "testtest";
         $signup->nif = "122456789";
         $signup->nome = "Test Test";
-        $signup->role = "cliente";
-        $signup->status = 10;
         $signup->signup();
-        $this->tester->seeRecord('common\models\User', ['username' => "test", 'email' => "test@gmail.com", 'status' => 10]);
+        $this->tester->seeRecord('common\models\User', ['username' => "test", 'email' => "test@gmail.com", 'status' => 9]);
         $this->tester->seeRecord('common\models\Userdata', ['nif' => "122456789", 'nome' => "Test Test"]);
         $this->tester->seeEmailIsSent();
         $emailMessage = $this->tester->grabLastSentEmail();

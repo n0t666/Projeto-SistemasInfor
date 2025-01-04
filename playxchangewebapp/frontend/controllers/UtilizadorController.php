@@ -49,9 +49,14 @@ class UtilizadorController extends Controller
                                 return false;
                             }
 
+                            if($user->checkBackendAccess()){
+                                return false;
+                            }
+
                             if (!Yii::$app->user->isGuest && Yii::$app->user->identity->id == $user->id) {
                                 return true;
                             }
+
 
                             if (!Yii::$app->user->isGuest) {
                                 $isBlockedByCurrentUser = $user->profile
@@ -114,9 +119,13 @@ class UtilizadorController extends Controller
         $user = User::find()->where(['username' => $username])->one();
         $isBlockedByCurrentUser = false;
         $isCurrentUserBlocked = false;
-
         $denuncia = null;
         $isFollowing = false;
+
+        if($user->checkBackendAccess()){
+            return false;
+        }
+
 
 
         if (!Yii::$app->user->isGuest) {
@@ -210,6 +219,8 @@ class UtilizadorController extends Controller
                     throw new NotFoundHttpException();
                 }
 
+
+
                 if (Yii::$app->user->isGuest) {
                     throw new NotFoundHttpException();
                 }
@@ -217,6 +228,12 @@ class UtilizadorController extends Controller
                 if ($target->id == Yii::$app->user->identity->id) {
                     throw new NotFoundHttpException();
                 }
+
+                if($target->checkBackendAccess()){
+                    return $this->goHome();
+                }
+
+
 
                 $blockExistente = $target->profile
                     ->find()
@@ -266,6 +283,10 @@ class UtilizadorController extends Controller
                 throw new NotFoundHttpException();
             }
 
+            if($target->checkBackendAccess()){
+                return $this->goHome();
+            }
+
             $blockExistente = $target->profile
                 ->find()
                 ->joinWith(['utilizadorBloqueios b'])
@@ -306,6 +327,11 @@ class UtilizadorController extends Controller
             if ($target->id == Yii::$app->user->identity->id) {
                 throw new NotFoundHttpException();
             }
+
+            if($target->checkBackendAccess()){
+                return $this->goHome();
+            }
+
             $followExistente = $target->profile->getSeguidores()
                 ->andWhere(['id' => Yii::$app->user->identity->id])
                 ->exists();
@@ -341,6 +367,10 @@ class UtilizadorController extends Controller
                 throw new NotFoundHttpException();
             }
 
+            if($target->checkBackendAccess()){
+                return $this->goHome();
+            }
+
             $followExistente = $target->profile
                 ->find()
                 ->joinWith(['seguidores s'])
@@ -366,6 +396,7 @@ class UtilizadorController extends Controller
         if (Yii::$app->user->isGuest) {
             throw new NotFoundHttpException();
         }
+
 
         $user = Yii::$app->user->identity;
         $profile = $user->profile;
@@ -405,6 +436,10 @@ class UtilizadorController extends Controller
             throw new NotFoundHttpException();
         }
 
+        if($user->checkBackendAccess()){
+            return $this->goHome();
+        }
+
         $followingStatus = [];
         if (!Yii::$app->user->isGuest) {
             $loggedInUser = Yii::$app->user->identity->profile;
@@ -437,6 +472,10 @@ class UtilizadorController extends Controller
 
         if (!$user) {
             throw new NotFoundHttpException();
+        }
+
+        if($user->checkBackendAccess()){
+            return $this->goHome();
         }
 
 
@@ -523,6 +562,8 @@ class UtilizadorController extends Controller
         if (!$user) {
             throw new NotFoundHttpException();
         }
+
+
 
         $dataProvider = new \yii\data\ActiveDataProvider([
             'query' => UtilizadorJogo::find()

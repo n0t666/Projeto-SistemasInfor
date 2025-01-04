@@ -28,7 +28,7 @@ class FaturaTest extends \Codeception\Test\Unit
 
         // Testar adicionar produto físico á fatura
         $fatura = new \common\models\Fatura();
-        $fatura->utilizador_id = 1;
+        $fatura->utilizador_id = 2;
         $fatura->pagamento_id = 1;
         $fatura->envio_id = 1;
         $fatura->total = 0;
@@ -41,7 +41,7 @@ class FaturaTest extends \Codeception\Test\Unit
 
         // Testar adicionar produto digital á fatura
         $fatura = new \common\models\Fatura();
-        $fatura->utilizador_id = 1;
+        $fatura->utilizador_id = 2;
         $fatura->pagamento_id = 1;
         $fatura->envio_id = 1;
         $fatura->total = 0;
@@ -68,7 +68,7 @@ class FaturaTest extends \Codeception\Test\Unit
         $fatura = new Fatura();
         $produtoId1 = $this->tester->grabRecord('common\models\Produto', ['id' => 1]);
         $produtoId2 = $this->tester->grabRecord('common\models\Produto', ['id' => 2]);
-        $fatura->utilizador_id = 1;
+        $fatura->utilizador_id = 2;
         $fatura->pagamento_id = 1;
         $fatura->envio_id = 1;
         $fatura->total = 0;
@@ -92,7 +92,7 @@ class FaturaTest extends \Codeception\Test\Unit
         $fatura = new Fatura();
         $produtoId1 = $this->tester->grabRecord('common\models\Produto', ['id' => 1]);
         $produtoId2 = $this->tester->grabRecord('common\models\Produto', ['id' => 2]);
-        $fatura->utilizador_id = 1;
+        $fatura->utilizador_id = 2;
         $fatura->pagamento_id = 1;
         $fatura->envio_id = 1;
         $fatura->total = 0;
@@ -115,7 +115,7 @@ class FaturaTest extends \Codeception\Test\Unit
         $fatura = new Fatura();
         $produtoId1 = $this->tester->grabRecord('common\models\Produto', ['id' => 1]);
         $produtoId2 = $this->tester->grabRecord('common\models\Produto', ['id' => 2]);
-        $fatura->utilizador_id = 1;
+        $fatura->utilizador_id = 2;
         $fatura->pagamento_id = 1;
         $fatura->envio_id = 1;
         $fatura->total = 0;
@@ -131,7 +131,7 @@ class FaturaTest extends \Codeception\Test\Unit
     public function testGuardar()
     {
         $fatura = new Fatura();
-        $fatura->utilizador_id = 1;
+        $fatura->utilizador_id = 2;
         $fatura->pagamento_id = 1;
         $fatura->envio_id = 1;
         $fatura->total = 0;
@@ -139,7 +139,7 @@ class FaturaTest extends \Codeception\Test\Unit
         $fatura->save();
         $produtoId1 = $this->tester->grabRecord('common\models\Produto', ['id' => 1]);
         $fatura->adicionarLinhaFatura($produtoId1);
-        $this->tester->seeRecord('common\models\Fatura', ['utilizador_id' => 1, 'pagamento_id' => 1, 'envio_id' => 1, 'total' => 0, 'estado' => Fatura::ESTADO_PAID]);
+        $this->tester->seeRecord('common\models\Fatura', ['utilizador_id' => 2, 'pagamento_id' => 1, 'envio_id' => 1, 'total' => 0, 'estado' => Fatura::ESTADO_PAID]);
         $this->tester->seeRecord('common\models\LinhaFatura', ['fatura_id' => $fatura->id, 'produto_id' => $produtoId1->id]);
     }
 
@@ -165,7 +165,7 @@ class FaturaTest extends \Codeception\Test\Unit
         $this->assertFalse($fatura->validate(['estado']));
 
         // Tipo de dados correto
-        $fatura->utilizador_id = 1;
+        $fatura->utilizador_id = 2;
         $fatura->pagamento_id = 1;
         $fatura->envio_id = 1;
         $fatura->total = 0;

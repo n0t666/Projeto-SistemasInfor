@@ -20,19 +20,19 @@ class ComentarioTest extends \Codeception\Test\Unit
     public function testGuardar()
     {
         $avaliacao = new Avaliacao();
-        $avaliacao->utilizador_id = 1;
+        $avaliacao->utilizador_id = 2;
         $avaliacao->jogo_id = 54;
         $avaliacao->numEstrelas = 5;
         $avaliacao->save();
-        $this->tester->seeRecord('common\models\Avaliacao', ['utilizador_id' => 1, 'jogo_id' => 54, 'numEstrelas' => 5]);
+        $this->tester->seeRecord('common\models\Avaliacao', ['utilizador_id' => 2, 'jogo_id' => 54, 'numEstrelas' => 5]);
 
         $comentario = new Comentario();
-        $comentario->utilizador_id = 1;
+        $comentario->utilizador_id = 2;
         $comentario->jogo_id = 54;
         $comentario->comentario = "Gostei muito do jogo";
         $comentario->save();
 
-        $this->tester->seeRecord('common\models\Comentario', ['utilizador_id' => 1, 'jogo_id' => 54, 'comentario' => "Gostei muito do jogo"]);
+        $this->tester->seeRecord('common\models\Comentario', ['utilizador_id' => 2, 'jogo_id' => 54, 'comentario' => "Gostei muito do jogo"]);
     }
 
     public function testEditar(){
@@ -63,7 +63,7 @@ class ComentarioTest extends \Codeception\Test\Unit
         $this->assertFalse($comentario->validate(['utilizador_id']));
         $this->assertFalse($comentario->validate(['jogo_id']));
 
-        $comentario->utilizador_id = 1;
+        $comentario->utilizador_id = 2;
         $comentario->jogo_id = 54;
         $this->assertTrue($comentario->validate(['utilizador_id']));
         $this->assertTrue($comentario->validate(['jogo_id']));

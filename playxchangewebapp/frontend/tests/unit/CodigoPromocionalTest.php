@@ -112,7 +112,7 @@ class CodigoPromocionalTest extends \Codeception\Test\Unit
         $codigo->desconto = 10;
         $codigo->isAtivo = 1;
         $codigo->save();
-        $user = $this->tester->grabRecord('common\models\Userdata', ['id' => 1]);
+        $user = $this->tester->grabRecord('common\models\Userdata', ['id' => 2]);
         $this->assertCount(0, $codigo->utilizadores, 'O código promocional não deve estar associado a nenhum utilizador');
         $this->assertFalse($codigo->isUsedByUser($user), 'Código não foi utilizado por nenhum utilizador');
         $codigo->link('utilizadores', $user);

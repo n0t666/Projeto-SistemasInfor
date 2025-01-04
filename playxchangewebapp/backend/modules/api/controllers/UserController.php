@@ -47,6 +47,7 @@ class UserController extends ActiveController
         $user_ = User::findIdentityByAccessToken($token);
         if ($user_) {
             $this->user = $user_;
+            Yii::$app->user->login($user_);
             return $user_;
         }
         throw new ForbiddenHttpException('No authentication');
@@ -56,11 +57,17 @@ class UserController extends ActiveController
     {
         switch ($action) {
             case 'public-profile':
-                $targetProfile = User::findByUsername($params['username']);
+                $backendUsers = User::getBackendUsers();
+
+                $targetProfile = User::find()
+                    ->where(['username' => $params['username']])
+                    ->andWhere(['not in', 'id', $backendUsers])
+                    ->one();
 
                 if(!$targetProfile){
                     throw new NotFoundHttpException('Perfil não encontrado');
                 }
+
 
                 if($targetProfile->id === $this->user->id){
                     throw new ForbiddenHttpException('Não pode aceder ao seu próprio perfil através desta rota');

@@ -32,7 +32,6 @@ class Login
     public function login($username, $password)
     {
         $I = $this->acceptanceTester;
-
         $I->amOnPage(self::$URL);
         $I->fillField($this->usernameField, $username);
         $I->fillField($this->passwordField, $password);

@@ -25,7 +25,7 @@ if (ComentarioController::isLikedByCurrentUser($model->id)) {
 }
 
 ?>
-
+<?php if($model->utilizador): ?>
 <div class="review-card mb-4 p-3 rounded shadow">
     <div class="d-flex align-items-start">
         <img src="<?= $model->utilizador->getFotoPerfil() ?>" alt="User Photo" class="rounded-circle user-photo me-3"
@@ -94,6 +94,6 @@ if (ComentarioController::isLikedByCurrentUser($model->id)) {
                 ],
             ]) ?>
         <?php endif; ?>
-
     </div>
 </div>
+<?php endif; ?>

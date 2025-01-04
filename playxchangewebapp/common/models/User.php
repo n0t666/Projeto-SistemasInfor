@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\web\NotFoundHttpException;
 
 /**
  * User model
@@ -232,4 +233,41 @@ class User extends ActiveRecord implements IdentityInterface
                 return 'Desconhecido';
         }
     }
+
+    // Função para verificar se o utilizador tem acesso ao backend
+    public function checkBackendAccess()
+    {
+        $auth = Yii::$app->authManager;
+        if ($auth->checkAccess($this->id, 'acederBackend')) {
+            return true;
+        }
+        return false;
+    }
+
+    // Função para obter todos os utilizadores que têm acesso ao backend, devolve um array de ids de utilizadores
+    public static function getBackendUsers(){
+        $auth = Yii::$app->authManager;
+        $users = [];
+        $perms = self::getRolesByPermission($auth->getPermission('acederBackend'));
+        foreach ($perms as $perm){
+            $users = array_merge($users, $auth->getUserIdsByRole($perm));
+        }
+
+
+        return $users;
+    }
+
+    // Função para obter todas as roles que têm acesso a uma determinada permissão, devolde um array de nomes de roles
+    public static function getRolesByPermission($permission)
+    {
+        $auth = Yii::$app->authManager;
+        $rolesByPermission = [];
+        foreach ($auth->getRoles() as $role) {
+            if ($auth->hasChild($role, $permission)) {
+                $rolesByPermission[] = $role->name;
+            }
+        }
+        return $rolesByPermission;
+    }
+
 }

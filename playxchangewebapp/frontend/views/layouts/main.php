@@ -105,11 +105,21 @@ $this->registerJsFile(
                 'aria-expanded' => 'false',
             ]);
 
-            echo Html::img(Yii::$app->user->identity->profile->getFotoPerfil(), [
-                'alt' => 'Profile Picture',
-                'class' => 'rounded-circle me-2',
-                'style' => 'width: 40px; height: 40px; object-fit: cover;',
-            ]);
+            if(!Yii::$app->user->identity->profile) {
+                $img = Yii::getAlias('@imagesUrl') . '/' . 'default_user.jpg';
+                echo Html::img($img, [
+                    'alt' => 'Profile Picture',
+                    'class' => 'rounded-circle me-2',
+                    'style' => 'width: 40px; height: 40px; object-fit: cover;',
+                ]);
+            }else{
+                echo Html::img(Yii::$app->user->identity->profile->getFotoPerfil(), [
+                    'alt' => 'Profile Picture',
+                    'class' => 'rounded-circle me-2',
+                    'style' => 'width: 40px; height: 40px; object-fit: cover;',
+                ]);
+            }
+
 
             echo Html::encode($username);
             echo Html::endTag('a');

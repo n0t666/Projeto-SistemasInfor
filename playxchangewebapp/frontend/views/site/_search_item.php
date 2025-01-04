@@ -25,10 +25,12 @@ use yii\helpers\Url;
             </div>
         </div>
     </div>
-<?php elseif ($model instanceof User): ?>
+<?php elseif ($model instanceof User && $model->profile != null): ?>
     <div class="list-group-item list-group-item-action searchResult-item p-3">
         <div class="d-flex align-items-start align-items-md-center">
-            <img src="<?= Html::encode($model->profile->getFotoPerfil()) ?>" alt="User Profile" class="searchResult-profileImg me-3">
+            <?php if ($model->profile && $model->profile->getFotoPerfil()): ?>
+                <img src="<?= Html::encode($model->profile->getFotoPerfil()) ?>" alt="User Profile" class="searchResult-profileImg me-3">
+            <?php endif; ?>
             <div class="flex-grow-1">
                 <h5 class="mb-1">
                     <a href="<?= Url::to(['utilizador/profile', 'username' => $model->username]) ?>" class="searchResult-link"><?= Html::encode($model->username) ?></a>

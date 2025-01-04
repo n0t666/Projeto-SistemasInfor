@@ -17,11 +17,11 @@ class AvaliacaoTest extends \Codeception\Test\Unit
 
     public function testGuardar(){
         $avaliacao = new Avaliacao();
-        $avaliacao->utilizador_id = 1;
+        $avaliacao->utilizador_id = 2;
         $avaliacao->jogo_id = 54;
         $avaliacao->numEstrelas = 5;
         $avaliacao->save();
-        $this->tester->seeRecord('common\models\Avaliacao', ['utilizador_id' => 1, 'jogo_id' => 54, 'numEstrelas' => 5]);
+        $this->tester->seeRecord('common\models\Avaliacao', ['utilizador_id' => 2, 'jogo_id' => 54, 'numEstrelas' => 5]);
     }
 
     public function testEditar(){
@@ -55,7 +55,7 @@ class AvaliacaoTest extends \Codeception\Test\Unit
         $this->assertFalse($avaliacao->validate(['jogo_id']));
 
         // Tipo de dados correto
-        $avaliacao->utilizador_id = 1;
+        $avaliacao->utilizador_id = 2;
         $avaliacao->jogo_id = 54;
         $this->assertTrue($avaliacao->validate(['utilizador_id']));
         $this->assertTrue($avaliacao->validate(['jogo_id'],));
