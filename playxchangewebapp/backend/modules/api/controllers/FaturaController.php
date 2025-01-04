@@ -363,12 +363,11 @@ class FaturaController extends ActiveController
 
         $total = 0;
 
-        foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
-            $subtotal = $linhaCarrinho->quantidade * $linhaCarrinho->produtos->preco;
-            $total += $subtotal;
-        }
+        $carrinho->refresh();
+        $carrinho->recalculateTotal();
 
-        $totalSemDesconto = $total;
+
+        $totalSemDesconto = $carrinho->total;
         $valorDescontado = null;
         $codigoArray = null;
 
