@@ -212,23 +212,20 @@ class FaturaController extends ActiveController
 
             $codigo = null;
             $isCodigoUsed = true;
-            if ($codigoId != null && $codigoId != -1) {
+            if ($codigoId) {
                 $codigo = CodigoPromocional::find()->where(['id' => $codigoId, 'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
                 if (!$codigo) {
                     throw new NotFoundHttpException('Não foi possível encontrar o código promocional solicitado');
                 }
-                $isCodigoUsed = $isCodigoUsed = $user->getCodigos()
-                    ->viaTable('utilizacaocodigos', ['utilizador_id' => 'id'])
-                    ->andWhere(['codigosPromocionais.id' => $codigo->id])
-                    ->exists();
+                $isCodigoUsed = $codigo->isUsedByUser($user);
                 if ($isCodigoUsed) {
                     throw new Exception('O código já foi utilizado previamente');
                 }
             }
             $transaction = Yii::$app->db->beginTransaction();
-            $total = 0;
-
-
+            $carrinho->refresh();
+            $carrinho->recalculateTotal();
+            $total = $carrinho->total;
             $model = new Fatura();
             $model->utilizador_id = $user->id;
             $model->pagamento_id = $pagamentoId;
@@ -248,39 +245,23 @@ class FaturaController extends ActiveController
                 if(strtolower($model->envio->nome) == 'entrega online'){
                     foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
                         $produto = $linhaCarrinho->produtos;
-                        $chavesDisponiveis = $produto->getChaves()->where(['isUsada' => 0])->count();
-                        if ($chavesDisponiveis < $linhaCarrinho->quantidade) {
+                        if (!$produto->hasSuficienteChaves($linhaCarrinho->quantidade)) {
                             throw new \Exception('Não há chaves suficientes para o produto: ' . $produto->jogo->nome);
                         }
-                        $chavesReservar = $produto->getChaves()
-                            ->where(['isUsada' => 0])
-                            ->limit($linhaCarrinho->quantidade)
-                            ->all();
-                        $subtotal = $linhaCarrinho->quantidade * $produto->preco;
-                        $total += $subtotal;
+                        $chavesReservar = $produto->reservarChaves($linhaCarrinho->quantidade);
                         foreach ($chavesReservar as $chave) {
                             $chave->isUsada = 1;
                             if (!$chave->save()) {
                                 throw new \Exception('Erro ao finalizar o pedido.');
                             }
-                            $linhaFatura = new LinhaFatura();
-                            $linhaFatura->fatura_id = $model->id;
-                            $linhaFatura->chave_id = $chave->id;
-                            $linhaFatura->produto_id = $produto->id;
-                            $linhaFatura->precoUnitario = $produto->preco;
-
-                            if (!$linhaFatura->save()) {
-                                throw new \Exception('Erro ao guardar as linhas da fatura.');
-                            }
+                            $model->adicionarLinhaFatura($produto,$chave->id);
                         }
                     }
                 }elseif (strtolower($model->envio->nome) == 'entrega em loja'){
                     foreach ($carrinho->linhascarrinhos as $linhaCarrinho) {
                         $produto = $linhaCarrinho->produtos;
-                        $produtosDisponiveis = $produto->quantidade;
-
-                        if ($produtosDisponiveis < $linhaCarrinho->quantidade) {
-                            throw new \Exception('Não há stock suficiente para o produto: ' . $produto->jogo->nome);
+                        if (!$produto->hasSuficienteQuantidade($linhaCarrinho->quantidade)) {
+                           throw new \Exception('Não há stock suficiente para o produto: ' . $produto->jogo->nome);
                         }
 
                         for ($i = 0; $i < $linhaCarrinho->quantidade; $i++) {
@@ -288,20 +269,7 @@ class FaturaController extends ActiveController
                             if (!$produto->save()) {
                                 throw new \Exception('Erro ao atualizar o stock do produto.');
                             }
-                            $linhaFatura = new LinhaFatura();
-                            $linhaFatura->fatura_id = $model->id;
-                            $linhaFatura->produto_id = $produto->id;
-                            $linhaFatura->precoUnitario = $produto->preco;
-                            $linhaFatura->chave_id = null;
-
-                            if (!$produto->save()) {
-                                throw new \Exception('Erro ao atualizar o stock do produto.');
-                            }
-
-                            if (!$linhaFatura->save()) {
-                                throw new \Exception( 'Erro ao guardar as linhas da fatura para o produto: ' . $produto->jogo->nome);
-                            }
-                            $total += $produto->preco;
+                            $model->adicionarLinhaFatura($produto);
                         }
                     }
                 }else{
@@ -313,12 +281,7 @@ class FaturaController extends ActiveController
             }
 
             if ($codigo != null && !$isCodigoUsed) {
-                $desconto = $codigo->desconto;
-                $valorDescontado = ($total * ($desconto / 100));
-                $total -= $valorDescontado;
-                if ($total < 0) {
-                    $total = 0;
-                }
+                $total =  $total - $codigo->aplicarDesconto($total);
             }
 
             $model->total = $total;
@@ -327,10 +290,7 @@ class FaturaController extends ActiveController
             }
 
             $transaction->commit();
-            LinhaCarrinho::deleteAll(['carrinhos_id' => $carrinho->id]);
-            $carrinho->total = 0;
-            $carrinho->count = 0;
-            $carrinho->save();
+            $carrinho->limpar();
 
             return [
                 'message' => 'Fatura criadas com sucesso.',

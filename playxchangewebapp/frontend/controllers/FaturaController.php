@@ -251,7 +251,7 @@ class FaturaController extends Controller
                 }
 
                 if ($codigo != null && !$isCodigoUsed) {
-                    $total =  $codigo->aplicarDesconto($total);
+                    $total =  $total - $codigo->aplicarDesconto($total);
                 }
 
                 $model->total = $total;
