@@ -148,19 +148,11 @@ class FaturaController extends ActiveController
             if($linha->chave != null){
                 $linhasFatura[$produto->id]['chaves'][] = $linha->chave->chave;
             }
-
-            $totalSemDesconto += $linha->precoUnitario;
         }
 
-        $quantidadeDesconto = 0;
 
-        if ($fatura->codigo) {
-            $desconto = $fatura->codigo->desconto;
-            $quantidadeDesconto = ($totalSemDesconto * $desconto) / 100;
-        }
-
-        $faturaResponse['totalSemDesconto'] = $totalSemDesconto;
-        $faturaResponse['quantidadeDesconto'] = $quantidadeDesconto;
+        $faturaResponse['totalSemDesconto'] = $fatura->getTotalSemDesconto();
+        $faturaResponse['quantidadeDesconto'] = $fatura->getDesconto($faturaResponse['totalSemDesconto']);
 
         return [
             'fatura' => $faturaResponse,

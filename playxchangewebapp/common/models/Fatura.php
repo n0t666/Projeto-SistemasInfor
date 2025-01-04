@@ -229,7 +229,6 @@ class Fatura extends \yii\db\ActiveRecord
             $linhaFatura->chave_id = $chaveId;
         }
         if (!$linhaFatura->save()) {
-            var_dump($linhaFatura->errors);
             throw new \Exception('Erro ao adicionar linha de fatura');
         }
         return $linhaFatura;
@@ -261,10 +260,12 @@ class Fatura extends \yii\db\ActiveRecord
     public function getTotalSemDesconto()
     {
         $total = 0;
+
         foreach ($this->linhasfaturas as $linha) {
-            $total += $linha->precoUnitario;
+            $total += $linha->precoUnitario ;
         }
-        return $total;
+
+        return Iva::calculateIva($total, 'Normal');
     }
 
     public function getDesconto($totalSemDesconto)

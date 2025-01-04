@@ -107,16 +107,13 @@ class Carrinho extends \yii\db\ActiveRecord
         $totalProdutos = 0;
         $linhascarrinho = $this->linhascarrinhos;
 
-        $ivaNormal = Iva::findOne(['nome' => 'Normal']);
-        $percentagemIva = $ivaNormal ? $ivaNormal->percentagem : 0;
 
         foreach ($linhascarrinho as $linhaCarrinho) {
             $totalProdutos += $linhaCarrinho->quantidade;
             $total += $linhaCarrinho->produtos->preco * $linhaCarrinho->quantidade;
         }
 
-        $quantidadeIva = ($total * $percentagemIva) / 100;
-        $totalComIva = $total + $quantidadeIva;
+        $totalComIva = Iva::calculateIva($total, 'Normal');
 
         $this->total = $totalComIva;
         $this->count = $totalProdutos;

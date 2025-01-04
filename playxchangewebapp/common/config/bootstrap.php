@@ -30,7 +30,8 @@
     Yii::setAlias('@imagesUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/images/');
     Yii::setAlias('@perfilUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/users/perfil');
     Yii::setAlias('@screenshotsJogoUrl', '/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/jogos/screenshots');
-*/
+    */
+
     /* Desenvolvimento android
     Yii::setAlias('@utilsUrl', 'http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/utils');
     Yii::setAlias('@capasJogoUrl', 'http://10.0.2.2/Projeto-SistemasInfor/playxchangewebapp/frontend/web/uploads/jogos/capas');

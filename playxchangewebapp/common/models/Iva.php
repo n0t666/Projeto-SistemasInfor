@@ -62,4 +62,10 @@ class Iva extends \yii\db\ActiveRecord
             ],
         ];
     }
+
+    public static function calculateIva($price, $tipoIva){
+        $iva = Iva::findOne(['nome' => $tipoIva]);
+        $percentagem = $iva ? $iva->percentagem : 0;
+        return $price + ($price * $percentagem / 100);
+    }
 }
