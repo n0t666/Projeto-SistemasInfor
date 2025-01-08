@@ -69,6 +69,7 @@ class Jogo // Utilizado a página do jogo 19 (Grand Theft Auto V)
     {
         $I = $this->acceptanceTester;
         $I->waitForElementVisible($element, 10);
+        $I->moveMouseOver($element);
         $I->waitForElementClickable($element, 10);
         $I->click($element);
         $I->wait(2);
@@ -78,6 +79,7 @@ class Jogo // Utilizado a página do jogo 19 (Grand Theft Auto V)
     {
         $I = $this->acceptanceTester;
         $I->waitForElementVisible($element, 10);
+        $I->moveMouseOver($element);
         $I->wait(2);
         $I->selectOption($element, $option);
         $I->wait(2);

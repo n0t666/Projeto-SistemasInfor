@@ -22,9 +22,9 @@ class Perfil
     public $seguidoresLink = 'Seguidores';
     public $seguidosLink = 'A seguir';
 
-    public $favoritosLink = 'Favoritos';
-    public $jogadosLink = 'Jogados';
-    public $desejadosLink = 'Desejados';
+    public $favoritosLink = 'a[href="/Projeto-SistemasInfor/playxchangewebapp/frontend/web/utilizador/favoritos?username=pedro"]';
+    public $jogadosLink = 'a[href="/Projeto-SistemasInfor/playxchangewebapp/frontend/web/utilizador/jogados?username=pedro"]';
+    public $desejadosLink = 'a[href="/Projeto-SistemasInfor/playxchangewebapp/frontend/web/utilizador/desejados?username=pedro"]';
 
     public $userDropdown = '#userDropdown';
 
@@ -38,6 +38,8 @@ class Perfil
     {
         $I = $this->acceptanceTester;
         $I->wait(5);
+        $I->moveMouseOver($element);
+        $I->wait(2);
         $I->click($element);
         $I->wait(2);
     }
@@ -88,13 +90,13 @@ class Perfil
     public function enterJogados()
     {
         $I = $this->acceptanceTester;
-        $I->click($this->jogadosLink);
+        $this->click($this->jogadosLink);
     }
 
     public function enterDesejados()
     {
         $I = $this->acceptanceTester;
-        $I->click($this->desejadosLink);
+        $this->click($this->desejadosLink);
     }
 
 }
