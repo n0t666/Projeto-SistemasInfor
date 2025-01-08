@@ -43,14 +43,15 @@ class UpdateForm extends Model
             ['username', 'unique', 'targetClass' => '\common\models\User', 'filter' => ['not', ['id' => $this->id]], 'message' => 'Este username já foi usado.'],
             ['username', 'string', 'min' => 2, 'max' => 255, 'skipOnEmpty' => true],
 
+
             ['email', 'trim'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'filter' => ['not', ['id' => $this->id]], 'message' => 'Este email já foi usado.', 'skipOnEmpty' => true],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'filter' => ['not', ['id' => $this->id]], 'message' => 'Este email já foi usado.'],
 
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength'], 'skipOnEmpty' => true],
 
-            ['nif', 'string','min' => 9, 'max' => 9, 'skipOnEmpty' => true],
+            ['nif', 'string','min' => 9, 'max' => 9],
             ['nif', 'unique', 'targetClass' => '\common\models\Userdata', 'filter' => ['not', ['user_id' => $this->id]], 'message' => 'Este NIF já está associado a outra conta.'],
 
             ['nome', 'string', 'max' => 200, 'skipOnEmpty' => true],
@@ -69,6 +70,7 @@ class UpdateForm extends Model
             ['biografia', 'string', 'max' => 150, 'skipOnEmpty' => true],
             [['dataNascimento'], 'safe'],
             ['dataNascimento', 'validarDataNascimento'],
+            [['email', 'username', 'nif', 'nome', 'privacidadeSeguidores', 'privacidadePerfil', 'privacidadeJogos', 'dataNascimento'], 'required']
         ];
     }
 

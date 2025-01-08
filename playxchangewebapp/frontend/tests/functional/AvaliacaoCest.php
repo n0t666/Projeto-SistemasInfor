@@ -42,7 +42,6 @@ class AvaliacaoCest
         $I->click('Guardar Avaliação');
         $I->see(' Avaliação atualizada com sucesso! ');
         $I->seeRecord('common\models\Avaliacao', ['numEstrelas' => '5', 'jogo_id' => '19']);
-
     }
 
     public function testVerGuest(FunctionalTester $I)

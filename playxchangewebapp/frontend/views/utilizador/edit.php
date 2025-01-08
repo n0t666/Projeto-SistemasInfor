@@ -12,7 +12,7 @@ $this->registerJsVar('originalCoverImage', $user->profile->getFotoCapa());
 $this->registerJsVar('originalProfileImage', $user->profile->getFotoPerfil());
 ?>
 
-<div class="container">
+<div class="container mt-3">
     <div class="main-body">
         <div class="row">
             <?=$this->render('_form', [

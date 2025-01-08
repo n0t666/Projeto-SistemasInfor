@@ -20,13 +20,14 @@ class Login
     public $passwordField = '#login-form input[name="LoginForm[password]"]';
     public $loginButton = '#login-form button[name="login-button"]';
 
+    public $userDropdown = '#userDropdown';
+
 
     protected $acceptanceTester;
 
     public function __construct(\frontend\tests\AcceptanceTester $I)
     {
         $this->acceptanceTester = $I;
-        // you can inject other page objects here as well
     }
 
     public function login($username, $password)
@@ -36,6 +37,13 @@ class Login
         $I->fillField($this->usernameField, $username);
         $I->fillField($this->passwordField, $password);
         $I->click($this->loginButton);
+    }
+
+    public function logout()
+    {
+        $I = $this->acceptanceTester;
+        $I->click($this->userDropdown);
+        $I->submitForm('#logout-form', []);
     }
 
 }

@@ -15,13 +15,13 @@ use yii\bootstrap5\ActiveForm;
 
 <div class="container">
     <div class="main-body">
+        <?php $form = ActiveForm::begin([
+            'options' => ['enctype' => 'multipart/form-data', 'id' => 'update-form'],
+        ]); ?>
         <div class="row">
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <?php $form = ActiveForm::begin([
-                            'options' => ['enctype' => 'multipart/form-data', 'id' => 'update-form'],
-                        ]); ?>
                         <div class="d-flex flex-column align-items-center text-center">
                             <!-- Cover Image Section -->
                             <div class="position-relative w-100" style="height: 150px;">
@@ -78,12 +78,12 @@ use yii\bootstrap5\ActiveForm;
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-sm-12 text-secondary">
-                                <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'class' => 'form-control w-100','template' => "{input}\n{label}\n{error}",]) ?>
+                                <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'class' => 'form-control w-100']) ?>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-12 text-secondary">
-                                <?= $form->field($model, 'email')->textInput(['maxlength' => true,              'template' => "{input}\n{label}\n{error}",]) ?>
+                                <?= $form->field($model, 'email')->textInput(['maxlength' => true,]) ?>
                             </div>
                         </div>
 
@@ -139,8 +139,7 @@ use yii\bootstrap5\ActiveForm;
                     </div>
                 </div>
             </div>
-            <?php ActiveForm::end(); ?>
         </div>
-
+        <?php ActiveForm::end(); ?>
     </div>
 </div>

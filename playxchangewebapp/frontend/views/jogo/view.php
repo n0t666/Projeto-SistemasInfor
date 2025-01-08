@@ -470,7 +470,7 @@ if ((!yii::$app->user->isGuest)) {
     Modal::end();
 }
 ?>
-<a href="#" class="btn btn-primary rounded-circle floating-btn reviewButton">
+<a href="#" class="btn btn-primary rounded-circle floating-btn reviewButton" id="reviewBtn">
     <i class="fas fa-comment"></i>
 </a>
 

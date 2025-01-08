@@ -69,6 +69,7 @@ $this->title = $user->username;
 
                                 <?= Html::submitButton($isFollowing ? 'Deixar de seguir' : 'Seguir', [
                                     'class' => 'btn btn-primary px-4 py-2 fs-5',
+                                    'id' => 'followButton',
                                     'style' => 'border-radius: 30px;'
                                 ]) ?>
 

@@ -14,6 +14,18 @@ return [
         'verification_token' => 'Id5DXxRymU3nVLtj9Vn9vy8kyfCYHacM_1733343423',
     ],
     [
+        'id' => 21,
+        'username' => 'maria',
+        'auth_key' => 'QzKP55tTYnDmkfGpPwk2JDh7ULX9ZKfh',
+        //12345678
+        'password_hash' => '$2y$13$adzj/crHSV/CBlF4lk7MHuo/wJRVANM3RXkY/79NsWM1GlEgOx.IG',
+        'email' => 'xyz@gmail.com',
+        'status' => '10',
+        'created_at' => '1732668237',
+        'updated_at' => '1735882657',
+        'verification_token' => 'Hd6DXXtpmU4nQLti9Wn8vy9kzfCYJdcM_1733453523',
+    ],
+    [
         'username' => 'erau',
         'auth_key' => 'tUu1qHcde0diwUol3xeI-18MuHkkprQI',
         // password_0

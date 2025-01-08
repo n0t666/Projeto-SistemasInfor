@@ -132,7 +132,7 @@ $this->registerJsFile(
             if(Yii::$app->user->can('visualizarEncomendas')){
                 echo Html::tag('li', Html::a('Encomendas', ['fatura/index'], ['class' => 'dropdown-item']));
             }
-            echo Html::tag('li', Html::beginForm(['/site/logout'], 'post')
+            echo Html::tag('li', Html::beginForm(['/site/logout'],'post', ['id' => 'logout-form'])
                 . Html::submitButton('Logout', ['class' => 'dropdown-item'])
                 . Html::endForm());
             echo Html::endTag('ul');
