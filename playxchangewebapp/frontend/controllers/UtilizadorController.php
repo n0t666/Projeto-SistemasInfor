@@ -445,7 +445,6 @@ class UtilizadorController extends Controller
             $loggedInUser = Yii::$app->user->identity->profile;
 
             $followers = $user->profile->getSeguidores()
-                ->where(['!=', 'id', Yii::$app->user->identity->id])
                 ->all();
 
             foreach ($followers as $follower) {
@@ -455,6 +454,7 @@ class UtilizadorController extends Controller
             $followers = $user->profile->getSeguidores()
                 ->all();
         }
+
 
         return $this->render('followers', [
             'followers' => $followers,
@@ -484,15 +484,14 @@ class UtilizadorController extends Controller
         if (!Yii::$app->user->isGuest) {
             $loggedInUser = Yii::$app->user->identity->profile;
             $followings = $user->profile->getSeguidos()
-                ->where(['!=', 'id', Yii::$app->user->identity->id]) // Excluir o própio utilizador
                 ->all();
             foreach ($followings as $following) {
                 $followingStatus[$following->id] = $loggedInUser->getSeguidos()->where(['id' => $following->id])->exists();
             }
         } else {
             $followings = $user->profile->getSeguidos()->all();
-
         }
+
 
         return $this->render('following', [
             'followings' => $followings,

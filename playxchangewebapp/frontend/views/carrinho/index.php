@@ -54,11 +54,11 @@ $this->registerJsFile(
                             <tr id="<?= 'jogo_' . $linha->produtos->jogo->id ?>">
                                 <td class="product__cart__item">
                                     <div class="product__cart__item__pic">
-                                        <img src="<?=  Yii::getAlias('@capasJogoUrl') . '/'. $linha->produtos->jogo->imagemCapa; ?>" height="100px" width="100px" alt="" class="img-fluid">
+                                        <img src="<?=  Yii::getAlias('@capasJogoUrl') . '/'. $linha->produtos->jogo->imagemCapa; ?>" height="100px" width="100px" alt="" class="img-fluid" >
                                     </div>
                                     <div class="product__cart__item__text">
                                         <h6><?= Html::encode($linha->produtos->jogo->nome) ?></h6>
-                                        <h5><?= number_format($linha->produtos->preco, 2) ?>€</h5>
+                                        <h5><?= Yii::$app->formatter->asCurrency($linha->produtos->preco) ?></h5>
                                     </div>
                                 </td>
                                 <td class="quantity__item">
@@ -76,7 +76,7 @@ $this->registerJsFile(
                                         </div>
                                     </div>
                                 </td>
-                                <td class="cart__price"><?= number_format($linha->produtos->preco * $linha->quantidade, 2) ?>€</td>
+                                <td class="cart__price"><?= Yii::$app->formatter->asCurrency($linha->produtos->preco * $linha->quantidade) ?></td>
                                 <td class="cart__plataforma"><?= Html::encode($linha->produtos->plataforma->nome) ?></td>
                                 <td class="cart__close">
                                     <?= Html::a('<i class="fas fa-times"></i>', [
@@ -133,7 +133,7 @@ $this->registerJsFile(
                     <?php if ($model->total != null && $model->total > 0): ?>
                     <h6>Total</h6>
                     <ul>
-                        <li>Total (Com IVA) <span><?= number_format($model->total, 2) ?>€</span></li>
+                        <li>Total (Com IVA) <span><?= Yii::$app->formatter->asCurrency($model->total) ?></span></li>
                     </ul>
                     <?php endif;?>
                     <button id="checkout-btn" type="submit" class="primary-btn text-decoration-none btn" form="checkout-form">Checkout</button>

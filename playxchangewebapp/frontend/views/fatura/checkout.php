@@ -76,16 +76,16 @@ $this->registerCssFile('@web/css/checkout.css', ['depends' => [\yii\bootstrap5\B
                 <div class="p-3 custom-summary">
                     <h6 class="card-title mb-3">Detalhes da compra</h6>
                     <div class="d-flex justify-content-between mb-1 small">
-                        <span>Subtotal</span><span><?= $totalSemDesconto ?>€</span>
+                        <span>Subtotal</span><span><?= Yii::$app->formatter->asCurrency($totalSemDesconto)?></span>
                     </div>
                     <?php if ($codigoArray): ?>
                         <div class="d-flex justify-content-between mb-1 small">
-                            <span>Cupão (Código:  <?= $codigoArray['nome']  ?>)</span> <span class="text-danger">-<?= $codigoArray['valor_descontado']?>€</span>
+                            <span>Cupão (Código:  <?= $codigoArray['nome']  ?>)</span> <span class="text-danger">-<?= Yii::$app->formatter->asCurrency($codigoArray['valor_descontado'])?></span>
                         </div>
                     <?php endif; ?>
                     <hr class="section-divider">
                     <div class="d-flex justify-content-between mb-4 small">
-                        <span>TOTAL (Com IVA)</span> <strong class="total-amount"><?= $total ?>€</strong>
+                        <span>TOTAL (Com IVA)</span> <strong class="total-amount"><?= Yii::$app->formatter->asCurrency($total) ?></strong>
                     </div>
                     <button class="custom-btn-order btn w-100 mt-2" type="submit" form="payment-form">Completar compra</button>
                 </div>

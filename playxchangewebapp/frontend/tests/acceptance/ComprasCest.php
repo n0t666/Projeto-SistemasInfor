@@ -33,7 +33,7 @@ class ComprasCest
         $I->see('Grand Theft Auto V');
         $I->seeInField($carrinhoPage->quantidadeInput, '1');
         $I->see('PlayStation 4', $carrinhoPage->plataforma);
-        $I->see('30.00€', $carrinhoPage->preco);
+        $I->see('30,00 €', $carrinhoPage->preco);
         //$I->clearField($carrinhoPage->quantidadeInput); Não funciona
         //$I->pressKey($carrinhoPage->quantidadeInput, ['Ctrl', 'a'], WebDriverKeys::DELETE);
         $I->executeJS("document.querySelector('{$carrinhoPage->quantidadeInput}').value = '';");
@@ -44,7 +44,7 @@ class ComprasCest
         $I->see('Carrinho atualizado com sucesso!');
         $I->wait(2);
         $I->seeInField($carrinhoPage->quantidadeInput, '5');
-        $I->see('150.00€', $carrinhoPage->preco);
+        $I->see('150,00 €', $carrinhoPage->preco);
         $I->fillField($carrinhoPage->codigoDescontoInput,'SEMIVA');
         $I->click($carrinhoPage->aplicarDescontoButton);
         $I->wait(2);

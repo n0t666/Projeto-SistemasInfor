@@ -7,7 +7,7 @@ $interaction = \common\models\UtilizadorJogo::find()
     ->one();
 
 ?>
-    <div class="card game-card">
+    <div class="card game-card" id="jogo_<?= $jogo->id ?>">
         <img src="<?= Yii::getAlias('@capasJogoUrl') . '/' . $jogo->imagemCapa; ?>" class="game-poster img-fluid" alt="Game Poster">
 
         <?php if (Yii::$app->user->can('adicionarFavoritos') || Yii::$app->user->can('adicionarJogados')): ?>

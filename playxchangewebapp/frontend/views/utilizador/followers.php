@@ -27,9 +27,9 @@ $this->registerCssFile('@web/css/followList.css');
                             </a>
                         </div>
 
-                        <?php if (!Yii::$app->user->isGuest): ?>
+                        <?php if (!Yii::$app->user->isGuest && $follower->id != Yii::$app->user->id): ?>
                             <?php
-                            $isFollowing = isset($followingStatus[$follower->id]) && $followingStatus[$follower->id];
+                            $isFollowing = isset($followingStatus[$follower->id]) && $followingStatus[$follower->id] == true;
                             $actionUrl = $isFollowing ? Url::to(['utilizador/unfollow']) : Url::to(['utilizador/follow']);
                             $buttonText = $isFollowing ? 'Deixar de seguir' : 'Seguir de volta';
                             ?>

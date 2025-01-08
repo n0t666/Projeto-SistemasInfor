@@ -86,6 +86,7 @@ class UtilsController extends Controller
         $password = '';
         $client_id = 'phpMQTT-publisher';
 
+        /*
         $mqtt = new \Bluerhinos\phpMQTT($server, $port, $client_id);
         try {
             if ($mqtt->connect(true, NULL, $username, $password)) {
@@ -96,6 +97,7 @@ class UtilsController extends Controller
             $mqtt->close();
             return;
         }
+        */
     }
 
     public static function uploadBase64($alias, $base64){

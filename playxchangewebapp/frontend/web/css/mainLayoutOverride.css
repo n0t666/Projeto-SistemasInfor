@@ -883,6 +883,7 @@ figure img {
     margin-right: 30px;
     transition: transform 0.3s ease;
     flex-shrink: 0;
+    margin-left: 30px;
 }
 
 .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__pic:hover {
@@ -897,6 +898,7 @@ figure img {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+
 }
 
 .shopping__cart__table table tbody tr td.product__cart__item .product__cart__item__text h6 {
