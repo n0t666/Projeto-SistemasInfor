@@ -5,6 +5,7 @@ namespace frontend\tests\Unit;
 
 use common\models\CodigoPromocional;
 use common\models\Fatura;
+use common\models\Iva;
 use common\models\Produto;
 use frontend\tests\UnitTester;
 
@@ -100,7 +101,7 @@ class FaturaTest extends \Codeception\Test\Unit
         $fatura->save();
         $fatura->adicionarLinhaFatura($produtoId1);
         $fatura->adicionarLinhaFatura($produtoId2);
-        $quantiaEsperada = $produtoId1->preco + $produtoId2->preco;
+        $quantiaEsperada = Iva::calculateIva($produtoId1->preco + $produtoId2->preco, 'Normal');
         $this->assertEquals($quantiaEsperada, $fatura->getTotalSemDesconto());
     }
 
