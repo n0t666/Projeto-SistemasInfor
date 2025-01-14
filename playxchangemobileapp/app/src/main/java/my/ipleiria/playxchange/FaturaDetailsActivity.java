@@ -23,7 +23,7 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
 
     private Fatura auxFatura;
     private ListView lvLinhas;
-    private MaterialTextView tvDesconto,tvSubtotal,tvTotal,tvPagamento,tvEnvio,tvData;
+    private MaterialTextView tvDesconto,tvSubtotal,tvTotal,tvPagamento,tvEnvio,tvData,tvEstado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
         tvPagamento = findViewById(R.id.tvPagamento);
         tvEnvio = findViewById(R.id.tvEnvio);
         tvData = findViewById(R.id.tvData);
+        tvEstado = findViewById(R.id.tvEstado);
         this.setTitle(getString(R.string.txt_details_fatura_title));
     }
 
@@ -68,6 +69,8 @@ public class FaturaDetailsActivity extends AppCompatActivity implements FaturaLi
         if(fatura != null){
             auxFatura = fatura;
             lvLinhas.setAdapter(new LinhasFaturaAdapter(this, auxFatura.getLinhasFatura()));
+            tvEstado.append(" " + auxFatura.getEstado());
+            tvEstado.setTextColor(getResources().getColor(auxFatura.getEstado().getCor()));
             tvDesconto.append(" " + String.format("%.2f€", auxFatura.getQuantidadeDesconto()));
             tvSubtotal.append(" " + String.format("%.2f€", auxFatura.getTotalSemDesconto()));
             tvTotal.append(" " + String.format("%.2f€", auxFatura.getTotal()));

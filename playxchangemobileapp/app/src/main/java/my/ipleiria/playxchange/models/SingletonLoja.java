@@ -61,13 +61,13 @@ public class SingletonLoja {
     private SingletonLoja(Context context) {
         volleyQueue = Volley.newRequestQueue(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-        String ip = sharedPreferences.getString(Constants.IP_ADDRESS, null);
+        String ip = sharedPreferences.getString(Constants.IP_ADRESS_KEY, null);
         jogosDB = new LojaBDHelper(context);
         if (ip != null && !ip.equals(Constants.IP_ADDRESS)) {
             Constants.IP_ADDRESS = ip;
         } else {
-            Constants.IP_ADDRESS = "http://10.0.2.2" + Constants.PROJECT; // Dev environment remove on production
-            sharedPreferences.edit().putString(Constants.IP_ADDRESS, Constants.IP_ADDRESS).apply();
+            Constants.IP_ADDRESS = "http://10.0.2.2" + Constants.PROJECT; // Dev env
+            sharedPreferences.edit().putString(Constants.IP_ADRESS_KEY, Constants.IP_ADDRESS).apply();
          }
     }
 

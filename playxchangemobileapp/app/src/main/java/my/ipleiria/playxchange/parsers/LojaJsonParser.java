@@ -537,6 +537,17 @@ public class LojaJsonParser {
         return errorMessage;
     }
 
+    public static Double parserJsonTotalCarrinho(String response){
+        double total = 0.0;
+        try {
+            JSONObject jsonError = new JSONObject(response);
+            total = jsonError.has("total") && !jsonError.isNull("total") ? jsonError.getDouble("total") : 0.0;
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return total;
+    }
+
 
 
 

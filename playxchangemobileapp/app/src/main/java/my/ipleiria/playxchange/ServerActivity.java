@@ -40,18 +40,18 @@ public class ServerActivity extends AppCompatActivity {
         }
         etIp = findViewById(R.id.etIp);
         sharedPreferences = getApplicationContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-        Constants.IP_ADDRESS = sharedPreferences.getString(Constants.IP_ADDRESS, "");
+        Constants.IP_ADDRESS = sharedPreferences.getString(Constants.IP_ADRESS_KEY, "");
         etIp.setText(Constants.IP_ADDRESS);
         this.setTitle(getString(R.string.txt_config_server_title));
     }
 
     public void onClickServidor(View view){
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        String oldIp = sharedPreferences.getString(Constants.IP_ADDRESS, "");
+        String oldIp = sharedPreferences.getString(Constants.IP_ADRESS_KEY, "");
         String newIp = etIp.getText().toString().trim();
         if(validateIp(newIp, oldIp) ){
             Constants.IP_ADDRESS = newIp;
-            editor.putString(Constants.IP_ADDRESS, newIp);
+            editor.putString(Constants.IP_ADRESS_KEY, newIp);
             editor.apply();
             Snackbar.make(view, R.string.txt_ip_change_sucess, Snackbar.LENGTH_LONG).show();
         }else {

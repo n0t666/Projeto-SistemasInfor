@@ -2,6 +2,7 @@ package my.ipleiria.playxchange;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 
@@ -23,6 +25,8 @@ import my.ipleiria.playxchange.utils.Constants;
 public class InteracaoJogosActivity extends AppCompatActivity implements JogosListener {
 
     GridView gvJogos;
+    int requestCode;
+    SwipeRefreshLayout swipeInteracao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +44,14 @@ public class InteracaoJogosActivity extends AppCompatActivity implements JogosLi
         }
         if (extras != null) {
             gvJogos = findViewById(R.id.gvJogos);
+            swipeInteracao = findViewById(R.id.srlInteracaoJogo);
             SingletonLoja.getInstance(getApplicationContext()).setJogosListener(this);
             int code = extras.getInt("request_code");
+            swipeInteracao.setOnRefreshListener(() -> {
+                handleInteracao(code);
+            });
             handleInteracao(code);
+
         }else {
             Toast.makeText(this, "Não foi possível encontrar o tipo de interação especificado", Toast.LENGTH_SHORT).show();
             finish();
@@ -70,6 +79,7 @@ public class InteracaoJogosActivity extends AppCompatActivity implements JogosLi
     @Override
     public void onRefreshListaJogos(ArrayList<Jogo> jogos) {
 
+
     }
 
     @Override
@@ -85,18 +95,21 @@ public class InteracaoJogosActivity extends AppCompatActivity implements JogosLi
     @Override
     public void onRefreshListaJogosFavoritos(ArrayList<Jogo> jogos) {
         this.setTitle(getString(R.string.txt_favoritos_title));
+        swipeInteracao.setRefreshing(false);
         setAdapter(jogos);
     }
 
     @Override
     public void onRefreshListaJogosJogados(ArrayList<Jogo> jogos) {
         this.setTitle(getString(R.string.txt_jogados_title));
+        swipeInteracao.setRefreshing(false);
         setAdapter(jogos);
     }
 
     @Override
     public void onRefreshListaJogosDesejados(ArrayList<Jogo> jogos) {
         this.setTitle(getString(R.string.txt_desejados_title));
+        swipeInteracao.setRefreshing(false);
         setAdapter(jogos);
     }
 
@@ -114,4 +127,12 @@ public class InteracaoJogosActivity extends AppCompatActivity implements JogosLi
             openGameDetails(jogo.getId());
         });
     }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+
 }
