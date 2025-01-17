@@ -218,6 +218,7 @@ class CarrinhoController extends ActiveController
 
         return [
             'message' => 'Linha do carrinho alteradas com sucesso',
+            'total' => $carrinho->total,
         ];
 
     }
@@ -288,6 +289,7 @@ class CarrinhoController extends ActiveController
 
         return [
             'message' => 'Linha carrinho apagado com sucesso.',
+            'total' => $carrinho->total,
         ];
 
     }

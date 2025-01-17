@@ -108,24 +108,23 @@ class FaturaController extends ActiveController
             throw new NotFoundHttpException('Não foi possível encontrar o fatura');
         }
 
-        if(!$fatura->utilizador_id == $user->id){
-            throw new NotFoundHttpException('Não foi possível encontrar o fatura');
+        if ($fatura->utilizador_id != $user->id) {
+            throw new NotFoundHttpException('Não foi possível encontrar a fatura.');
         }
 
 
         $faturaResponse = [];
         $linhasFatura = [];
-        $totalSemDesconto = 0;
 
 
         $faturaResponse = [
             'id' => $fatura->id,
             'estado' => $fatura->estado,
-            'total' => $fatura->total,
+            'total' => round($fatura->total, 2),
             'dataEncomenda' => $fatura->dataEncomenda,
             'pagamento' => $fatura->pagamento->nome,
             'envio' => $fatura->envio->nome,
-            'codigo' =>  $fatura->getCodigo()->count() > 0 ? $fatura->codigo->codigo : null,
+            'codigo' => $fatura->getCodigo()->count() > 0 ? $fatura->codigo->codigo : null,
         ];
 
         foreach ($fatura->linhasfaturas as $linha){
@@ -136,7 +135,7 @@ class FaturaController extends ActiveController
                     'produtoId' => $produto->id,
                     'jogoId' => $produto->jogo->id,
                     'produtoNome' => $produto->jogo->nome,
-                    'precoUnitario' => $linha->precoUnitario,
+                    'precoUnitario' => round($linha->precoUnitario, 2),
                     'quantidade' => 0,
                     'subtotal' => 0,
                     'chaves' => []
@@ -144,15 +143,15 @@ class FaturaController extends ActiveController
             }
 
             $linhasFatura[$produto->id]['quantidade'] += 1;
-            $linhasFatura[$produto->id]['subtotal'] += $linha->precoUnitario;
+            $linhasFatura[$produto->id]['subtotal'] += round($linha->precoUnitario, 2);
             if($linha->chave != null){
                 $linhasFatura[$produto->id]['chaves'][] = $linha->chave->chave;
             }
         }
 
 
-        $faturaResponse['totalSemDesconto'] = $fatura->getTotalSemDesconto();
-        $faturaResponse['quantidadeDesconto'] = $fatura->getDesconto($faturaResponse['totalSemDesconto']);
+        $faturaResponse['totalSemDesconto'] = round($fatura->getTotalSemDesconto(), 2);
+        $faturaResponse['quantidadeDesconto'] = round($fatura->getDesconto($faturaResponse['totalSemDesconto']), 2);
 
         return [
             'fatura' => $faturaResponse,

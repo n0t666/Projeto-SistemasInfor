@@ -141,9 +141,11 @@ class CodigoPromocionalController extends ActiveController
             $total = null;
             $valorDescontado = null;
             if(count($carrinho->linhascarrinhos) > 0){
+                $carrinho->refresh();
+                $carrinho->recalculateTotal();
                 if($carrinho->total!=0){
-                    $valorDescontado = ($carrinho->total * $codigo->desconto )/100;
-                    $total = $carrinho->total - $valorDescontado;
+                    $valorDescontado = round(($carrinho->total * $codigo->desconto) / 100, 2);
+                    $total = round($carrinho->total - $valorDescontado, 2);
                 }
             }
             return [
