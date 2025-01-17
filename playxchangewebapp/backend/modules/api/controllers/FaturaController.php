@@ -313,12 +313,11 @@ class FaturaController extends ActiveController
 
         $codigo = $body['codigo'] ?? null;
 
-        $total = $carrinho->total;
+
 
         $carrinho->refresh();
         $carrinho->recalculateTotal();
-
-
+        $total = $carrinho->total;
         $totalSemDesconto = $total;
         $valorDescontado = null;
         $codigoArray = null;
@@ -337,8 +336,8 @@ class FaturaController extends ActiveController
                 throw new \Exception('O código promocional já foi utilizado.');
             }
             $desconto = $codigoPromocional->desconto;
-            $valorDescontado = ($total * ($desconto / 100));
-            $total -= $valorDescontado;
+            $valorDescontado = round($total * ($desconto / 100), 2);
+            $total = round($total - $valorDescontado, 2);
             $codigoArray = [
                 'id' => $codigoPromocional->id,
                 'codigo' => $codigoPromocional->codigo,
@@ -366,9 +365,9 @@ class FaturaController extends ActiveController
         }
 
         return [
-            'total' => round($total,2),
-            'totalSemDesconto' => round($totalSemDesconto,2),
-            'valorDescontado' => round($valorDescontado,2),
+            'total' => round($total, 2),
+            'totalSemDesconto' => round($totalSemDesconto, 2),
+            'valorDescontado' => round($valorDescontado, 2),
             'codigo' => $codigoArray,
             'metodosPagamento' => $metodosPagamento,
             'metodosEnvio' => $metodosEnvio,
