@@ -149,9 +149,9 @@ class FaturaController extends ActiveController
             }
         }
 
-
         $faturaResponse['totalSemDesconto'] = round($fatura->getTotalSemDesconto(), 2);
-        $faturaResponse['quantidadeDesconto'] = round($fatura->getDesconto($faturaResponse['totalSemDesconto']), 2);
+        $quantidadeDesconto = $faturaResponse['totalSemDesconto'] - $fatura->total;
+        $faturaResponse['quantidadeDesconto'] = round($quantidadeDesconto, 2);
 
         return [
             'fatura' => $faturaResponse,
