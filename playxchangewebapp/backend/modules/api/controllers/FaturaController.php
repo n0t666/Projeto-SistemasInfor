@@ -366,9 +366,9 @@ class FaturaController extends ActiveController
         }
 
         return [
-            'total' => $total,
-            'totalSemDesconto' => $totalSemDesconto,
-            'valorDescontado' => $valorDescontado,
+            'total' => round($total,2),
+            'totalSemDesconto' => round($totalSemDesconto,2),
+            'valorDescontado' => round($valorDescontado,2),
             'codigo' => $codigoArray,
             'metodosPagamento' => $metodosPagamento,
             'metodosEnvio' => $metodosEnvio,
