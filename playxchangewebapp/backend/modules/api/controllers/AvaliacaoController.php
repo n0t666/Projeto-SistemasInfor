@@ -159,7 +159,7 @@ class AvaliacaoController extends ActiveController
             throw new NotFoundHttpException('Jogo inexistente');
         }
 
-        if($jogo->getComentarios()->where(['utilizador_id' => $user->id])->exists()){
+        if($jogo->getComentarios()->where(['utilizador_id' => $user->id,'jogo_id' => $jogoid])->exists()){
             throw new \Exception('Não é possível remover estrelas em jogos que existam atividade.');
         }
 

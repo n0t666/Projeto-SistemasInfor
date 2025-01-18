@@ -393,7 +393,7 @@ class UserController extends ActiveController
         $numSeguidores = count($profile->getSeguidores()->all());
         $numSeguir = count($profile->getSeguidos()->all());
 
-        // Devido á sobrecraga de trabalho não será possível implementar a funcionaldade realmente por ordem de recentes
+        // Devido á sobrecarga de trabalho não será possível implementar a funcionalidade realmente por ordem de recentes
 
         $previewFavoritos = $profile
             ->getInteracoes()
