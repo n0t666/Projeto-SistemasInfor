@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     private TextInputEditText tfCodigoText;
     private View view;
     private ConstraintLayout clContent, clCarrinhoVazio;
-
+    private SwipeRefreshLayout srlCarrinho;
     private CodigoPromocional codigo;
 
 
@@ -66,6 +67,10 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         tfCodigoText = view.findViewById(R.id.tfCodigoText);
         clContent = view.findViewById(R.id.clContent);
         clCarrinhoVazio = view.findViewById(R.id.clCarrinhoVazio);
+        srlCarrinho = view.findViewById(R.id.srlCart);
+        SingletonLoja.getInstance(getContext()).setCarrinhoListener(this);
+        srlCarrinho.setOnRefreshListener(this::getCarrinho);
+        getCarrinho();
         return view;
     }
 
@@ -73,6 +78,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     @Override
     public void onRefreshCarrinho(Carrinho carrinho) {
         carrinhoAux = carrinho;
+        srlCarrinho.setRefreshing(false);
         if (carrinhoAux == null || carrinhoAux.getLinhas() == null) {
             Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
             btnApply.setEnabled(false);
@@ -124,13 +130,10 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                     }
                 }
             }else if (txtButton.equals(getResources().getString(R.string.txt_remove_coupoun))){
-                btnApply.setText(R.string.txt_apply);
-                tfCodigoText.setText("");
-                tfCodigoText.setEnabled(true);
-                btnApply.setBackgroundColor(getResources().getColor(R.color.primary));
-                tvTotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
-                tvDesconto.setText(String.format("€%.2f", 0.00));
-                tvSubtotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
+                changeApplyButton(true);
+                tvTotal.setText(String.format("%.2f", carrinhoAux.getTotal()) + "€");
+                tvDesconto.setText(String.format("%.2f", 0.00) + "€");
+                tvSubtotal.setText(String.format("%.2f", carrinhoAux.getTotal()) + "€");
             }
         }else{
             Toast.makeText(getContext(), "Carrinho vazio", Toast.LENGTH_SHORT).show();
@@ -152,9 +155,12 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         });
         tfCodigoText = view.findViewById(R.id.tfCodigoText);
         lvLinhas.setAdapter(new CarrinhoAdapter(getContext(), carrinhoAux.getLinhas(), this));
-        tvTotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
-        tvSubtotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
-
+        tvTotal.setText(String.format("%.2f", carrinhoAux.getTotal()) + "€");
+        tvSubtotal.setText(String.format("%.2f", carrinhoAux.getTotal()) + "€");
+        tvDesconto.setText(String.format("%.2f", 0.00) + "€");
+        btnApply.setText(R.string.txt_apply);
+        btnApply.setBackgroundColor(getResources().getColor(R.color.primary));
+        tfCodigoText.setEnabled(true);
     }
 
     @Override
@@ -162,27 +168,25 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         if(codigoPromocional!=null){
             codigo = codigoPromocional;
             if(codigoPromocional.getStatus() == 0){
-                Toast.makeText(getContext(), "O código promocional já foi usado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.txt_used_code, Toast.LENGTH_SHORT).show();
                 return;
             }else if (codigoPromocional.getStatus() == 1){
-                tvDesconto.setText(String.format("€%.2f", codigoPromocional.getValorDescontado()));
+                tvDesconto.setText(String.format("%.2f", codigoPromocional.getValorDescontado()) + "€");
                 if(tvSubtotal!= null && carrinhoAux!=null){
-                    tvSubtotal.setText(String.format("€%.2f", carrinhoAux.getTotal()));
+                    tvSubtotal.setText(String.format("%.2f", carrinhoAux.getTotal()) + "€");
                 }
 
                 if(tvSubtotal!=null&& carrinhoAux!=null){
                     Double total = carrinhoAux.getTotal() - codigoPromocional.getValorDescontado();
                     if(total < 0){
-                        tvTotal.setText(String.format("€%.2f", 0.00));
+                        tvTotal.setText(String.format("%.2f", 0.00) + "€");
                     }else{
-                        tvTotal.setText(String.format("€%.2f", total));
+                        tvTotal.setText(String.format("%.2f", total) + "€");
                     }
                 }
 
                 if(btnApply!= null){
-                    btnApply.setText(R.string.txt_remove_coupoun);
-                    btnApply.setBackgroundColor(getResources().getColor(R.color.error));
-                    tfCodigoText.setEnabled(false);
+                    changeApplyButton(false);
                 }
             }
         }
@@ -199,7 +203,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
             carrinhoAux.setTotal(total);
 
             if (tvSubtotal != null) {
-                tvSubtotal.setText(String.format("€%.2f", total));
+                tvSubtotal.setText(String.format("%.2f", total) + "€");
             }
 
 
@@ -212,12 +216,12 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
                 }
 
                 if(tvDesconto != null){
-                    tvDesconto.setText(String.format("€%.2f", valorDescontado));
+                    tvDesconto.setText(String.format("%.2f", valorDescontado) + "€");
                 }
 
-                tvTotal.setText(String.format("€%.2f", totalComDesconto));
+                tvTotal.setText(String.format("%.2f", totalComDesconto) + "€");
             }else {
-                tvTotal.setText(String.format("€%.2f", total));
+                tvTotal.setText(String.format("%.2f", total) + "€");
             }
         }
     }
@@ -241,12 +245,30 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         }
     }
 
+    private void getCarrinho(){
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(Constants.TOKEN, null);
+        SingletonLoja.getInstance(getContext()).getCarrinhoAPI(getContext(), token);
+    }
+
+    private void changeApplyButton(boolean apply){
+        if(apply){
+            btnApply.setText(R.string.txt_apply);
+            btnApply.setBackgroundColor(getResources().getColor(R.color.primary));
+            tfCodigoText.setText("");
+            tfCodigoText.setEnabled(true);
+        }else{
+            btnApply.setText(R.string.txt_remove_coupoun);
+            btnApply.setBackgroundColor(getResources().getColor(R.color.error));
+            tfCodigoText.setEnabled(false);
+        }
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(Constants.CURRENT_USER, Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString(Constants.TOKEN, null);
-        SingletonLoja.getInstance(getContext()).setCarrinhoListener(this);
-        SingletonLoja.getInstance(getContext()).getCarrinhoAPI(getContext(), token);
     }
+
+
 }

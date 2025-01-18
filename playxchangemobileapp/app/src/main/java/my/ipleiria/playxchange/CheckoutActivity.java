@@ -85,13 +85,13 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     public void onRefreshCheckout(Checkout checkout) {
         if(checkout != null){
             auxCheckout = checkout;
-            tvSubtotal.append( " " + String.format("%.2f€",checkout.getTotalSemDesconto()));
-            tvTotalComDesconto.append(" " + String.format("%.2f€",checkout.getTotal()));
+            tvSubtotal.append( " " + String.format("%.2f",checkout.getTotalSemDesconto()) + "€");
+            tvTotalComDesconto.append(" " + String.format("%.2f",checkout.getTotal()) + "€");
 
             if(checkout.getValorDesconto() > 0){
                 tvDesconto = findViewById(R.id.tvDesconto);
                 tvDesconto.setVisibility(View.VISIBLE);
-                tvDesconto.append(" " + String.format("%.2f€",checkout.getValorDesconto()));
+                tvDesconto.append(" " + String.format("%.2f",checkout.getValorDesconto()) + "€");
             }else{
                 tvDesconto.setVisibility(View.GONE);
             }

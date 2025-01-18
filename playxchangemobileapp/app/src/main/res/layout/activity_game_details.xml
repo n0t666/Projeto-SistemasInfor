@@ -76,7 +76,7 @@
                 android:layout_marginStart="16dp"
                 android:onClick="tvTrailerOnClick"
                 android:text="@string/txt_trailer"
-                android:textColor="@color/material_on_primary_disabled"
+                android:textColor="@android:color/secondary_text_dark"
                 android:textSize="14sp" />
         </LinearLayout>
 

@@ -15,6 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Response;
 import com.bumptech.glide.Glide;
@@ -35,6 +37,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -58,15 +61,16 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
     private ChipGroup chGroupTags;
     private RecyclerView rvScreenshots;
     private CarouselAdapterScreenshots carouselAdapterScreenshots;
-
     private static final int MAX_QUANTITY = 10;
     private static final int MIN_QUANTITY = 1;
-
     private int selectedProdutoId = -1;
-
     private BottomSheetDialog bottomSheet;
+    private SwipeRefreshLayout srlGameDetails;
+    private RatingBar rbStars;
+    private int id;
+    private LinearLayout llQuantity;
 
-    RatingBar rbStars;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
         dpPlataforma = findViewById(R.id.dpPlataforma);
         chGroupTags = findViewById(R.id.chGroupTags);
         rvScreenshots = findViewById(R.id.rvScreenshotsCarousel);
+        llQuantity = findViewById(R.id.llQuantity);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -102,8 +107,12 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            int id = extras.getInt("ID_JOGO");
-            getJogo(id);
+            id = extras.getInt("ID_JOGO");
+            if(id > 0){
+                getJogo(id);
+            }else{
+                Toast.makeText(this, R.string.txt_error_find_jogo, Toast.LENGTH_SHORT).show();
+            }
         }else {
             Toast.makeText(this, R.string.txt_error_find_jogo, Toast.LENGTH_SHORT).show();
         }
@@ -131,11 +140,20 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
             tvDescricao.setText(lJogo.getDescricao());
             setTags();
             setScreenshots();
-            ArrayList<PlataformaItem> produtoNames = new ArrayList<>();
-            for(Jogo.Produto produto : lJogo.getProdutos()){ // Necessário criar um classe PlatformItem para poder adicionar ao dropdown e ao selecionar obter o id e procurar
-                produtoNames.add(new PlataformaItem(produto.getPlataformaNome(), produto.getId()));
+            if(!lJogo.getProdutos().isEmpty()){
+                ArrayList<PlataformaItem> produtoNames = new ArrayList<>();
+                for(Jogo.Produto produto : lJogo.getProdutos()){ // Necessário criar um classe PlatformItem para poder adicionar ao dropdown e ao selecionar obter o id e procurar
+                    produtoNames.add(new PlataformaItem(produto.getPlataformaNome(), produto.getId()));
+                }
+                setPlataformaDropdown(produtoNames);
+            }else{
+                llQuantity.setVisibility(View.GONE);
+                tvPrice.setVisibility(View.GONE);
+                btnCart.setVisibility(View.INVISIBLE);
+
             }
-            setPlataformaDropdown(produtoNames);
+
+
             Glide.with(getApplicationContext())
                     .load(lJogo.getCapas())
                     .placeholder(R.drawable.placeholder_jogo)
@@ -201,6 +219,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
     private void setTags(){
         if(lJogo != null){
+            chGroupTags.removeAllViews();
             for(Jogo.Tag tag : lJogo.getTags()){
                 Chip chip = new Chip(new ContextThemeWrapper(this, R.style.TagChip));
                 chip.setText(tag.getNome());
@@ -463,6 +482,17 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
         intent.putExtra("REQUEST_CODE", requestCode);
         intent.putExtra("ID_COMENTARIO", reviewId);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bottomSheet != null) {
+            bottomSheet.dismiss();
+        }
+        if(id > 0){
+            getJogo(id);
+        }
     }
 
 

@@ -144,4 +144,12 @@
     <string name="txt_ip_change_sucess">IP alterado com sucesso</string>
     <string name="txt_error_ip">IP inválido</string>
     <string name="txt_produto_removed_sucess">Produto removido do carrinho</string>
+    <string name="txt_used_code">O código promocional já foi usado</string>
+    <string name="txt_zero_euro">0.00€</string>
+    <string name="txt_comp_compra">Completar Compra</string>
+    <string name="txt_keep_buy">Continuar a comprar</string>
+    <string name="txt_sucess_purchase">Obrigado pela sua compra</string>
+    <string name="txt_game_time">Título do Jogo</string>
+    <string name="txt_data_lanc">Data de lançamento</string>
+    <string name="txt_see_details">Ver Detalhes</string>
 </resources>

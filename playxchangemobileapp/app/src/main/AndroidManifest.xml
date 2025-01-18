@@ -27,9 +27,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ComentarioCreate"
-            android:exported="false" />
-        <activity
             android:name=".ComentarioDetailsActivity"
             android:exported="false" />
         <activity
@@ -70,7 +67,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing"/>
     </application>
 
 </manifest>

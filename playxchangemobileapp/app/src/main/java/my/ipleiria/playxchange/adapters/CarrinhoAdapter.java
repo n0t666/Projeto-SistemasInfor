@@ -95,7 +95,7 @@ public class CarrinhoAdapter extends BaseAdapter {
 
         public void update(LinhaCarrinho linha) {
             tvNome.setText(linha.getNome());
-            tvPreco.setText(String.format("€%.2f", linha.getPreco()));
+            tvPreco.setText(String.format("%.2f", linha.getPreco()) + "€");
             tvQuantidade.setText(String.valueOf(linha.getQuantidade()));
             tvPlataforma.setText(linha.getPlataforma());
 

@@ -16,7 +16,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Título do Jogo"
+        android:text="@string/txt_game_time"
         android:textColor="@color/text"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Data de lançamento"
+        android:text="@string/txt_data_lanc"
         android:textColor="@color/muted_text"
         android:textSize="14sp" />
 

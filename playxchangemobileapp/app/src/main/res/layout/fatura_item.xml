@@ -38,7 +38,6 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delivered"
                 android:textSize="16sp"
                 android:textColor="@color/text"/>
 
@@ -115,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Ver Detalhes"
+                android:text="@string/txt_see_details"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/primary"/>
 
@@ -130,7 +129,6 @@
                     android:id="@+id/tvTotalPreco"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total: €39.99"
                     android:textColor="@color/text"
                     android:textSize="16sp"/>
 
@@ -138,7 +136,6 @@
                     android:id="@+id/tvTotalItens"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(4 items)"
                     android:textColor="@color/muted_text"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp"/>

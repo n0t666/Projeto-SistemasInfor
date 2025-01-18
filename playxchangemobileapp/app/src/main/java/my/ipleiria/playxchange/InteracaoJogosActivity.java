@@ -45,6 +45,7 @@ public class InteracaoJogosActivity extends AppCompatActivity implements JogosLi
         if (extras != null) {
             gvJogos = findViewById(R.id.gvJogos);
             swipeInteracao = findViewById(R.id.srlInteracaoJogo);
+            swipeInteracao.setProgressViewOffset(false, 0, 300);
             SingletonLoja.getInstance(getApplicationContext()).setJogosListener(this);
             int code = extras.getInt("request_code");
             swipeInteracao.setOnRefreshListener(() -> {

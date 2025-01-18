@@ -203,7 +203,6 @@ public class EditProfileDetailsActivity extends AppCompatActivity implements Use
     }
 
     public void onDataNascimentoClick(View view) {
-        Toast.makeText(this, "AAA", Toast.LENGTH_SHORT).show();
         MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
                 .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
