@@ -205,13 +205,13 @@ class FaturaController extends ActiveController
             $isCodigoUsed = true;
             if ($codigoId) {
                 $codigo = CodigoPromocional::find()->where(['id' => $codigoId, 'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
-                if (!$codigo) {
-                    throw new NotFoundHttpException('Não foi possível encontrar o código promocional solicitado');
+                if(codigo){
+                    $isCodigoUsed = $codigo->isUsedByUser($user);
+                    if ($isCodigoUsed) {
+                        throw new Exception('O código já foi utilizado previamente');
+                    }
                 }
-                $isCodigoUsed = $codigo->isUsedByUser($user);
-                if ($isCodigoUsed) {
-                    throw new Exception('O código já foi utilizado previamente');
-                }
+
             }
             $transaction = Yii::$app->db->beginTransaction();
             $carrinho->refresh();
