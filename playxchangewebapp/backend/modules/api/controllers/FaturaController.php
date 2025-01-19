@@ -205,7 +205,7 @@ class FaturaController extends ActiveController
             $isCodigoUsed = true;
             if ($codigoId) {
                 $codigo = CodigoPromocional::find()->where(['id' => $codigoId, 'isAtivo' => CodigoPromocional::STATUS_ACTIVATED])->one();
-                if(codigo){
+                if($codigo){
                     $isCodigoUsed = $codigo->isUsedByUser($user);
                     if ($isCodigoUsed) {
                         throw new Exception('O código já foi utilizado previamente');
