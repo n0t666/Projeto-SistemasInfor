@@ -15,13 +15,15 @@ $this->registerJsFile(
     ['depends' => [\yii\web\JqueryAsset::class]]
 );
 
+$img = Yii::getAlias('@web') . "/images/empty_cart.png";
+
 
 
 ?>
 <?php if (empty($model->linhascarrinhos)): ?>
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8 col-sm-10 mt-5 text-center">
-            <img src="<?= Yii::getAlias('@web') . '/images/empty_cart' ?>" alt="Cart Empty" class="img-fluid mb-4" height="300" width="300" />
+            <img src="<?= $img?>" alt="Cart Empty" class="img-fluid mb-4" height="300" width="300" />
             <h3 class="text-muted">O seu carrinho está vazio!</h3>
             <a href="<?= Url::to(['/jogo/index']) ?>" class="btn btn-primary mt-3 px-4 py-2">
                 Ir para a loja
