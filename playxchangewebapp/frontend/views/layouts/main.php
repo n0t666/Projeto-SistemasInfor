@@ -22,6 +22,8 @@ $this->registerJsFile(
     ['depends' => [\yii\web\JqueryAsset::className()]]
 );
 
+$img = Yii::getAlias('@web') . "/images/logo.png";
+
 
 
 ?>
@@ -53,7 +55,8 @@ $this->registerJsFile(
         ]);
 
         echo Html::a(
-            Html::img('@web/images/logo.png', ['alt' => 'Your Logo', 'class' => 'navbar-brand', 'style' => 'width: 50px;']),
+            Html::img($img
+                , ['alt' => 'Your Logo', 'class' => 'navbar-brand', 'style' => 'width: 50px;']),
             Yii::$app->homeUrl,
             ['class' => 'navbar-brand']
         );
