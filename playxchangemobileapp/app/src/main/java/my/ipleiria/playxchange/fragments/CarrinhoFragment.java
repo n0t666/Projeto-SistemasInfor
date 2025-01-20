@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -34,7 +35,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
     private Carrinho carrinhoAux;
     private ListView lvLinhas;
     private TextView tvTotal, tvSubtotal, tvDesconto;
-    private MaterialButton btnCheckout,btnApply;
+    private MaterialButton btnCheckout,btnApply,btnProducts;
     private TextInputEditText tfCodigoText;
     private View view;
     private ConstraintLayout clContent, clCarrinhoVazio;
@@ -68,6 +69,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         clContent = view.findViewById(R.id.clContent);
         clCarrinhoVazio = view.findViewById(R.id.clCarrinhoVazio);
         srlCarrinho = view.findViewById(R.id.srlCart);
+        btnProducts = view.findViewById(R.id.btnProducts);
         SingletonLoja.getInstance(getContext()).setCarrinhoListener(this);
         srlCarrinho.setOnRefreshListener(this::getCarrinho);
         getCarrinho();
@@ -86,6 +88,13 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
             tfCodigoText.setEnabled(false);
             clContent.setVisibility(View.GONE);
             clCarrinhoVazio.setVisibility(View.VISIBLE);
+            btnProducts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BottomNavigationView navigationView = getActivity().findViewById(R.id.bottomNavView);
+                    navigationView.setSelectedItemId(R.id.games);
+                }
+            });
         } else {
             getActivity().setTitle("Carrinho" + " (" + carrinhoAux.getQuantidadeTotal()+ ")");
             setComponents();
@@ -161,6 +170,7 @@ public class CarrinhoFragment extends Fragment implements CarrinhoListener, Codi
         btnApply.setText(R.string.txt_apply);
         btnApply.setBackgroundColor(getResources().getColor(R.color.primary));
         tfCodigoText.setEnabled(true);
+
     }
 
     @Override

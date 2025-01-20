@@ -152,4 +152,11 @@
     <string name="txt_game_time">Título do Jogo</string>
     <string name="txt_data_lanc">Data de lançamento</string>
     <string name="txt_see_details">Ver Detalhes</string>
+    <string name="txt_sucess_add_jogado">Jogo adicionado aos jogados com sucesso!</string>
+    <string name="txt_sucess_add_favorito">Jogo adicionado aos favoritos com sucesso!</string>
+    <string name="txt_sucess_add_desejado">Jogo adicionado aos desejados com sucesso!</string>
+    <string name="txt_sucess_remove_jogado">Jogo removido dos jogados com sucesso!</string>
+    <string name="txt_sucess_remove_favorito">Jogo removido dos favoritos com sucesso!</string>
+    <string name="txt_sucess_remove_desejado">Jogo removido dos desejados com sucesso!</string>
+    <string name="txt_aval_first">Necessita de avaliar o jogo antes de comentar!</string>
 </resources>

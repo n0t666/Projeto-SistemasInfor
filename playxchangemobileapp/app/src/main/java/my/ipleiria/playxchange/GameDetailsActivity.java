@@ -305,6 +305,8 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
             if (btnComment != null && token != null) {
                 int codeR = -1;
+
+
                 if(lJogo.getReviewId() > 0){
                     btnComment.setText(R.string.txt_edit_com);
                     codeR = Constants.REQUEST_CODE_EDIT_COMMENT;
@@ -337,7 +339,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                                 if(rating > 0 && rating <= 5) {
                                     SingletonLoja.getInstance(getApplicationContext()).updateAvaliacaoAPI(getApplicationContext(), lJogo.getId(), rating, token);
                                 }else if (rating == 0){
-                                    if(lJogo.getReviewId() > 0){
+                                    if(lJogo.getReviewId() == -1){
                                         SingletonLoja.getInstance(getApplicationContext()).deleteAvaliacaoAPI(getApplicationContext(), lJogo.getId(), token);
                                     }else{
                                         Toast.makeText(getApplicationContext(), R.string.txt_aval_busy, Toast.LENGTH_SHORT).show();
@@ -357,7 +359,7 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
                     btnClearRating.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(lJogo.getReviewId() > 0){
+                            if(lJogo.getReviewId()  == -1){
                                 bottomSheet.dismiss();
                                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(GameDetailsActivity.this, R.style.CustomMaterialAlertDialog);
                                 builder.setTitle(R.string.txt_remover_aval)
@@ -435,14 +437,29 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
             case 1:
                 lJogo.getAtividade().setJogado(lJogo.getAtividade().isJogado() == 1 ? 0 : 1);
                 bottomSheet.dismiss();
+                if (lJogo.getAtividade().isJogado() == 1) {
+                    Toast.makeText(this, R.string.txt_sucess_add_jogado, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.txt_sucess_remove_jogado, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 2:
                 lJogo.getAtividade().setFavorito(lJogo.getAtividade().isFavorito() == 1 ? 0 : 1);
                 bottomSheet.dismiss();
+                if(lJogo.getAtividade().isFavorito() == 1){
+                    Toast.makeText(this, R.string.txt_sucess_add_favorito, Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, R.string.txt_sucess_remove_favorito, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 3:
                 lJogo.getAtividade().setDesejado(lJogo.getAtividade().isDesejado() == 1 ? 0 : 1);
                 bottomSheet.dismiss();
+                if(lJogo.getAtividade().isDesejado() == 1){
+                    Toast.makeText(this, R.string.txt_sucess_add_desejado, Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, R.string.txt_sucess_remove_desejado, Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 Toast.makeText(this, R.string.txt_invalid_act, Toast.LENGTH_SHORT).show();
@@ -477,6 +494,10 @@ public class GameDetailsActivity extends AppCompatActivity implements JogoListen
 
 
     private void openComentarioActivity(int reviewId, int requestCode){
+        if(lJogo.getAvaliacao() == null){
+            Toast.makeText(this, R.string.txt_aval_first, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(this, ComentarioDetailsActivity.class);
         intent.putExtra("ID_JOGO", lJogo.getId());
         intent.putExtra("REQUEST_CODE", requestCode);
