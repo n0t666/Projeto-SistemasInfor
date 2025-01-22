@@ -100,6 +100,7 @@ return [
                     'controller' => 'api/jogo',
                     'extraPatterns' => [
                         'GET group/{type}' => 'group',
+                        'GET produtos' => 'produto'
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',

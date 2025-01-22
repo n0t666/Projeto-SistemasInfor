@@ -212,5 +212,33 @@ class JogoController extends ActiveController
         return $response;
     }
 
+    public function actionProduto(){
+        $jogos = Jogo::find()->all();
+        $jogoMaisCaro = 0;
+        foreach ($jogos as $jogo) {
+            $jogoProdutos = $jogo->produtos;
+            $produtos = [];
+
+
+            foreach ($jogoProdutos as $jogoProduto) {
+                $produtos[] = [
+                    'id' => $jogoProduto->id,
+                    'plataformaNome' => $jogoProduto->plataforma->nome,
+                    'plataformaId' => $jogoProduto->plataforma->id,
+                    'preco' => $jogoProduto->preco,
+                    'quantidade' => $jogoProduto->quantidade,
+                ];
+                if($jogoProduto->preco > $jogoMaisCaro){
+                    $jogoMaisCaro = $jogoProduto->preco;
+                }
+
+            }
+        }
+        return [
+            'jogomaiscaro' => $jogoMaisCaro,
+        ];
+
+    }
+
 
 }
