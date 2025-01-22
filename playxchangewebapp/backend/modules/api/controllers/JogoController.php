@@ -32,7 +32,7 @@ class JogoController extends ActiveController
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => QueryParamAuth::className(),
-            'except' => ['index', 'view','group'],
+            'except' => ['index', 'view','group','produto'],
         ];
         return $behaviors;
     }
