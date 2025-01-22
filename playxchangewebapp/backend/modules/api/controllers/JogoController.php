@@ -235,7 +235,7 @@ class JogoController extends ActiveController
             }
         }
         return [
-            'jogomaiscaro' => $jogoMaisCaro,
+            'preco' => $jogoMaisCaro,
         ];
 
     }
