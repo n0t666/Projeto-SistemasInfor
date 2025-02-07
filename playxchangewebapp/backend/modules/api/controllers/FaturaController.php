@@ -135,6 +135,7 @@ class FaturaController extends ActiveController
                     'produtoId' => $produto->id,
                     'jogoId' => $produto->jogo->id,
                     'produtoNome' => $produto->jogo->nome,
+                    'plataforma' => $produto->plataforma->nome,
                     'precoUnitario' => round($linha->precoUnitario, 2),
                     'quantidade' => 0,
                     'subtotal' => 0,

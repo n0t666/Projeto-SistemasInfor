@@ -924,7 +924,6 @@ CREATE TABLE `seguidores` (
 
 LOCK TABLES `seguidores` WRITE;
 /*!40000 ALTER TABLE `seguidores` DISABLE KEYS */;
-INSERT INTO `seguidores` VALUES (19,20,NULL),(21,20,NULL),(20,21,NULL);
 /*!40000 ALTER TABLE `seguidores` ENABLE KEYS */;
 UNLOCK TABLES;
 
